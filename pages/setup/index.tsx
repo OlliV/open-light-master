@@ -113,7 +113,7 @@ function LM3(props: { children: any }) {
 					setInfo({ message: 'Requesting BLE Device...', severity: 'info' });
 
 					const newBtDevice = await pairDevice(
-						[],
+						[{name: 'LightMaster'}],
 						[LM3_SERVICE_UUID],
 						async ({ device, server }) => {
 							try {

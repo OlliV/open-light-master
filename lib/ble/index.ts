@@ -26,14 +26,14 @@ async function connect(device: BluetoothDevice): Promise<BluetoothRemoteGATTServ
  * @param connectCb is called on the initial connect as well as on reconnects. This allows restarting the notifications.
  */
 export async function pairDevice(
-	services: string[],
+	filters: any | null,
 	optionalServices: string[] | null,
 	connectCb: (dev: BtDevice) => Promise<void>,
 	onDisconnectedCb: () => void
 ) {
 	const options = {
-		acceptAllDevices: services.length == 0,
-		filters: services.length > 0 ? [{ services: services }] : undefined,
+		acceptAllDevices: !filters,
+		filters: filters || undefined,
 		optionalServices,
 	};
 
