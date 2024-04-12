@@ -7,7 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import IconCamera from '@mui/icons-material/Videocam';
+import SensorWindowIcon from '@mui/icons-material/SensorWindow';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import Title from '../../components/Title';
 import Typography from '@mui/material/Typography';
 import { green } from '@mui/material/colors';
@@ -15,7 +16,8 @@ import SxPropsTheme from '../../lib/SxPropsTheme';
 import { BtDevice, pairDevice } from '../../lib/ble';
 import { useEffect, useState } from 'react';
 import MyHead from '../../components/MyHead';
-import { useGlobalState, getGlobalState } from '../../lib/global';
+import Parameters from '../../components/Parameters';
+import { getGlobalState, useGlobalState } from '../../lib/global';
 import { BLE_SERVICE_UUID as LM3_SERVICE_UUID, createLm3 } from '../../lib/ble/lm3';
 
 type Severity = 'error' | 'info' | 'success' | 'warning';
@@ -118,7 +120,7 @@ function LM3(props: { children: any }) {
 								const lm3 = await createLm3(server);
 								await lm3.startNotifications();
 								await lm3.readCal();
-								lm3.startMeasuring(1000);
+								lm3.startMeasuring(1 / getGlobalState('hz') * 1000, getGlobalState('avg'));
 								setLm3(lm3);
 							} catch (err) {
 								console.error(err);
@@ -155,7 +157,7 @@ function LM3(props: { children: any }) {
 
 	return (
 		<Grid item xs="auto">
-			<Card variant="outlined">
+			<Card variant="outlined" sx={{ height: '19em' }}>
 				<CardContent sx={{ height: '15em' }}>
 					<Typography gutterBottom variant="h5" component="h2">
 						{props.children}
@@ -192,8 +194,11 @@ export default function Setup() {
 				<Title href="/">Setup</Title>
 				<Grid container direction="row" alignItems="center" spacing={2}>
 					<LM3>
-						<IconCamera sx={iconStyle} /> LM3
+						<SensorWindowIcon sx={iconStyle} /> LM3
 					</LM3>
+					<Parameters>
+						<DisplaySettingsIcon sx={iconStyle} /> Parameters
+					</Parameters>
 				</Grid>
 			</Box>
 		</Container>

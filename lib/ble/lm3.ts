@@ -230,7 +230,6 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		power: 0,
 	};
 	let prevMeas = [0, 0, 0, 0, 0, 0]; // V1, B1, G1, Y1, O1, R1
-	const avg_period = 5; // sec
 	let coeff_a = 1; // Calc with lpfGetA()
 
 	let inflight = false;
@@ -370,8 +369,8 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 	const singleMeasure = async () => await sendCommand(PROTO_REQ_MEAS);
 
-	const startMeasuring = (ms: number) => {
-		coeff_a = lpfGetA(avg_period, ms / 1000);
+	const startMeasuring = (ms: number, avgPeriod: number) => {
+		coeff_a = lpfGetA(avgPeriod, ms / 1000);
 		let tim = setInterval(() => {
 			if (inflight || !getGlobalState('running')) {
 				return;

@@ -34,9 +34,11 @@ export type GlobalState = {
 	};
 	res_battery_level: number;
 	// Settings
+	hz: number;
+	avg: number;
 };
 
-const LOCAL_STORAGE_KEY = 'settings';
+const LOCAL_STORAGE_KEY = 'olm_settings';
 const initialState: GlobalState = {
 	// Devices
 	btDevice_lm3: null,
@@ -65,13 +67,15 @@ const initialState: GlobalState = {
 	},
 	res_battery_level: 0,
 	// Settings
+	hz: 1,
+	avg: 5,
 	// Load config from local storage
 	...(typeof window === 'undefined' ? {} : JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))),
 };
 
 const { useGlobalState: _useGlobalState, getGlobalState, setGlobalState } = createGlobalState(initialState);
 
-type ConfigKey = 'cc_scenes';
+type ConfigKey = 'avg' | 'hz';
 
 function useGlobalState(key: keyof GlobalState) {
 	const [value, setValue] = _useGlobalState(key);
@@ -89,10 +93,11 @@ function useGlobalState(key: keyof GlobalState) {
 }
 
 function saveConfig() {
-	//const config: { [k in ConfigKey]: any } = {
-	//	cc_scenes: getGlobalState('cc_scenes'),
-	//};
-	//localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
+	const config: { [k in ConfigKey]: any } = {
+		hz: getGlobalState('hz'),
+		avg: getGlobalState('avg'),
+	};
+	localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
 }
 
 export { useGlobalState, getGlobalState, setGlobalState /* saveConfig */ };
