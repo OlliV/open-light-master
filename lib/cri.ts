@@ -1236,7 +1236,7 @@ function A(n: number[]) {
 function D(n: number[], t: number[]) {
 	let y = n.reduce((res, xn, i) => res + Math.pow(xn - t[i], 2), 0);
 
-	return Math.pow(Math.E, -y / n.length);
+	return Math.exp(-y / n.length);
 }
 
 function S(n: number[]) {
@@ -1296,13 +1296,12 @@ export function calcCRI(data: MeasurementData, kCri = Kcri_default) {
 	const sigs = [data.B1 * o[1], data.G1 * o[2], data.O1 * o[4], data.R1 * o[5], data.V1 * o[0], data.Y1 * o[3]];
 	const ck = [kCri[1], kCri[2], kCri[4], kCri[5], kCri[0], kCri[3]];
 	const R = calcR(sigs, ck);
-	// Normally we would have eight CRIs
-	const F = R[1] * (data.Lux / 1e3) * (data.Lux / 1e3) + R[2] * (data.Lux / 1e3);
+	const csa = R[1] * (data.Lux / 1e3) * (data.Lux / 1e3) + R[2] * (data.Lux / 1e3);
 
 	if (R[0] > 100) R[0] = 100;
 
 	return {
 		R,
-		cs: F < 0 ? 0 : 0.7 - 0.7 / (1 + Math.pow(F / 355.7, 1.1026)),
+		cs: csa < 0 ? 0 : 0.7 - 0.7 / (1 + Math.pow(csa / 355.7, 1.1026)),
 	};
 }
