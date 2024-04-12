@@ -139,7 +139,21 @@ function matMul(mat_a: number[][], m1: number, n1: number, mat_b: number[][], m2
 	return mat_r;
 }
 
-function denormalizeMeasureData(data: number[], kSensor: number[]) {
+function lpfGetA(avg_period: number, sample_interval: number) {
+	return Math.exp(-(sample_interval / avg_period));
+}
+
+/**
+ * Calculate the next output value of the lpf.
+ * @param prev is the previous output of this function.
+ * @param a is the coefficient calculated by lpfGetA().
+ * @param sample is the current sample.
+ */
+function lpfCalcNext(a: number, prev: number, sample: number) {
+	return a * prev + (1.0 - a) * sample;
+}
+
+function parseMeasurementData(data: number[], prevMeas: number[], coeff_a: number, kSensor: number[]) {
 	data = data.slice(11);
 
 	const V0 = (data[1] << 8) + data[2];
@@ -152,12 +166,12 @@ function denormalizeMeasureData(data: number[], kSensor: number[]) {
 	const C0 = data[15];
 
 	// Correction
-	const V1 = V0 * kSensor[0]; // 450 nm
-	const B1 = B0 * kSensor[1]; // 500 nm
-	const G1 = G0 * kSensor[2]; // 550 nm
-	const Y1 = Y0 * kSensor[3]; // 570 nm
-	const O1 = O0 * kSensor[4]; // 600 nm
-	const R1 = R0 * kSensor[5]; // 650 nm
+	const V1 = lpfCalcNext(coeff_a, prevMeas[0], V0 * kSensor[0]); // 450 nm
+	const B1 = lpfCalcNext(coeff_a, prevMeas[1], B0 * kSensor[1]); // 500 nm
+	const G1 = lpfCalcNext(coeff_a, prevMeas[2], G0 * kSensor[2]); // 550 nm
+	const Y1 = lpfCalcNext(coeff_a, prevMeas[3], Y0 * kSensor[3]); // 570 nm
+	const O1 = lpfCalcNext(coeff_a, prevMeas[4], O0 * kSensor[4]); // 600 nm
+	const R1 = lpfCalcNext(coeff_a, prevMeas[5], R0 * kSensor[5]); // 650 nm
 	const C1 = 1 * kSensor[6]; // But what's the relation of this to C0 that's the ambient temperature?
 
 	const result = calcResult(V1, B1, G1, Y1, O1, R1, C1);
@@ -215,6 +229,9 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		Ksensor: [],
 		power: 0,
 	};
+	let prevMeas = [0, 0, 0, 0, 0, 0]; // V1, B1, G1, Y1, O1, R1
+	const avg_period = 5; // sec
+	let coeff_a = 1; // Calc with lpfGetA()
 
 	let inflight = false;
 	let rxBuffer = null;
@@ -325,7 +342,13 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 		if (code == PROTO_RES_MEAS) {
 			// response to singleMeasure?
-			const res = denormalizeMeasureData(data, calData.Ksensor);
+			const res = parseMeasurementData(data, prevMeas, coeff_a, calData.Ksensor);
+			prevMeas[0] = res.result.V1;
+			prevMeas[1] = res.result.B1;
+			prevMeas[2] = res.result.G1;
+			prevMeas[3] = res.result.Y1;
+			prevMeas[4] = res.result.O1;
+			prevMeas[5] = res.result.R1;
 			//console.log('Read measurement:', res);
 
 			setGlobalState('res_lm_measurement', res.result);
@@ -348,6 +371,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 	const singleMeasure = async () => await sendCommand(PROTO_REQ_MEAS);
 
 	const startMeasuring = (ms: number) => {
+		coeff_a = lpfGetA(avg_period, ms / 1000);
 		let tim = setInterval(() => {
 			if (inflight || !getGlobalState('running')) {
 				return;
