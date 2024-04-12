@@ -120,7 +120,7 @@ function LM3(props: { children: any }) {
 								const lm3 = await createLm3(server);
 								await lm3.startNotifications();
 								await lm3.readCal();
-								lm3.startMeasuring(1 / getGlobalState('hz') * 1000, getGlobalState('avg'));
+								lm3.startMeasuring((1 / getGlobalState('hz')) * 1000, getGlobalState('avg'));
 								setLm3(lm3);
 							} catch (err) {
 								console.error(err);

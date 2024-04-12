@@ -38,10 +38,22 @@ export default function Home() {
 				<Title disableBack>OLM</Title>
 				<br />
 				<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="flex-start">
-					<MenuItem href="/exposure">Exposure <br/><ExposureIcon /></MenuItem>
-					<MenuItem href="/text">Text <br /><DataArrayIcon /></MenuItem>
-					<MenuItem href="/cri">CRI <br /><TipsAndUpdatesIcon /></MenuItem>
-					<MenuItem href="/wb">WB <br /><WbIncandescentIcon /></MenuItem>
+					<MenuItem href="/exposure">
+						Exposure <br />
+						<ExposureIcon />
+					</MenuItem>
+					<MenuItem href="/text">
+						Text <br />
+						<DataArrayIcon />
+					</MenuItem>
+					<MenuItem href="/cri">
+						CRI <br />
+						<TipsAndUpdatesIcon />
+					</MenuItem>
+					<MenuItem href="/wb">
+						WB <br />
+						<WbIncandescentIcon />
+					</MenuItem>
 				</Grid>
 			</Box>
 		</Container>
