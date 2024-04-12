@@ -55,7 +55,7 @@ export default function Text() {
 			>
 				<Title>OLM - Exposure</Title>
 				<Box>
-					<TextField label="EV" disabled id="outlined-basic" variant="outlined" value={ev.toFixed(2)} />
+					<TextField label="EV" disabled id="outlined-basic" variant="outlined" value={Math.round(ev)} />
 					<TextField
 						label="ISO"
 						id="outlined-basic"
