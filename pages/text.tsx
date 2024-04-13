@@ -26,8 +26,6 @@ export default function Text() {
 				{ id: 0, name: 'Illuminance', value: Math.round(meas.Lux), unit: 'lx' },
 				{ id: 0, name: 'Illuminance [fc]', value: Math.round(meas.Lux * 0.09293680297), unit: 'ft⋅cd' },
 				{ id: 0, name: 'Ra', value: Math.round(cri.R[0]), unit: null },
-				{ id: 0, name: 'R1', value: Math.round(cri.R[1]), unit: null },
-				{ id: 0, name: 'R2', value: Math.round(cri.R[2]), unit: null },
 				{ id: 0, name: 'cs', value: cri.cs, unit: null },
 				{ id: 0, name: 'Temperature', value: meas.temperature, unit: '°C' },
 			].map((v, i) => ((v.id = i + 1), v)),
