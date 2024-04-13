@@ -1244,6 +1244,10 @@ function calcR(sigs: number[], kc = default_kc) {
 	const a = normalizeVec(sigs.map((sig, i) => sig / kc[i]));
 	let b = A(a);
 
+	// S(b) goes negative with saturated HSI light sources (ie. non-white light)
+	// However, it's questionable whether it's useful to calculate Ra for
+	// non-white light sources. It probably goes negative with sodium-vapor lamps
+	// too but are those even white light sources?
 	const R0 =
 		S(b) >= 0 ? dotProdC((b = A(transformVec(a, R0C, R0D))), coeff_R0a, 87.37) : dotProdC(b, coeff_R0b, 36.446);
 	const R1 = dotProdC((b = A(transformVec(normalizeVec(sigs), R1C, R1D))), coeff_R1, 31.700093887436257);
