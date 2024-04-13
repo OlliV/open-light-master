@@ -1212,7 +1212,7 @@ const coeff_R2 = [
 	-0.1765565,
 ];
 
-function x(v: number[]) {
+function normalizeVec(v: number[]) {
 	const div = Math.sqrt(v.reduce((res, vn) => res + Math.pow(vn, 2), 0));
 
 	return v.map((vn) => vn / div);
@@ -1254,29 +1254,19 @@ function E(n: number[]) {
 	return n;
 }
 
-function calcR0a(n: number[]) {
-	return n.reduce((res, xn, i) => res + coeff_R0a[i] * xn, 87.37);
+function calcRi(n: number[], coeff: number[], C: number) {
+	return n.reduce((res, xn, i) => res + coeff[i] * xn, C);
 }
 
-function calcR0b(n: number[]) {
-	return n.reduce((res, xn, i) => res + coeff_R0b[i] * xn, 36.446);
-}
+function calcR(sigs: number[], kc = default_kc) {
+	const a = normalizeVec(sigs.map((sig, i) => sig / kc[i]));
+	let b = A(a);
 
-function calcR1(n: number[]) {
-	return n.reduce((res, xn, i) => res + coeff_R1[i] * xn, 31.700093887436257);
-}
+	const R0 = S(b) >= 0 ? calcRi((b = A((q(a)))), coeff_R0a, 87.37) : calcRi(b, coeff_R0b, 36.446);
+	const R1 = calcRi(b = A(E(normalizeVec(sigs))), coeff_R1, 31.700093887436257);
+	const R2 = calcRi(b, coeff_R2, 494.05881166801277);
 
-function calcR2(n: number[]) {
-	return n.reduce((res, xn, i) => res + coeff_R2[i] * xn, 494.05881166801277);
-}
-
-function calcR(sigs: number[], kc = default_kc, f = 0) {
-	let w = x(sigs.map((sig, i) => sig / kc[i]));
-	let M = A(w);
-	const y = S(M);
-	return 1 == f
-		? y
-		: [y >= 0 ? calcR0a((M = A((w = q(w))))) : calcR0b(M), calcR1((M = A((w = E((w = x(sigs))))))), calcR2(M)];
+	return [R0, R1, R2];
 }
 
 type MeasurementData = {
@@ -1289,11 +1279,11 @@ type MeasurementData = {
 	Lux: number;
 };
 
-const Kcri_default = [1, 1.114, 1.4303, 1.5462, 1.7299, 1.8985, 1];
+const kCri_default = [1, 1.114, 1.4303, 1.5462, 1.7299, 1.8985, 1];
+const kSigs = [0.40591, 0.45651, 0.45369, 0.44404, 0.46515, 0.46683];
 
-export function calcCRI(data: MeasurementData, kCri = Kcri_default) {
-	const o = [0.40591, 0.45651, 0.45369, 0.44404, 0.46515, 0.46683];
-	const sigs = [data.B1 * o[1], data.G1 * o[2], data.O1 * o[4], data.R1 * o[5], data.V1 * o[0], data.Y1 * o[3]];
+export function calcCRI(data: MeasurementData, kCri = kCri_default) {
+	const sigs = [data.B1 * kSigs[1], data.G1 * kSigs[2], data.O1 * kSigs[4], data.R1 * kSigs[5], data.V1 * kSigs[0], data.Y1 * kSigs[3]];
 	const ck = [kCri[1], kCri[2], kCri[4], kCri[5], kCri[0], kCri[3]];
 	const R = calcR(sigs, ck);
 	const csa = R[1] * (data.Lux / 1e3) * (data.Lux / 1e3) + R[2] * (data.Lux / 1e3);
