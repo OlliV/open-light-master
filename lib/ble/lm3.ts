@@ -91,8 +91,10 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 	const n = (x - 0.332) / (0.1858 - y);
 	const CCT = 449 * n * n * n + 3525 * n * n + 6823.3 * n + 5520.33;
 
-	const Eu = (4 * x) / (-2 * x + 12 * y + 3);
-	const Ev = (6 * y) / (-2 * x + 12 * y + 3);
+	// MacAdam simplified Judd's
+	const nj = -2 * x + 12 * y + 3;
+	const Eu = (4 * x) / nj;
+	const Ev = (6 * y) / nj;
 
 	const [, tint] = calcTint(x, y);
 
