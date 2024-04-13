@@ -13,7 +13,7 @@ export default function Text() {
 	const rows = [
 		{ id: 1, name: 'CCT', value: Math.round(meas.CCT), unit: 'K' },
 		{ id: 2, name: 'Duv', value: meas.Duv, unit: null },
-		{ id: 3, name: 'Tint', value: meas.tint, unit: null },
+		{ id: 3, name: 'Tint', value: Math.round(meas.tint), unit: null },
 	];
 
 	return (

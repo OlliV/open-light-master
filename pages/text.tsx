@@ -20,7 +20,7 @@ export default function Text() {
 				{ id: 0, name: 'u', value: meas.Eu, unit: null },
 				{ id: 0, name: 'v', value: meas.Ev, unit: null },
 				{ id: 0, name: 'Duv', value: meas.Duv, unit: null },
-				{ id: 0, name: 'Tint', value: meas.tint, unit: null },
+				{ id: 0, name: 'Tint', value: Math.round(meas.tint), unit: null },
 				//{ id: 0, name: 'Hue', value: 0, unit: 'deg' },
 				//{ id: 0, name: 'Sat', value: 0, unit: '%' },
 				{ id: 0, name: 'Illuminance', value: Math.round(meas.Lux), unit: 'lx' },
