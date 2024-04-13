@@ -8,6 +8,7 @@ import ExposureIcon from '@mui/icons-material/Exposure';
 import DataArrayIcon from '@mui/icons-material/DataArray';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
 
@@ -38,22 +39,11 @@ export default function Home() {
 				<Title disableBack>OLM</Title>
 				<br />
 				<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="flex-start">
-					<MenuItem href="/exposure">
-						Exposure <br />
-						<ExposureIcon />
-					</MenuItem>
-					<MenuItem href="/text">
-						Text <br />
-						<DataArrayIcon />
-					</MenuItem>
-					<MenuItem href="/cri">
-						CRI <br />
-						<TipsAndUpdatesIcon />
-					</MenuItem>
-					<MenuItem href="/wb">
-						WB <br />
-						<WbIncandescentIcon />
-					</MenuItem>
+					<MenuItem href="/exposure">Exposure <br/><ExposureIcon /></MenuItem>
+					<MenuItem href="/wb">WB <br /><WbIncandescentIcon /></MenuItem>
+					<MenuItem href="/cri">CRI <br /><TipsAndUpdatesIcon /></MenuItem>
+					<MenuItem href="/text">Text <br /><DataArrayIcon /></MenuItem>
+					<MenuItem href="/spectrum">Spectrum <br /><EqualizerIcon /></MenuItem>
 				</Grid>
 			</Box>
 		</Container>
