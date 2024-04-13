@@ -1,5 +1,5 @@
 const default_kc = [1.3, 1.61, 2.01, 2.37, 1, 1.85];
-const values_t = [
+const pow_m = [
 	[0, 0, 0, 0, 0, 0],
 	[1, 0, 0, 0, 0, 0],
 	[0, 1, 0, 0, 0, 0],
@@ -85,10 +85,10 @@ const values_t = [
 	[0, 0, 0, 0, 1, 2],
 	[0, 0, 0, 0, 0, 3],
 ];
-const coeff_o = [0.25504364, 0.44477188, 0.46041756, 0.37034149, 0.34477445, 0.46480867];
-const coeff_f = [0.05339831, 0.0453689, 0.0631812, 0.14835071, 0.14409045, 0.03748968];
-const coeff_u = [0.14246274, 0.44375397, 0.6509918, 0.34412611, 0.11818976, 0.43499633];
-const coeff_h = [0.06105464, 0.06406534, 0.09138916, 0.11674138, 0.07816053, 0.03822846];
+const R0C = [0.25504364, 0.44477188, 0.46041756, 0.37034149, 0.34477445, 0.46480867];
+const R0D = [0.05339831, 0.0453689, 0.0631812, 0.14835071, 0.14409045, 0.03748968];
+const R1C = [0.14246274, 0.44375397, 0.6509918, 0.34412611, 0.11818976, 0.43499633];
+const R1D = [0.06105464, 0.06406534, 0.09138916, 0.11674138, 0.07816053, 0.03822846];
 const coeff_S = [
 	-100, -100, -100, -42.66990006, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -75.69032209,
 	-100, -100, -100, -100, -100, -100, -100, -55.6596328, -100, -100, -100, -100, 100, 100, 100, 100, 100, 100, 100,
@@ -1218,19 +1218,16 @@ function normalizeVec(v: number[]) {
 	return v.map((vn) => vn / div);
 }
 
-function A(n: number[]) {
-	let res = [];
+function transformVec(v: number[], sub: number[], coeff: number[]) {
+	return v.map((xn, i) => (xn - sub[i]) / coeff[i]);
+}
 
-	for (let i = 0; i < values_t.length; i++) {
-		let u = 1;
-		for (let j = 0; j < 6; j++) {
-			u *= Math.pow(n[j], values_t[i][j]);
-		}
+function dotProdC(a: number[], b: number[], C: number) {
+	return a.reduce((prev, an, n) => prev + an * b[n], C);
+}
 
-		res.push(u);
-	}
-
-	return res;
+function A(a: number[]) {
+	return pow_m.map((pn) => a.reduce((prev, an, j) => prev * Math.pow(an, pn[j]), 1));
 }
 
 function D(n: number[], t: number[]) {
@@ -1239,32 +1236,18 @@ function D(n: number[], t: number[]) {
 	return Math.exp(-y / n.length);
 }
 
-function S(n: number[]) {
-	return D_refs.reduce((res, d, i) => res + coeff_S[i] * D(d, n), -0.91088515);
-}
-
-function q(n: number[]) {
-	return n.map((xn, i) => (xn - coeff_o[i]) / coeff_f[i]);
-}
-
-function E(n: number[]) {
-	for (let i = 0; i < n.length; i++) {
-		n[i] = (n[i] - coeff_u[i]) / coeff_h[i];
-	}
-	return n;
-}
-
-function calcRi(n: number[], coeff: number[], C: number) {
-	return n.reduce((res, xn, i) => res + coeff[i] * xn, C);
+function S(a: number[]) {
+	return D_refs.reduce((res, d, i) => res + coeff_S[i] * D(d, a), -0.91088515);
 }
 
 function calcR(sigs: number[], kc = default_kc) {
 	const a = normalizeVec(sigs.map((sig, i) => sig / kc[i]));
 	let b = A(a);
 
-	const R0 = S(b) >= 0 ? calcRi((b = A((q(a)))), coeff_R0a, 87.37) : calcRi(b, coeff_R0b, 36.446);
-	const R1 = calcRi(b = A(E(normalizeVec(sigs))), coeff_R1, 31.700093887436257);
-	const R2 = calcRi(b, coeff_R2, 494.05881166801277);
+	const R0 =
+		S(b) >= 0 ? dotProdC((b = A(transformVec(a, R0C, R0D))), coeff_R0a, 87.37) : dotProdC(b, coeff_R0b, 36.446);
+	const R1 = dotProdC((b = A(transformVec(normalizeVec(sigs), R1C, R1D))), coeff_R1, 31.700093887436257);
+	const R2 = dotProdC(b, coeff_R2, 494.05881166801277);
 
 	return [R0, R1, R2];
 }
@@ -1283,7 +1266,14 @@ const kCri_default = [1, 1.114, 1.4303, 1.5462, 1.7299, 1.8985, 1];
 const kSigs = [0.40591, 0.45651, 0.45369, 0.44404, 0.46515, 0.46683];
 
 export function calcCRI(data: MeasurementData, kCri = kCri_default) {
-	const sigs = [data.B1 * kSigs[1], data.G1 * kSigs[2], data.O1 * kSigs[4], data.R1 * kSigs[5], data.V1 * kSigs[0], data.Y1 * kSigs[3]];
+	const sigs = [
+		data.B1 * kSigs[1],
+		data.G1 * kSigs[2],
+		data.O1 * kSigs[4],
+		data.R1 * kSigs[5],
+		data.V1 * kSigs[0],
+		data.Y1 * kSigs[3],
+	];
 	const ck = [kCri[1], kCri[2], kCri[4], kCri[5], kCri[0], kCri[3]];
 	const R = calcR(sigs, ck);
 	const csa = R[1] * (data.Lux / 1e3) * (data.Lux / 1e3) + R[2] * (data.Lux / 1e3);
