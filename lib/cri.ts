@@ -1,4 +1,4 @@
-import { normalize as normalizeVec, transform as transformVec, dotProdC } from "./vector";
+import { normalize as normalizeVec, transform as transformVec, dotProdC } from './vector';
 
 const default_kc = [1.3, 1.61, 2.01, 2.37, 1, 1.85];
 const pow_m = [
@@ -1213,7 +1213,6 @@ const coeff_R2 = [
 	-0.01420348, -6.58320973, -4.05459859, 4.10099987, 0, -11.8411898, -4.56892517, 15.87283618, 0, -1.50713431,
 	-0.1765565,
 ];
-
 
 function A(a: number[]) {
 	return pow_m.map((pn) => a.reduce((prev, an, j) => prev * Math.pow(an, pn[j]), 1));

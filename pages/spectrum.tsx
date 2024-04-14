@@ -92,10 +92,12 @@ const Bar = ({ data }) => {
 
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
-	const data = useMemo(
-		() => {
-			const norm = normalize([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
-			return [
+	const data = useMemo(() => {
+		const vec = [meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1];
+		const norm = vec.every((v) => v === 0)
+			? [0, 0, 0, 0, 0, 0]
+			: normalize([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
+		return [
 			{
 				l: 450,
 				v: norm[0],
@@ -120,9 +122,8 @@ export default function Text() {
 				l: 650,
 				v: norm[5],
 			},
-		]},
-		[meas]
-	);
+		];
+	}, [meas]);
 
 	return (
 		<Container maxWidth="md">
