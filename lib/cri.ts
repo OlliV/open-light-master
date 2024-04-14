@@ -1,3 +1,5 @@
+import { normalize as normalizeVec, transform as transformVec, dotProdC } from "./vector";
+
 const default_kc = [1.3, 1.61, 2.01, 2.37, 1, 1.85];
 const pow_m = [
 	[0, 0, 0, 0, 0, 0],
@@ -1212,19 +1214,6 @@ const coeff_R2 = [
 	-0.1765565,
 ];
 
-function normalizeVec(v: number[]) {
-	const div = Math.sqrt(v.reduce((res, vn) => res + Math.pow(vn, 2), 0));
-
-	return v.map((vn) => vn / div);
-}
-
-function transformVec(v: number[], sub: number[], coeff: number[]) {
-	return v.map((xn, i) => (xn - sub[i]) / coeff[i]);
-}
-
-function dotProdC(a: number[], b: number[], C: number) {
-	return a.reduce((prev, an, n) => prev + an * b[n], C);
-}
 
 function A(a: number[]) {
 	return pow_m.map((pn) => a.reduce((prev, an, j) => prev * Math.pow(an, pn[j]), 1));

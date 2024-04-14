@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
 import { useGlobalState } from '../lib/global';
+import { normalize } from '../lib/vector';
 const ResponsiveBar = dynamic(() => import('@nivo/bar').then((m) => m.ResponsiveBar), { ssr: false });
 
 function wavelengthToColor(wl: number) {
@@ -82,6 +83,7 @@ const Bar = ({ data }) => {
 					legendOffset: 35,
 				}}
 				minValue={0}
+				maxValue={1}
 				isInteractive={false}
 			/>
 		</Container>
@@ -91,32 +93,34 @@ const Bar = ({ data }) => {
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const data = useMemo(
-		() => [
+		() => {
+			const norm = normalize([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
+			return [
 			{
 				l: 450,
-				v: meas.V1,
+				v: norm[0],
 			},
 			{
 				l: 500,
-				v: meas.B1,
+				v: norm[1],
 			},
 			{
 				l: 550,
-				v: meas.G1,
+				v: norm[2],
 			},
 			{
 				l: 570,
-				v: meas.Y1,
+				v: norm[3],
 			},
 			{
 				l: 600,
-				v: meas.O1,
+				v: norm[4],
 			},
 			{
 				l: 650,
-				v: meas.R1,
+				v: norm[5],
 			},
-		],
+		]},
 		[meas]
 	);
 
