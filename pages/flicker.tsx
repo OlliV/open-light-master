@@ -118,7 +118,7 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 	useEffect(() => setFc((1e3 * data.indexOf(Math.max(...data.slice(1)))) / freqDiv), [data]);
 
 	return (
-		<Container sx={{ height: '400px' }}>
+		<Container>
 			<Line
 				data={{
 					labels: Array.from({ length: data?.length || 0 }, (_, i) => i),
