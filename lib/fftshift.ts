@@ -48,20 +48,20 @@
  * @param {Number} rotations - the number of rotations
  * @private
  */
-function rotate (src, n) {
-  var len = src.length
-  reverse(src, 0, len)
-  reverse(src, 0, n)
-  reverse(src, n, len)
-  return src
+function rotate(src, n) {
+	var len = src.length;
+	reverse(src, 0, len);
+	reverse(src, 0, n);
+	reverse(src, n, len);
+	return src;
 }
-function reverse (src, from, to) {
-  --from
-  while (++from < --to) {
-    var tmp = src[from]
-    src[from] = src[to]
-    src[to] = tmp
-  }
+function reverse(src, from, to) {
+	--from;
+	while (++from < --to) {
+		var tmp = src[from];
+		src[from] = src[to];
+		src[to] = tmp;
+	}
 }
 
 /**
@@ -77,9 +77,9 @@ function reverse (src, from, to) {
  * @param {Array} buffer
  * @return {Array} the same buffer (with the data rotated)
  */
-export function fftshift (src) {
-  const len = src.length
-  return rotate(src, Math.floor(len / 2))
+export function fftshift(src) {
+	const len = src.length;
+	return rotate(src, Math.floor(len / 2));
 }
 
 /**
@@ -91,7 +91,7 @@ export function fftshift (src) {
  * @param {Array} buffer
  * @return {Array} the same buffer (with the data rotated)
  */
-export function ifftshift (src) {
-  const len = src.length
-  return rotate(src, Math.floor((len + 1) / 2))
+export function ifftshift(src) {
+	const len = src.length;
+	return rotate(src, Math.floor((len + 1) / 2));
 }

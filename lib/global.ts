@@ -33,11 +33,13 @@ export type GlobalState = {
 		eml: number;
 	};
 	res_lm_freq: {
-		fluDepth: number,
-		flickerIndex: number,
-		freqDiv: number,
-		wave: number[],
-	},
+		CCT: number;
+		Lux: number;
+		fluDepth: number;
+		flickerIndex: number;
+		freqDiv: number;
+		wave: number[];
+	};
 	res_battery_level: number;
 	// Settings
 	hz: number;
@@ -72,6 +74,8 @@ const initialState: GlobalState = {
 		eml: 0,
 	},
 	res_lm_freq: {
+		CCT: 0,
+		Lux: 0,
 		fluDepth: 0,
 		flickerIndex: 0,
 		freqDiv: 1,

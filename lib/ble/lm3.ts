@@ -1,7 +1,7 @@
 import { getGlobalState, setGlobalState } from '../global';
 import calcDuv from '../duv';
 import calcTint from '../tint';
-import {calcFlicker} from '../flicker';
+import { calcFlicker } from '../flicker';
 
 export const BLE_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const RX_CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
@@ -207,8 +207,8 @@ function parseWave(data: number[], len: number): number[] {
 		let b = (data[16 + 6 * i + 2] << 8) + data[16 + 6 * i + 3];
 		let c = (data[16 + 6 * i + 4] << 8) + data[16 + 6 * i + 5];
 		const xn0 = a >> 4;
-		const xn1 = (0xf & a) << 8 | b >> 8;
-		const xn2 = (0xff & b) << 4 | c >> 12;
+		const xn1 = ((0xf & a) << 8) | (b >> 8);
+		const xn2 = ((0xff & b) << 4) | (c >> 12);
 		const xn3 = 0xfff & c;
 
 		x.push(xn0, xn1, xn2, xn3);
@@ -438,7 +438,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		}
 
 		waveData = { n, sRange: NaN, x: [] };
-		await sendCommand(PROTO_REQ_FREQ, [a, (n & 0xFF00) >> 8, n & 0xff]);
+		await sendCommand(PROTO_REQ_FREQ, [a, (n & 0xff00) >> 8, n & 0xff]);
 	};
 
 	return {
@@ -446,6 +446,6 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		readCal: async () => await sendCommand(PROTO_REQ_READ_M3),
 		singleMeasure,
 		startMeasuring,
-		readFreq
+		readFreq,
 	};
 }
