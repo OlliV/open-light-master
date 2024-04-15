@@ -1,13 +1,14 @@
 import { getGlobalState, setGlobalState } from '../global';
 import calcDuv from '../duv';
 import calcTint from '../tint';
+import {calcFlicker} from '../flicker';
 
 export const BLE_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const RX_CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 const TX_CHARACTERISTIC_UUID = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
 const PROTO_REQ_READ_M3 = 2564;
-const PROTO_RESP_READ_M3 = 2565;
+const PROTO_RES_READ_M3 = 2565;
 const PROTO_REQ_MEAS = 2560;
 const PROTO_RES_MEAS = 2561;
 const PROTO_REQ_FREQ = 2570;
@@ -159,8 +160,6 @@ function lpfCalcNext(a: number, prev: number, sample: number) {
 }
 
 function parseMeasurementData(data: number[], prevMeas: number[], coeff_a: number, kSensor: number[]) {
-	data = data.slice(11);
-
 	const V0 = (data[1] << 8) + data[2];
 	const B0 = (data[3] << 8) + data[4];
 	const G0 = (data[5] << 8) + data[6];
@@ -201,6 +200,23 @@ function parseMeasurementData(data: number[], prevMeas: number[], coeff_a: numbe
 	};
 }
 
+function parseWave(data: number[], len: number): number[] {
+	const x: number[] = [];
+	for (let i = 0; i < len; i++) {
+		let a = (data[16 + 6 * i + 0] << 8) + data[16 + 6 * i + 1];
+		let b = (data[16 + 6 * i + 2] << 8) + data[16 + 6 * i + 3];
+		let c = (data[16 + 6 * i + 4] << 8) + data[16 + 6 * i + 5];
+		const xn0 = a >> 4;
+		const xn1 = (0xf & a) << 8 | b >> 8;
+		const xn2 = (0xff & b) << 4 | c >> 12;
+		const xn3 = 0xfff & c;
+
+		x.push(xn0, xn1, xn2, xn3);
+	}
+
+	return x;
+}
+
 function buffer2array(data: DataView) {
 	const arr = [];
 
@@ -231,7 +247,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 	const txCharacteristic = await service.getCharacteristic(TX_CHARACTERISTIC_UUID);
 
 	const calData = {
-		Ksensor: [],
+		kSensor: [],
 		power: 0,
 	};
 	let prevMeas = [0, 0, 0, 0, 0, 0]; // V1, B1, G1, Y1, O1, R1
@@ -344,9 +360,9 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		//const trx = data[5];
 		//console.log('msgType: ' + (255 & data[9]) + ', ' + ((0xff & data[9]) << 8) + ', ' + code + ',transNumber:' + trx);
 
-		if (code == PROTO_RES_MEAS) {
+		if (code === PROTO_RES_MEAS) {
 			// response to singleMeasure?
-			const res = parseMeasurementData(data, prevMeas, coeff_a, calData.Ksensor);
+			const res = parseMeasurementData(data.slice(11), prevMeas, coeff_a, calData.kSensor);
 			prevMeas[0] = res.result.V1;
 			prevMeas[1] = res.result.B1;
 			prevMeas[2] = res.result.G1;
@@ -357,7 +373,22 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 			setGlobalState('res_lm_measurement', res.result);
 			setGlobalState('res_battery_level', batteryLevel(res.power));
-		} else if (code == PROTO_RESP_READ_M3) {
+		} else if (code === PROTO_RES_FREQ) {
+			if (data[12] >= 4) {
+				console.log('wat?');
+				return;
+			}
+			const len = data[12] === 3 ? 61 : 65;
+			const wave = parseWave(data.slice(12), len);
+
+			waveData.x.push(...wave);
+			if (len === 61) {
+				waveData.sRange = data[13];
+				// Some of the values retrieved this way are totally incorrect but CCT and Lux are good.
+				const { CCT, Lux } = parseMeasurementData(data.slice(11).slice(2), prevMeas, 0, calData.kSensor).result;
+				calcFlicker(waveData, CCT, Lux, calData.kSensor);
+			}
+		} else if (code === PROTO_RES_READ_M3) {
 			// response to readM3: M3 Matrix
 			const arr2float = (v) => new DataView(new Uint8Array(v).buffer).getFloat32(0);
 
@@ -367,25 +398,47 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 				const l = data.slice(12 + j, 12 + j + 4);
 				s.push(arr2float(l.reverse()));
 			}
-			calData.Ksensor = s;
+			calData.kSensor = s;
 			calData.power = (data[40] << 8) + data[41];
 		}
 	};
 
 	const singleMeasure = async () => await sendCommand(PROTO_REQ_MEAS);
 
+	let measTim: ReturnType<typeof setInterval> = null;
 	const startMeasuring = (ms: number, avgPeriod: number) => {
+		if (measTim) {
+			throw new Error('Already measuring');
+		}
+
+		// TODO It would be good to clear all the previous measurement data here
+
 		coeff_a = lpfGetA(avgPeriod, ms / 1000);
-		let tim = setInterval(() => {
+		measTim = setInterval(() => {
 			if (inflight || !getGlobalState('running')) {
 				return;
 			}
 
 			singleMeasure().catch((e) => {
 				console.log(e);
-				clearInterval(tim);
+				clearInterval(measTim);
 			});
 		}, ms);
+	};
+
+	let waveData: {
+		n: number;
+		sRange: number; // Stroboscopic range
+		x: number[];
+	} = { n: 0, sRange: 0, x: [] };
+
+	const readFreq = async (a: number, n: number) => {
+		if (measTim && getGlobalState('running')) {
+			throw new Error('The measurement loop must be paused first');
+		}
+
+		waveData = { n, sRange: NaN, x: [] };
+		await sendCommand(PROTO_REQ_FREQ, [a, (n & 0xFF00) >> 8, n & 0xff]);
 	};
 
 	return {
@@ -393,5 +446,6 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		readCal: async () => await sendCommand(PROTO_REQ_READ_M3),
 		singleMeasure,
 		startMeasuring,
+		readFreq
 	};
 }

@@ -8,6 +8,7 @@ import ExposureIcon from '@mui/icons-material/Exposure';
 import DataArrayIcon from '@mui/icons-material/DataArray';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
+import FluorescentIcon from '@mui/icons-material/Fluorescent';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
@@ -58,6 +59,10 @@ export default function Home() {
 					<MenuItem href="/spectrum">
 						Spectrum <br />
 						<EqualizerIcon />
+					</MenuItem>
+					<MenuItem href="/flicker">
+						Flicker <br />
+						<FluorescentIcon />
 					</MenuItem>
 				</Grid>
 			</Box>
