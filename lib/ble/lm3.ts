@@ -357,6 +357,10 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 	const parseMsg = (data: number[]) => {
 		const code = ((255 & data[9]) << 8) + data[10];
+		// We could theoretically implement a frame reassembly and callback
+		// response system here, but it's totally unnecessary because we
+		// are alway sending one command at time and there are only 3 possible
+		// command responses that are only parsed in one way.
 		//const trx = data[5];
 		//console.log('msgType: ' + (255 & data[9]) + ', ' + ((0xff & data[9]) << 8) + ', ' + code + ',transNumber:' + trx);
 
