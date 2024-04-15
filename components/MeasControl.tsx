@@ -6,11 +6,12 @@ import { useGlobalState } from '../lib/global';
 
 export default function MeasControl() {
 	const [running, setRunning] = useGlobalState('running');
+	const [lm3] = useGlobalState('lm3');
 	const toggle = () => setRunning(!running);
 
 	return (
 		<Box>
-			<IconButton onClick={toggle} size="large" aria-label="start/pause measurements" color="inherit">
+			<IconButton disabled={!lm3} onClick={toggle} size="large" aria-label="start/pause measurements" color="inherit">
 				{running ? <PauseCircleIcon /> : <PlayCircleIcon />}
 			</IconButton>
 		</Box>
