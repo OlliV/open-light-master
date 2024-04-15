@@ -42,11 +42,11 @@ export function calcFlicker(
 		var t = xn - y;
 		return t < 0 ? 0 : t;
 	});
-	const wavMax = Math.max(...corrected);
-	const wavMin = Math.min(...corrected);
+	//const wavMax = Math.max(...corrected);
+	//const wavMin = Math.min(...corrected);
 	const wavMean = mean(corrected);
 	const k = wavMean !== 0 ? Lux / wavMean : 1;
-	console.log('"Lux":', Lux, 'average:', wavMean, 'max:', wavMax, 'min:', wavMin, 'k:', k);
+	//console.log('Lux:', Lux, 'average:', wavMean, 'max:', wavMax, 'min:', wavMin, 'k:', k);
 	wave = corrected.map((v) => k * v);
 	const sortedWave = wave.slice(0).sort((n, t) => {
 		return n - t;
