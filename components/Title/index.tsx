@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import IconSettings from '@mui/icons-material/Settings';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { MouseEvent } from 'react';
@@ -26,9 +27,9 @@ const Offset = styled('div')(({ theme }) => ({ margin: '2px', ...theme.mixins.to
 
 function BackButton({ disable, onClick }: { disable: boolean; onClick?: (e?: MouseEvent<HTMLElement>) => void }) {
 	return (
-		<Typography sx={disable ? sxArrowDisabled : sxArrowEnabled} onClick={onClick}>
-			&larr; &nbsp;
-		</Typography>
+		<IconButton sx={{ color: 'white' }} disabled={disable} onClick={onClick}>
+			<FirstPageIcon />
+		</IconButton>
 	);
 }
 
