@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
 import MyHead from '../components/MyHead';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
 import { useGlobalState } from '../lib/global';
 import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from '../lib/exposure';
@@ -54,67 +55,69 @@ export default function Text() {
 				autoComplete="off"
 			>
 				<Title>OLM - Exposure</Title>
-				<Box>
-					<TextField label="EV" disabled id="outlined-basic" variant="outlined" value={Math.round(ev)} />
-					<TextField
-						label="ISO"
-						id="outlined-basic"
-						variant="outlined"
-						required
-						error={Number.isNaN(iso)}
-						defaultValue={`${iso}`}
-						onChange={(e) => setIso(parseInt(e.target.value))}
-					/>
-				</Box>
-				<Box>
-					<Stack direction="row" spacing={1} alignItems="center">
-						<Typography>Shutter</Typography>
-						<Switch
-							color="default"
-							defaultChecked={false}
-							onChange={(e) => setAuto(Number(e.target.checked))}
+				<Paper sx={{ padding: 2 }}>
+					<Box>
+						<TextField label="EV" disabled id="outlined-basic" variant="outlined" value={Math.round(ev)} />
+						<TextField
+							label="ISO"
+							id="outlined-basic"
+							variant="outlined"
+							required
+							error={Number.isNaN(iso)}
+							defaultValue={`${iso}`}
+							onChange={(e) => setIso(parseInt(e.target.value))}
 						/>
-						<Typography>Aperture</Typography>
-					</Stack>
-				</Box>
-				<Box>
-					<TextField
-						label="Shutter"
-						InputProps={{
-							startAdornment: <InputAdornment position="start">1/</InputAdornment>,
-						}}
-						id="outlined-basic"
-						variant="outlined"
-						required
-						disabled={auto === 0}
-						error={!!(invalid & 1)}
-						value={shutterStr}
-						onChange={(e) => {
-							const v = e.target.value;
-							setShutterStr(v);
-							const num = 1 / Number(v);
-							if (!Number.isNaN(num)) updateExposure(num, aperture);
-						}}
-					/>
-					<TextField
-						label="Aperture"
-						InputProps={{
-							startAdornment: <InputAdornment position="start">f/</InputAdornment>,
-						}}
-						id="outlined-basic"
-						variant="outlined"
-						required
-						disabled={auto === 1}
-						error={!!(invalid & 2)}
-						value={apertureStr}
-						onChange={(e) => {
-							const v = e.target.value;
-							setApertureStr(v);
-							const num = Number(v);
-							if (!Number.isNaN(num)) updateExposure(shutter, num);
-						}}
-					/>
-				</Box>
+					</Box>
+					<Box>
+						<Stack direction="row" spacing={1} alignItems="center">
+							<Typography>Shutter</Typography>
+							<Switch
+								color="default"
+								defaultChecked={false}
+								onChange={(e) => setAuto(Number(e.target.checked))}
+							/>
+							<Typography>Aperture</Typography>
+						</Stack>
+					</Box>
+					<Box>
+						<TextField
+							label="Shutter"
+							InputProps={{
+								startAdornment: <InputAdornment position="start">1/</InputAdornment>,
+							}}
+							id="outlined-basic"
+							variant="outlined"
+							required
+							disabled={auto === 0}
+							error={!!(invalid & 1)}
+							value={shutterStr}
+							onChange={(e) => {
+								const v = e.target.value;
+								setShutterStr(v);
+								const num = 1 / Number(v);
+								if (!Number.isNaN(num)) updateExposure(num, aperture);
+							}}
+						/>
+						<TextField
+							label="Aperture"
+							InputProps={{
+								startAdornment: <InputAdornment position="start">f/</InputAdornment>,
+							}}
+							id="outlined-basic"
+							variant="outlined"
+							required
+							disabled={auto === 1}
+							error={!!(invalid & 2)}
+							value={apertureStr}
+							onChange={(e) => {
+								const v = e.target.value;
+								setApertureStr(v);
+								const num = Number(v);
+								if (!Number.isNaN(num)) updateExposure(shutter, num);
+							}}
+						/>
+					</Box>
+				</Paper>
 			</Box>
 		</Container>
 	);

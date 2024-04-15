@@ -8,14 +8,14 @@ const columns: GridColDef<(typeof rowsSample)[number]>[] = [
 	{
 		field: 'name',
 		headerName: 'Name',
-		width: 150,
+		width: 120,
 		hideable: false,
 	},
 	{
 		field: 'value',
 		headerName: 'Value',
 		type: 'number',
-		width: 110,
+		width: 120,
 		sortable: false,
 		hideable: false,
 		getApplyQuickFilterFn: undefined,
@@ -23,7 +23,7 @@ const columns: GridColDef<(typeof rowsSample)[number]>[] = [
 	{
 		field: 'unit',
 		headerName: 'Unit',
-		width: 90,
+		width: 70,
 		hideable: false,
 		getApplyQuickFilterFn: undefined,
 	},
@@ -39,7 +39,7 @@ export default function DataArray({
 	filter?: any;
 }) {
 	return (
-		<Box sx={{ height: '100%', width: '100%' }}>
+		<Box sx={{ height: '100%', width: '100%', maxWidth: '40em' }}>
 			<DataGrid
 				rows={rows}
 				columns={columns}

@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
+import Paper from '@mui/material/Paper';
 import Title from '../components/Title';
 import { useGlobalState } from '../lib/global';
 import { normalize } from '../lib/vector';
@@ -59,12 +60,12 @@ function wavelengthToColor(wl: number) {
 
 const Bar = ({ data }) => {
 	return (
-		<Container sx={{ height: '400px' }}>
+		<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
 			<ResponsiveBar
 				data={data}
 				keys={['v']}
 				indexBy="l"
-				margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+				margin={{ top: 50, bottom: 50 }}
 				padding={0.4}
 				valueScale={{ type: 'linear' }}
 				colors={(bar) => wavelengthToColor(Number(bar.indexValue))[0] as string}
@@ -130,7 +131,9 @@ export default function Text() {
 			<MyHead />
 			<Box position="relative" sx={{ flexGrow: 1 }}>
 				<Title>OLM - Spectrum</Title>
-				<Bar data={data} />
+				<Paper>
+					<Bar data={data} />
+				</Paper>
 			</Box>
 		</Container>
 	);

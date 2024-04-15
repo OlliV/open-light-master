@@ -11,7 +11,13 @@ export default function MeasControl() {
 
 	return (
 		<Box>
-			<IconButton disabled={!lm3} onClick={toggle} size="large" aria-label="start/pause measurements" color="inherit">
+			<IconButton
+				disabled={!lm3}
+				onClick={toggle}
+				size="large"
+				aria-label="start/pause measurements"
+				color="inherit"
+			>
 				{lm3 && running ? <PauseCircleIcon /> : <PlayCircleIcon />}
 			</IconButton>
 		</Box>

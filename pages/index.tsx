@@ -39,7 +39,13 @@ export default function Home() {
 			<Box position="relative" sx={{ flexGrow: 1 }}>
 				<Title disableBack>OLM</Title>
 				<br />
-				<Grid  container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center" justifyContent="center">
+				<Grid
+					container
+					spacing={{ xs: 2, md: 3 }}
+					columns={{ xs: 4, sm: 8, md: 12 }}
+					alignItems="center"
+					justifyContent="center"
+				>
 					<MenuItem href="/exposure">
 						Exposure <br />
 						<ExposureIcon />
