@@ -9,5 +9,6 @@ Features
 --------
 
 - Exposure meter
-- CCT, Duv, Tint, CRI, Lux, ft⋅cd
-- CSV Export
+- CCT, WB, Duv, Tint, CRI, Lux, ft⋅cd
+- Flicker analysis (FFT)
+- CSV Export, printable reports
