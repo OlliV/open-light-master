@@ -81,7 +81,7 @@ const initialState: GlobalState = {
 		freqDiv: 1,
 		wave: [],
 	},
-	res_battery_level: 0,
+	res_battery_level: -1,
 	// Settings
 	hz: 1,
 	avg: 5,
