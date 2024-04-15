@@ -1,6 +1,6 @@
 {
-  "name": "olm",
-  "version": "0.1.0",
+  "name": "open-light-master",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED:-1} next dev",
