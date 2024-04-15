@@ -15,7 +15,7 @@ export default function Parameters({ children }) {
 
 	return (
 		<Grid item xs="auto">
-			<Card variant="outlined" sx={{ height: '19em' }}>
+			<Card variant="outlined" sx={{ height: '19em', width: '15em' }}>
 				<CardContent sx={{ height: '15em' }}>
 					<Typography gutterBottom variant="h5" component="h2">
 						{children}
