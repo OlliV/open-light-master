@@ -14,12 +14,13 @@ const DEFAULT_ISO = 100;
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const [iso, setIso] = useState(DEFAULT_ISO);
+	const [gain, setGain] = useState(0);
 	const [auto, setAuto] = useState(0);
 	const [[shutter, aperture], setParam] = useState([1 / 100, 4]);
 	const [shutterStr, setShutterStr] = useState('4');
 	const [apertureStr, setApertureStr] = useState('4');
 	const [invalid, setInvalid] = useState(0);
-	const ev = calcEV(meas.Lux, Number.isNaN(iso) ? DEFAULT_ISO : iso);
+	const ev = calcEV(meas.Lux, Number.isNaN(iso) ? DEFAULT_ISO : iso, gain);
 
 	const updateParam = (newShutter: number, newAperture: number) => {
 		if (auto == 0) {
@@ -60,12 +61,17 @@ export default function Text() {
 						<TextField label="EV" disabled id="outlined-basic" variant="outlined" value={Math.round(ev)} />
 						<TextField
 							label="ISO"
-							id="outlined-basic"
 							variant="outlined"
 							required
 							error={Number.isNaN(iso)}
 							defaultValue={`${iso}`}
 							onChange={(e) => setIso(parseInt(e.target.value))}
+						/>
+						<TextField
+							label="Gain"
+							error={Number.isNaN(gain)}
+							defaultValue={`${gain}`}
+							onChange={(e) => setGain(Number(e.target.value))}
 						/>
 					</Box>
 					<Box>
@@ -85,7 +91,6 @@ export default function Text() {
 							InputProps={{
 								startAdornment: <InputAdornment position="start">1/</InputAdornment>,
 							}}
-							id="outlined-basic"
 							variant="outlined"
 							required
 							disabled={auto === 0}
@@ -103,7 +108,6 @@ export default function Text() {
 							InputProps={{
 								startAdornment: <InputAdornment position="start">f/</InputAdornment>,
 							}}
-							id="outlined-basic"
 							variant="outlined"
 							required
 							disabled={auto === 1}

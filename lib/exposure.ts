@@ -55,15 +55,15 @@ export function closestAperture(fstop: number) {
 	return closest(fstop, fStops);
 }
 
-export function calcEV(lux: number, iso: number = 100) {
+export function calcEV(lux: number, iso: number = 100, gain: number = 0) {
 	const C = 250;
 	const EV100 = Math.log2((lux * 100) / C);
 
 	if (iso === 100) {
-		return EV100;
+		return EV100 + gain / 6;
 	}
 
-	return EV100 + Math.log2(iso / 100);
+	return EV100 + Math.log2(iso / 100) + gain / 6;
 }
 
 export function calcShutter(ev: number, fstop: number) {
