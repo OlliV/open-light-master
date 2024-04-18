@@ -1227,12 +1227,11 @@ function S(a: number[]) {
 	return D_refs.reduce((res, d, i) => res + coeff_S[i] * D(d, a), -0.91088515);
 }
 
-function calcR(sigs: number[], kc: number[]) {
-	const a = normalizeVec(sigs.map((sig, i) => sig / kc[i]));
-	let b = A(a);
+const default_ck = [1.3, 1.61, 2.01, 2.37, 1, 1.85];
 
-		const tst = [0, 0, 0, 0, 0, 0];
-	console.table(A(transformVec(a, tst, R0D)))
+function calcR(sigs: number[], ck: number[] = default_ck) {
+	const a = normalizeVec(sigs.map((sig, i) => sig / ck[i]));
+	let b = A(a);
 
 	// S(b) goes negative with saturated HSI light sources (ie. non-white light)
 	// However, it's questionable whether it's useful to calculate Ra for
