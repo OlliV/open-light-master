@@ -19,63 +19,48 @@ const PROTO_MSG_FFRAG = 0x80;
 const PROTO_MSG_MFRAG = 0xa0;
 const PROTO_MSG_LFRAG = 0xc0;
 
-function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, R1: number, C1: number) {
+enum LightMode {
+	MONOCHROMATIC = 1,
+	INCANDESCENT = 2,
+	GENERAL = 3,
+}
+
+const tristimulusM = [
+	[
+		[0.06023, 0.00106, 0.02108, 0.03673, 0.1683, 0.02001, 0],
+		[0.00652, 0.04478, 0.16998, -0.03268, 0.07425, 0.00739, 0],
+		[0.33092, 0.12936, -0.15809, 0.19889, -0.0156, 0.00296, 0],
+	],
+	[
+		[-0.43786, 0.53102, -0.1453, 0.2316, 0.36758, -0.09047, 0],
+		[-0.23226, 0.69225, -0.39786, 0.22539, 0.47947, -0.17614, 0],
+		[-0.11002, 1.21259, -0.56003, 0.14487, 0.35074, -0.30248, 0],
+	],
+	[
+		[-0.05825, -0.0896, 0.25859, 0.19518, 0.10893, 0.06724, 0],
+		[-0.19865, 0.01337, 0.40651, 0.29702, -0.06287, 0.03282, 0],
+		[0.58258, 0.11548, 0.21823, -0.00136, -0.10732, -0.00915, 0],
+	],
+];
+
+function getLightMode(V1: number, B1: number, G1: number, Y1: number, O1: number, R1: number, C1: number): LightMode {
 	const a = (O1 + R1) / (V1 + B1 + G1 + Y1 + O1 + R1);
 	const b = (R1 - Y1) / (V1 + B1 + G1 + Y1 + O1 + R1);
-	let mode = 0;
-	Math.max(V1, B1, G1, Y1, O1, R1) / (V1 + B1 + G1 + Y1 + O1 + R1) >= 0.45
-		? (mode = 1) // Monochromatic light, no need to calculate display index CRI
-		: a >= 0.5 && a <= 0.55 && b >= 0 && b <= 0.05
-		? (mode = 2) // thermal (incandescent) light source
-		: (mode = 3); // general
-	let O: number[][] = [[V1], [B1], [G1], [Y1], [O1], [R1], [C1]];
-	let w = null;
 
-	switch (mode) {
-		case 1:
-			w = matMul(
-				[
-					[0.06023, 0.00106, 0.02108, 0.03673, 0.1683, 0.02001, 0],
-					[0.00652, 0.04478, 0.16998, -0.03268, 0.07425, 0.00739, 0],
-					[0.33092, 0.12936, -0.15809, 0.19889, -0.0156, 0.00296, 0],
-				],
-				3,
-				7,
-				O,
-				7,
-				1
-			);
-			break;
-		case 2:
-			w = matMul(
-				[
-					[-0.43786, 0.53102, -0.1453, 0.2316, 0.36758, -0.09047, 0],
-					[-0.23226, 0.69225, -0.39786, 0.22539, 0.47947, -0.17614, 0],
-					[-0.11002, 1.21259, -0.56003, 0.14487, 0.35074, -0.30248, 0],
-				],
-				3,
-				7,
-				O,
-				7,
-				1
-			);
-			break;
-		case 3:
-			w = matMul(
-				[
-					[-0.05825, -0.0896, 0.25859, 0.19518, 0.10893, 0.06724, 0],
-					[-0.19865, 0.01337, 0.40651, 0.29702, -0.06287, 0.03282, 0],
-					[0.58258, 0.11548, 0.21823, -0.00136, -0.10732, -0.00915, 0],
-				],
-				3,
-				7,
-				O,
-				7,
-				1
-			);
+	if (Math.max(V1, B1, G1, Y1, O1, R1) / (V1 + B1 + G1 + Y1 + O1 + R1) >= 0.45) {
+		return LightMode.MONOCHROMATIC;
+	} else if (a >= 0.5 && a <= 0.55 && b >= 0 && b <= 0.05) {
+		return LightMode.INCANDESCENT;
+	} else {
+		return LightMode.GENERAL;
 	}
+}
 
-	// trisimulus
+function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, R1: number, C1: number) {
+	let mode = getLightMode(V1, B1, G1, Y1, O1, R1, C1);
+	const w = matMul(tristimulusM[mode - 1], 3, 7, [[V1], [B1], [G1], [Y1], [O1], [R1], [C1]], 7, 1);
+
+	// Tristimulus
 	let X, Y, Z;
 	(X = w[0][0]) < 0 && (X = 0);
 	(Y = w[1][0]) < 0 && (Y = 0);
@@ -115,12 +100,11 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 	);
 }
 
-function calcEml(cct: number, v1: number, b1: number, g1: number, y1: number, o1: number, r1: number, mode: number) {
+function calcEml(cct: number, v1: number, b1: number, g1: number, y1: number, o1: number, r1: number, mode: LightMode) {
 	let eml: number;
 
 	if (cct < 4e3) {
-		if (cct < 3e3 && mode === 2) {
-			// Thermal light source
+		if (cct < 3e3 && mode === LightMode.INCANDESCENT) {
 			eml = -11.1321 * v1 + 10.088 * b1 + 10.5399 * g1 - 4.9714 * y1 - 4.2457 * o1 + 1.3921 * r1;
 		} else {
 			eml = 0.1157 * v1 + 0.543 * b1 + 0.1886 * g1 + 0.02516 * y1 - 0.0825 * o1 - 0.007316 * r1;
