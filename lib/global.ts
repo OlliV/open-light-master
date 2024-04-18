@@ -84,7 +84,7 @@ const initialState: GlobalState = {
 	res_battery_level: -1,
 	// Settings
 	hz: 1,
-	avg: 5,
+	avg: 1,
 	// Load config from local storage
 	...(typeof window === 'undefined' ? {} : JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))),
 };
