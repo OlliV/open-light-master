@@ -3,13 +3,13 @@ import Container from '@mui/material/Container';
 import Scatter from './Scatter';
 import planckian from '../lib/planckian';
 
-export default function CIE1931({Ex, Ey}) {
+export default function CIE1931({ Ex, Ey }) {
 	const locus = useMemo(() => {
 		const CCT_MIN = 1667;
 		const CCT_MAX = 25000;
 		const CCT_STEP = 100;
 
-		return Array.from({length: (CCT_MAX - CCT_MIN) / CCT_STEP}, (_, i) => CCT_MIN + i * CCT_STEP).map((T) => {
+		return Array.from({ length: (CCT_MAX - CCT_MIN) / CCT_STEP }, (_, i) => CCT_MIN + i * CCT_STEP).map((T) => {
 			const xc = planckian.calc_xc(T);
 			const yc = planckian.calc_yc(T, xc);
 			return { x: xc, y: yc, T };
@@ -20,11 +20,11 @@ export default function CIE1931({Ex, Ey}) {
 		<Container>
 			<Scatter
 				data={{
-					labels: locus.map(({T}) => `${T} K`),
+					labels: locus.map(({ T }) => `${T} K`),
 					datasets: [
 						{
 							label: 'locus',
-							data: locus.map(({x, y}) => ({x, y})),
+							data: locus.map(({ x, y }) => ({ x, y })),
 							showLine: true,
 							borderColor: 'black',
 							borderWidth: 1,
@@ -85,4 +85,4 @@ export default function CIE1931({Ex, Ey}) {
 			/>
 		</Container>
 	);
-};
+}

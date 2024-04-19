@@ -45,7 +45,7 @@ export default function Text() {
 							variant="outlined"
 							error={duvErr}
 							value={`${meas.Duv.toFixed(3)}`}
-							helperText={ duvErr && "Invalid CCT?" }
+							helperText={duvErr && 'Invalid CCT?'}
 						/>
 						<TextField
 							label="Tint"
@@ -54,7 +54,7 @@ export default function Text() {
 							value={`${Math.round(meas.tint)}`}
 						/>
 					</Box>
-					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} />	
+					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} />
 				</Paper>
 			</Box>
 		</Container>

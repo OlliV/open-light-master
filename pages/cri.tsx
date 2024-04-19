@@ -43,22 +43,12 @@ export default function Text() {
 							variant="outlined"
 							error={duvErr}
 							value={`${meas.Duv.toFixed(3)}`}
-							helperText={ duvErr && "Invalid CCT?" }
+							helperText={duvErr && 'Invalid CCT?'}
 						/>
 					</Box>
 					<Box>
-						<TextField
-							label="Ra"
-							disabled
-							sx={{ m: 1, width: '15ch' }}
-							value={`${Math.round(cri.R[0])}`}
-						/>
-						<TextField
-							label="cs"
-							disabled
-							sx={{ m: 1, width: '15ch' }}
-							value={`${cri.cs.toFixed(6)}`}
-						/>
+						<TextField label="Ra" disabled sx={{ m: 1, width: '15ch' }} value={`${Math.round(cri.R[0])}`} />
+						<TextField label="cs" disabled sx={{ m: 1, width: '15ch' }} value={`${cri.cs.toFixed(6)}`} />
 					</Box>
 				</Paper>
 			</Box>
