@@ -161,6 +161,7 @@ export default function CIE1931({ Ex, Ey }) {
 						{
 							label: 'Spectral locus',
 							data: spectral,
+							animation: false,
 							tension: 0.3,
 							showLine: true,
 							borderColor: 'black',
@@ -170,6 +171,7 @@ export default function CIE1931({ Ex, Ey }) {
 						},
 						{
 							data: markers.map(({ x, y }) => ({ x, y })),
+							animation: false,
 							borderColor: 'black',
 							pointStyle: 'line',
 							borderWidth: 2,
@@ -187,6 +189,7 @@ export default function CIE1931({ Ex, Ey }) {
 						{
 							label: 'Planckian locus',
 							data: locus.map(({ x, y }) => ({ x, y })),
+							animation: false,
 							showLine: true,
 							borderColor: 'black',
 							borderWidth: 1,
