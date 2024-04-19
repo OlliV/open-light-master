@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
 import { Scatter } from './Chart';
-import planckian from '../lib/planckian';
+import { calc_xy as planckianCalc_xy } from '../lib/planckian';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -105,7 +105,7 @@ const markers = [
 ];
 
 function planckianXYT(T: number) {
-	const [x, y] = planckian.calc_xy(T);
+	const [x, y] = planckianCalc_xy(T);
 	return { x, y, T };
 }
 

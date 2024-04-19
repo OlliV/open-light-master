@@ -24,5 +24,3 @@ export function calc_xy(T: number) {
 
 	return [xc, yc];
 }
-
-export default { calc_xc, calc_yc, calc_xy };
