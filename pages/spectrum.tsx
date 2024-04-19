@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import Title from '../components/Title';
-import Bar from '../components/Bar';
+import { Bar } from '../components/Chart';
 import { useGlobalState } from '../lib/global';
 import { normalize } from '../lib/vector';
 
@@ -64,12 +64,15 @@ const SpectrumBar = ({ data }) => {
 				width={1}
 				height={1}
 				data={{
-					labels: data.map(({l}) => `${l} nm`),
-					datasets: [{
-						label: 'nm',
-						data: data.map(({v}) => v),
-						backgroundColor: data.map(({l}) => wavelengthToColor(l)[0]),
-					}],
+					labels: data.map(({ l }) => `${l} nm`),
+					datasets: [
+						{
+							label: 'nm',
+							datalabels: { display: false },
+							data: data.map(({ v }) => v),
+							backgroundColor: data.map(({ l }) => wavelengthToColor(l)[0]),
+						},
+					],
 				}}
 				options={{
 					scales: {

@@ -1,6 +1,5 @@
-import { useEffect, useMemo } from 'react';
 import Container from '@mui/material/Container';
-import Scatter from './Scatter';
+import { Scatter } from './Chart';
 import planckian from '../lib/planckian';
 
 const spectral = [

@@ -18,7 +18,7 @@ import Title from '../components/Title';
 import IconButton from '@mui/material/IconButton';
 import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 import { useGlobalState } from '../lib/global';
-import Line from '../components/Line';
+import { Line } from '../components/Chart';
 
 function mean(x: number[]) {
 	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;
