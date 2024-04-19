@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
+import InputAdornment from '@mui/material/InputAdornment';
 import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
 import { Bar } from '../components/Chart';
 import { useGlobalState } from '../lib/global';
@@ -133,6 +135,17 @@ export default function Text() {
 			<Box position="relative" sx={{ flexGrow: 1 }}>
 				<Title>OLM - Spectrum</Title>
 				<Paper>
+					<Box>
+						<TextField
+							label="Illuminance"
+							disabled
+							sx={{ m: 1, width: '15ch' }}
+							value={`${Math.round(meas.Lux)}`}
+							InputProps={{
+								endAdornment: <InputAdornment position="end">lx</InputAdornment>,
+							}}
+						/>
+					</Box>
 					<SpectrumBar data={data} />
 				</Paper>
 			</Box>
