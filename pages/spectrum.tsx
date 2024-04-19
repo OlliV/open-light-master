@@ -98,9 +98,10 @@ export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const data = useMemo(() => {
 		const vec = [meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1];
-		const norm = vec.every((v) => v === 0)
-			? [0, 0, 0, 0, 0, 0]
-			: normalize([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
+		const max = Math.max(...vec);
+		const norm = max === 0
+			? vec
+			: vec.map((v) => v / max);
 		return [
 			{
 				l: 450,
