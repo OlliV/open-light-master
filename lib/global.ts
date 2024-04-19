@@ -26,8 +26,8 @@ export type GlobalState = {
 		Ev: number;
 		Ey: number;
 		Ex: number;
-		Duv: number;
 		CCT: number;
+		Duv: number;
 		tint: number;
 		Lux: number;
 		eml: number;
@@ -67,8 +67,8 @@ const initialState: GlobalState = {
 		Ev: 0,
 		Ey: 0,
 		Ex: 0,
-		Duv: 0,
 		CCT: 0,
+		Duv: 0,
 		tint: 0,
 		Lux: 0,
 		eml: 0,

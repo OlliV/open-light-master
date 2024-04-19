@@ -1,4 +1,5 @@
 import { getGlobalState, setGlobalState } from '../global';
+import calcCCT from '../cct';
 import calcDuv from '../duv';
 import calcTint from '../tint';
 import { calcFlicker } from '../flicker';
@@ -70,19 +71,11 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 	let x = X / (X + Y + Z);
 	let y = Y / (X + Y + Z);
 
-	// McCamy’s (CCT) formula
-	// RFE Explore better formulas
-	// - Hernández-Andrés et al. formula
-	// - Accurate method for computing correlated color temperature, Changjun Li et al.
-	const n = (x - 0.332) / (0.1858 - y);
-	const CCT = 449 * n * n * n + 3525 * n * n + 6823.3 * n + 5520.33;
 
 	// MacAdam simplified Judd's
 	const nj = -2 * x + 12 * y + 3;
 	const Eu = (4 * x) / nj;
 	const Ev = (6 * y) / nj;
-
-	const [, tint] = calcTint(x, y);
 
 	return (
 		0 == X && 0 == Y && 0 == Z && ((x = 0), (y = 0)),
@@ -91,9 +84,9 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 			Ev,
 			Ey: y,
 			Ex: x,
+			CCT: calcCCT(x, y),
 			Duv: calcDuv(Eu, Ev),
-			CCT,
-			tint,
+			tint: calcTint(x, y)[1],
 			Lux: 1 * Y,
 			mode: mode,
 		}
