@@ -43,7 +43,7 @@ export default function Text() {
 							variant="outlined"
 							error={duvErr}
 							value={`${meas.Duv.toFixed(3)}`}
-							helperText={duvErr && 'Invalid CCT?'}
+							helperText={duvErr && 'Invalid CCT?' || <>&nbsp;</>}
 						/>
 						<TextField
 							label="Tint"
