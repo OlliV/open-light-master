@@ -1237,8 +1237,7 @@ function calcR(sigs: number[], ck: number[] = default_ck) {
 	// However, it's questionable whether it's useful to calculate Ra for
 	// non-white light sources. It probably goes negative with sodium-vapor lamps
 	// too but are those even considered white light sources?
-	const R0 =
-		S(b) >= 0 ? dotProdC(A(transformVec(a, R0C, R0D)), coeff_R0a, 87.37) : dotProdC(b, coeff_R0b, 36.446);
+	const R0 = S(b) >= 0 ? dotProdC(A(transformVec(a, R0C, R0D)), coeff_R0a, 87.37) : dotProdC(b, coeff_R0b, 36.446);
 	const c = A(transformVec(normalizeVec(sigs), R1C, R1D));
 	const R1 = dotProdC(c, coeff_R1, 31.700093887436257);
 	const R2 = dotProdC(c, coeff_R2, 494.05881166801277);

@@ -71,7 +71,6 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 	let x = X / (X + Y + Z);
 	let y = Y / (X + Y + Z);
 
-
 	// MacAdam simplified Judd's
 	const nj = -2 * x + 12 * y + 3;
 	const Eu = (4 * x) / nj;
