@@ -138,6 +138,9 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 						legend: {
 							display: false,
 						},
+						datalabels: {
+							display: false,
+						},
 					},
 					scales: {
 						x: {
