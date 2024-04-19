@@ -20,15 +20,16 @@
     "@mui/x-data-grid": "7.1.1",
     "@nivo/bar": "0.85.1",
     "@nivo/core": "0.85.1",
-    "@nivo/line": "^0.85.1",
+    "@nivo/line": "0.85.1",
+    "chartjs-plugin-datalabels": "2.2.0",
     "next": "13.4.7",
     "prop-types": "15.8.1",
     "react": "18.2.0",
-    "react-chartjs-2": "^5.2.0",
+    "react-chartjs-2": "5.2.0",
     "react-dom": "18.2.0",
     "react-hooks-global-state": "2.1.0",
     "sharp": "0.31.2",
-    "webfft": "^1.0.3"
+    "webfft": "1.0.3"
   },
   "devDependencies": {
     "@types/node": "18.16.18",

@@ -36,8 +36,6 @@ export default function Text() {
 								endAdornment: <InputAdornment position="end">K</InputAdornment>,
 							}}
 						/>
-					</Box>
-					<Box>
 						<TextField
 							label="Duv"
 							disabled

@@ -18,4 +18,11 @@ export function calc_yc(T: number, xc: number) {
 	return NaN;
 }
 
-export default { calc_xc, calc_yc };
+export function calc_xy(T: number) {
+	const xc = calc_xc(T);
+	const yc = calc_yc(T, xc);
+
+	return [xc, yc];
+}
+
+export default { calc_xc, calc_yc, calc_xy };
