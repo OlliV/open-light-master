@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
+import CIE1931 from '../components/CIE1931';
 import { useGlobalState } from '../lib/global';
 import { calcCRI } from '../lib/cri';
 
@@ -53,6 +54,7 @@ export default function Text() {
 							value={`${Math.round(meas.tint)}`}
 						/>
 					</Box>
+					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} />	
 				</Paper>
 			</Box>
 		</Container>
