@@ -127,7 +127,7 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 							label: 'Dataset',
 							data: data,
 							fill: false,
-							borderColor: 'green',
+							borderColor: 'black',
 							borderWidth: 1,
 							pointRadius: 0,
 						},
@@ -155,7 +155,7 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 							},
 							ticks: {
 								display: true,
-								color: 'blue',
+								color: 'black',
 								callback: (tickValue, index, ticks) => Math.round((1e3 * Number(tickValue)) / freqDiv),
 							},
 						},
@@ -171,7 +171,7 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 							},
 							ticks: {
 								display: true,
-								color: 'blue',
+								color: 'black',
 							},
 						},
 					},
