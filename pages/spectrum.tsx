@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
-import dynamic from 'next/dynamic';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import Title from '../components/Title';
+import Bar from '../components/Bar';
 import { useGlobalState } from '../lib/global';
 import { normalize } from '../lib/vector';
-const ResponsiveBar = dynamic(() => import('@nivo/bar').then((m) => m.ResponsiveBar), { ssr: false });
 
 function wavelengthToColor(wl: number) {
 	let R: number;
@@ -58,34 +57,33 @@ function wavelengthToColor(wl: number) {
 	return ['rgba(' + R * 100 + '%,' + G * 100 + '%,' + B * 100 + '%, ' + alpha + ')', R, G, B, alpha];
 }
 
-const Bar = ({ data }) => {
+const SpectrumBar = ({ data }) => {
 	return (
 		<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
-			<ResponsiveBar
-				data={data}
-				keys={['v']}
-				indexBy="l"
-				margin={{ top: 50, bottom: 50 }}
-				padding={0.4}
-				valueScale={{ type: 'linear' }}
-				colors={(bar) => wavelengthToColor(Number(bar.indexValue))[0] as string}
-				animate={true}
-				enableLabel={false}
-				axisTop={null}
-				axisRight={null}
-				axisLeft={{
-					tickSize: 5,
-					tickPadding: 5,
-					tickRotation: 0,
+			<Bar
+				width={1}
+				height={1}
+				data={{
+					labels: data.map(({l}) => `${l} nm`),
+					datasets: [{
+						label: 'nm',
+						data: data.map(({v}) => v),
+						backgroundColor: data.map(({l}) => wavelengthToColor(l)[0]),
+					}],
 				}}
-				axisBottom={{
-					legend: 'nm',
-					legendPosition: 'middle',
-					legendOffset: 35,
+				options={{
+					scales: {
+						y: {
+							min: 0,
+							max: 1,
+						},
+					},
+					plugins: {
+						legend: {
+							display: false,
+						},
+					},
 				}}
-				minValue={0}
-				maxValue={1}
-				isInteractive={false}
 			/>
 		</Container>
 	);
@@ -132,7 +130,7 @@ export default function Text() {
 			<Box position="relative" sx={{ flexGrow: 1 }}>
 				<Title>OLM - Spectrum</Title>
 				<Paper>
-					<Bar data={data} />
+					<SpectrumBar data={data} />
 				</Paper>
 			</Box>
 		</Container>
