@@ -4,12 +4,13 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import ExposureIcon from '@mui/icons-material/Exposure';
+import ContrastIcon from '@mui/icons-material/Contrast';
 import DataArrayIcon from '@mui/icons-material/DataArray';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import ExposureIcon from '@mui/icons-material/Exposure';
+import FluorescentIcon from '@mui/icons-material/Fluorescent';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
-import FluorescentIcon from '@mui/icons-material/Fluorescent';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
 
@@ -57,6 +58,10 @@ export default function Home() {
 					<MenuItem href="/cri">
 						CRI <br />
 						<TipsAndUpdatesIcon />
+					</MenuItem>
+					<MenuItem href="/color">
+						Color <br />
+						<ContrastIcon />
 					</MenuItem>
 					<MenuItem href="/text">
 						Text <br />
