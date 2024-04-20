@@ -4,6 +4,11 @@ export function normalize(v: number[]) {
 	return v.map((vn) => vn / div);
 }
 
+export function normalize2(v: number[]) {
+	const max = Math.max(...v);
+	return max === 0 ? v.slice(0) : v.map((v) => v / max);
+}
+
 export function transform(v: number[], sub: number[], coeff: number[]) {
 	return v.map((xn, i) => (xn - sub[i]) / coeff[i]);
 }
