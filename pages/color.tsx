@@ -18,11 +18,11 @@ export default function Text() {
 	const wls = useMemo(() => {
 		const r = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
 		const ds = {
-			//borderColor: 'hsla(35, 40%, 60%, 80%)',
 			borderColor: (context) => {
 				const ctx = context.chart.ctx;
 				const gradient = ctx.createLinearGradient(0, 0, 0, 200);
 				gradient.addColorStop(0, wl2rgb(650)[0]);
+				// TODO This is picking wrong colors most of the time
 				gradient.addColorStop(1 / 6, wl2rgb(600)[0]);
 				gradient.addColorStop(2 / 6, wl2rgb(570)[0]);
 				gradient.addColorStop(3 / 6, wl2rgb(550)[0]);
@@ -33,13 +33,13 @@ export default function Text() {
 			},
 			backgroundColor: 'hsla(35, 40%, 40%, 50%)',
 			data: [
-				{ r: r[5], angle: 0, label: '650 nm' }, // 650 nm
-				{ r: r[4], angle: 0.7803367085666647, label: '600 nm' }, // 600 nm
-				{ r: r[3], angle: 1.1704177963873974, label: '570 nm' }, // 570 nm
-				{ r: r[2], angle: 1.4250613342533702, label: '550 nm' }, // 550 nm
-				{ r: r[1], angle: 2.6939157004532475, label: '500 nm' }, // 500 nm
-				{ r: r[0], angle: 3.9013344769829246, label: '450 nm' }, // 450 nm
-				{ r: r[5], angle: 2 * Math.PI, label: '650 nm' }, // 650 nm
+				{ r: r[5], angle: 0, label: '650 nm' },
+				{ r: r[4], angle: 0.7803367085666647, label: '600 nm' },
+				{ r: r[3], angle: 1.1704177963873974, label: '570 nm' },
+				{ r: r[2], angle: 1.4250613342533702, label: '550 nm' },
+				{ r: r[1], angle: 2.6939157004532475, label: '500 nm' },
+				{ r: r[0], angle: 3.9013344769829246, label: '450 nm' },
+				{ r: r[5], angle: 2 * Math.PI, label: '650 nm' },
 			],
 		};
 
