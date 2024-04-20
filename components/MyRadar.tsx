@@ -99,8 +99,8 @@ export default function MyRadar({ pointer, datasets }: { pointer?: MyRadarPointe
 					},
 					tooltip: {
 						callbacks: {
-							// @ts-ignore
 							label: (ctx) =>
+								// @ts-ignore
 								(ctx.dataset.labels && ctx.dataset.labels[ctx.dataIndex]) ||
 								`(x: ${ctx.parsed.x}, y: ${ctx.parsed.y})`,
 						},

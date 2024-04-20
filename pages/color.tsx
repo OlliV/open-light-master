@@ -105,6 +105,7 @@ export default function Text() {
 								r: sat,
 								angle: (posHab * Math.PI) / 180,
 							}}
+							// @ts-ignore
 							datasets={[wls]}
 						/>
 					</Container>
