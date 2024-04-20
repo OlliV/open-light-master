@@ -224,6 +224,7 @@ export default function CIE1931({ Ex, Ey }) {
 					],
 				}}
 				options={{
+					aspectRatio: 1,
 					plugins: {
 						legend: {
 							display: false,
@@ -232,6 +233,9 @@ export default function CIE1931({ Ex, Ey }) {
 							display: true,
 							text: 'CIE 1931',
 							position: 'bottom',
+							padding: {
+								top: -10, // This fixes the aspect ratio shift
+							},
 						},
 						datalabels: {
 							display: true,
