@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { Scatter } from './Chart';
 
-const degToRad = Math.PI / 180;
-
 const axisAngles = [
 	0, // red
 	(1 / 3) * Math.PI, // yellow
@@ -33,21 +31,21 @@ function polar2xy(r: number, angle: number) {
 	return { x: r * Math.cos(angle), y: r * Math.sin(angle) };
 }
 
-type MyRadarPointer = {
+type PolarPointer = {
 	borderColor?: string;
 	backgroundColor?: string;
 	r: number;
 	angle: number;
 };
 
-type MyRadarDataset = {
+type PolarDataset = {
 	labels?: string[];
 	borderColor?: string;
 	backgroundColor?: string;
 	data: { r: number; angle: number; label: string }[];
 };
 
-export default function MyRadar({ pointer, datasets }: { pointer?: MyRadarPointer; datasets: MyRadarDataset[] }) {
+export default function Polar({ pointer, datasets }: { pointer?: PolarPointer; datasets: PolarDataset[] }) {
 	const scatterDatasets = useMemo(() => {
 		const ds: any[] = datasets.map((dataset) => ({
 			borderColor: dataset.borderColor,
@@ -171,24 +169,3 @@ export default function MyRadar({ pointer, datasets }: { pointer?: MyRadarPointe
 		/>
 	);
 }
-
-//ctx.width = ctx.offsetWidth;
-//ctx.height = ctx.offsetHeight;
-//let myChart = new Chart(ctx, {
-//  type: 'scatter',
-//});
-//
-//function updateData() {
-//  let data = [];
-//  for (let i = 0; i < 50; i++) {
-//    data.push({
-//      radius: 2 * Math.random() + 1,
-//      angle: ((2 * Math.PI / 50) * i) + (Math.random() * (10 * Math.PI / 180))
-//    })
-//  }
-//  myChart.data.datasets[0].data = data;
-//  myChart.update();
-//
-//  setTimeout(updateData, 5000);
-//}
-//updateData();

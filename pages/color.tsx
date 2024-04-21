@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Container from '@mui/material/Container';
 import MyHead from '../components/MyHead';
 import Title from '../components/Title';
-import MyRadar from '../components/MyRadar';
+import Polar from '../components/Polar';
 import { useGlobalState } from '../lib/global';
 import CIEXYZtoLab, { XYZnD65 } from '../lib/CIEXYZtoLab';
 import { LabChroma, LabHue, LabSat } from '../lib/huesat';
@@ -98,7 +98,7 @@ export default function Text() {
 						/>
 					</Box>
 					<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
-						<MyRadar
+						<Polar
 							pointer={{
 								borderColor: 'black',
 								backgroundColor: `hsl(${posHab}, 100%, 45%)`,

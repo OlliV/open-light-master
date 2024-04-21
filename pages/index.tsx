@@ -63,13 +63,13 @@ export default function Home() {
 						Color <br />
 						<ContrastIcon />
 					</MenuItem>
-					<MenuItem href="/text">
-						Text <br />
-						<DataArrayIcon />
-					</MenuItem>
 					<MenuItem href="/spectrum">
 						Spectrum <br />
 						<EqualizerIcon />
+					</MenuItem>
+					<MenuItem href="/text">
+						Text <br />
+						<DataArrayIcon />
 					</MenuItem>
 					<MenuItem href="/flicker">
 						Flicker <br />
