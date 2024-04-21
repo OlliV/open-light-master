@@ -67,7 +67,9 @@ export default function Polar({ pointer, datasets }: { pointer?: PolarPointer; d
 				pointStyle: 'circle',
 				pointRadius: (ctx) => (ctx.dataIndex == 0 ? 0 : 5),
 				showLine: true,
-				animation: false,
+				animation: {
+					easing: 'linear',
+				},
 				datalabels: { display: false },
 				labels: ['origo', `(r: ${pointer.r.toFixed(3)}, ∠: ${(pointer.angle * 180) / Math.PI} °)`],
 				data: [{ x: 0, y: 0 }, polar2xy(pointer.r, pointer.angle)],
