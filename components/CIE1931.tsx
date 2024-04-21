@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
 import { Scatter } from './Chart';
-import { calc_xy as planckianCalc_xy } from '../lib/planckian';
+import planckianCalc_xy from '../lib/planckian';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -119,7 +119,7 @@ const CCTMarkers = [
 	planckianXYT(10000),
 ];
 
-const CCT_MIN = 1667;
+const CCT_MIN = 1000;
 const CCT_MAX = 25000;
 const CCT_STEP = 100;
 
@@ -203,12 +203,13 @@ export default function CIE1931({ Ex, Ey }) {
 							pointStyle: 'line',
 							borderWidth: 2,
 							pointRadius: 5,
-							pointRotation: (ctx) => pointRotationAuto(ctx, 50),
+							pointRotation: [110, 90, 80, 65, 60, 50, 45],
 							datalabels: {
 								labels: {
 									value: {
 										align: 'top',
 										rotation: 45,
+										offset: (context) => context.dataIndex * 2,
 										formatter: (_value, context) => `${CCTMarkers[context.dataIndex].T} K`,
 									},
 								},
