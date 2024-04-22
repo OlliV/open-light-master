@@ -39,7 +39,7 @@ function calc_yc_high(T: number, xc: number) {
  */
 export default function calc_xy(T: number) {
 	if (T < 1000) {
-		return NaN;
+		return [NaN, NaN];
 	} else if (T < 1667) {
 		return calc_xyc_low(T);
 	} else {
