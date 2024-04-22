@@ -38,7 +38,9 @@ function calc_yc_high(T: number, xc: number) {
  * Calculate Planckian locus for T
  */
 export default function calc_xy(T: number) {
-	if (1000 < T && T < 1667) {
+	if (T < 1000) {
+		return NaN;
+	} else if (T < 1667) {
 		return calc_xyc_low(T);
 	} else {
 		const xc = calc_xc_high(T);
