@@ -34,6 +34,50 @@ const swatch = [
 	'rgb(0, 96, 68)',
 ];
 
+function CriChart({cri, showAll}: {cri: ReturnType<typeof calcCRI2>, showAll?: boolean}) {
+	return (
+	<Scatter
+		width={1}
+		height={1}
+		data={{
+			datasets: cri.UVPairs.slice(0, showAll ? cri.UVPairs.length : 8).map(
+				({ ref, test }, i) => ({
+					label: `R${i + 1}`,
+					borderColor: swatch[i],
+					datalabels: { display: false },
+					pointStyle: 'rect',
+					pointRotation: (ctx) => pointRotationAuto(ctx, 45),
+					pointRadius: (ctx) => ctx.dataIndex != 0 && 3,
+					showLine: true,
+					data: [
+						{ x: ref[0], y: ref[1] },
+						{ x: test[0], y: test[1] },
+					],
+				})
+			),
+		}}
+		options={{
+			scales: {
+				x: {
+					min: -40,
+					max: 40,
+					grid: {
+						color: ({ tick }) => (tick.value == 0 ? 'black' : 'lightgrey'),
+					},
+				},
+				y: {
+					min: -40,
+					max: 40,
+					grid: {
+						color: ({ tick }) => (tick.value == 0 ? 'black' : 'lightgrey'),
+					},
+				},
+			},
+		}}
+	/>
+	);
+}
+
 export default function Cri() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const cri = useMemo(() => calcCRI(meas), [meas]);
@@ -86,45 +130,7 @@ export default function Cri() {
 						/>
 					</FormGroup>
 					<Box sx={{ width: 400 }}>
-						<Scatter
-							width={1}
-							height={1}
-							data={{
-								datasets: cri2.UVPairs.slice(0, chartShowAll ? cri2.UVPairs.length : 8).map(
-									({ ref, test }, i) => ({
-										label: `R${i + 1}`,
-										borderColor: swatch[i],
-										datalabels: { display: false },
-										pointStyle: 'rect',
-										pointRotation: (ctx) => pointRotationAuto(ctx, 45),
-										pointRadius: (ctx) => ctx.dataIndex != 0 && 3,
-										showLine: true,
-										data: [
-											{ x: ref[0], y: ref[1] },
-											{ x: test[0], y: test[1] },
-										],
-									})
-								),
-							}}
-							options={{
-								scales: {
-									x: {
-										min: -40,
-										max: 40,
-										grid: {
-											color: ({ tick, chart }) => (tick.value == 0 ? 'black' : 'lightgrey'),
-										},
-									},
-									y: {
-										min: -40,
-										max: 40,
-										grid: {
-											color: ({ tick }) => (tick.value == 0 ? 'black' : 'lightgrey'),
-										},
-									},
-								},
-							}}
-						/>
+						<CriChart cri={cri2} showAll={chartShowAll} />
 					</Box>
 				</Paper>
 			</Box>
