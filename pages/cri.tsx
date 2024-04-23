@@ -15,7 +15,7 @@ import { useGlobalState } from '../lib/global';
 import { calcCRI } from '../lib/cri';
 import { interpolateSPD } from '../lib/spd';
 import { calcCRI as calcCRI2 } from '../lib/cri2';
-import { Scatter, pointRotationAuto } from '../components/Chart';
+import { Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
 
 const swatch = [
 	'rgb(242, 185, 158)',
@@ -34,14 +34,13 @@ const swatch = [
 	'rgb(0, 96, 68)',
 ];
 
-function CriChart({cri, showAll}: {cri: ReturnType<typeof calcCRI2>, showAll?: boolean}) {
+function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI2>; showAll?: boolean }) {
 	return (
-	<Scatter
-		width={1}
-		height={1}
-		data={{
-			datasets: cri.UVPairs.slice(0, showAll ? cri.UVPairs.length : 8).map(
-				({ ref, test }, i) => ({
+		<Scatter
+			width={1}
+			height={1}
+			data={{
+				datasets: cri.UVPairs.slice(0, showAll ? cri.UVPairs.length : 8).map(({ ref, test }, i) => ({
 					label: `R${i + 1}`,
 					borderColor: swatch[i],
 					datalabels: { display: false },
@@ -53,28 +52,27 @@ function CriChart({cri, showAll}: {cri: ReturnType<typeof calcCRI2>, showAll?: b
 						{ x: ref[0], y: ref[1] },
 						{ x: test[0], y: test[1] },
 					],
-				})
-			),
-		}}
-		options={{
-			scales: {
-				x: {
-					min: -40,
-					max: 40,
-					grid: {
-						color: ({ tick }) => (tick.value == 0 ? 'black' : 'lightgrey'),
+				})),
+			}}
+			options={{
+				scales: {
+					x: {
+						min: -40,
+						max: 40,
+						grid: {
+							color: gridColorAuto,
+						},
+					},
+					y: {
+						min: -40,
+						max: 40,
+						grid: {
+							color: gridColorAuto,
+						},
 					},
 				},
-				y: {
-					min: -40,
-					max: 40,
-					grid: {
-						color: ({ tick }) => (tick.value == 0 ? 'black' : 'lightgrey'),
-					},
-				},
-			},
-		}}
-	/>
+			}}
+		/>
 	);
 }
 
@@ -116,7 +114,7 @@ export default function Cri() {
 						{cri2.R.map((r, i) => (
 							<TextField
 								key={`cri${i}`}
-								label={`R${i == 0 ? 'a' : i}`}
+								label={`R${i === 0 ? 'a' : i}`}
 								disabled
 								sx={{ m: 1, width: '15ch' }}
 								value={`${Math.round(r)}`}

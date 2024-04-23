@@ -75,7 +75,7 @@ export default function calcTint(x: number, y: number) {
 		let dt = -uu * dv + vv * du;
 
 		// If below line, we have found line pair.
-		if (dt <= 0.0 || i == 30) {
+		if (dt <= 0.0 || i === 30) {
 			// Find fractional weight of two lines.
 			if (dt > 0.0) {
 				dt = 0.0;
@@ -84,7 +84,7 @@ export default function calcTint(x: number, y: number) {
 			dt = -dt;
 
 			let f;
-			if (i == 1) {
+			if (i === 1) {
 				f = 0.0;
 			} else {
 				f = dt / (last_dt + dt);

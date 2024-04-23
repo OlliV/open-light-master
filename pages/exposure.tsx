@@ -23,20 +23,23 @@ export default function Text() {
 	const [shutterStr, setShutterStr] = useState('4');
 	const [apertureStr, setApertureStr] = useState('4');
 	const [invalid, setInvalid] = useState(0);
-	const updateParam = useCallback((newEv: number, newShutter: number, newAperture: number) => {
-		if (auto == 0) {
-			const autoShutter = calcShutter(newEv, newAperture);
-			const str = `${1 / closestShutter(autoShutter)}`;
-			setParam([autoShutter, newAperture]);
-			setShutterStr(str);
-		} else {
-			const autoAperture = calcFstop(newEv, newShutter);
-			const tradFstop = closestAperture(autoAperture);
-			const str = tradFstop < 10 ? tradFstop.toFixed(1) : `${tradFstop}`;
-			setParam([newShutter, autoAperture]);
-			setApertureStr(str);
-		}
-	}, [setParam, setShutterStr, setApertureStr, auto]);
+	const updateParam = useCallback(
+		(newEv: number, newShutter: number, newAperture: number) => {
+			if (auto === 0) {
+				const autoShutter = calcShutter(newEv, newAperture);
+				const str = `${1 / closestShutter(autoShutter)}`;
+				setParam([autoShutter, newAperture]);
+				setShutterStr(str);
+			} else {
+				const autoAperture = calcFstop(newEv, newShutter);
+				const tradFstop = closestAperture(autoAperture);
+				const str = tradFstop < 10 ? tradFstop.toFixed(1) : `${tradFstop}`;
+				setParam([newShutter, autoAperture]);
+				setApertureStr(str);
+			}
+		},
+		[setParam, setShutterStr, setApertureStr, auto]
+	);
 	const ev = useMemo(() => {
 		const ev = calcEV(meas.Lux, Number.isNaN(iso) ? DEFAULT_ISO : iso, gain);
 		updateParam(ev, shutter, aperture);

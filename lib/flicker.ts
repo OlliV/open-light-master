@@ -59,7 +59,7 @@ export function calcFlicker(
 	fluDepth = fluDepth > 99.5 ? 99.5 : fluDepth; // fluctuation depth
 	const J = wave.reduce((xn, t) => xn + (t - V > 0 ? t - V : 0));
 	const waveSum = wave.reduce((prev, xn) => prev + xn);
-	const flickerIndex = waveSum == 0 ? 0 : J / waveSum;
+	const flickerIndex = waveSum === 0 ? 0 : J / waveSum;
 
 	setGlobalState('res_lm_freq', {
 		CCT,

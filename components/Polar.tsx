@@ -65,7 +65,7 @@ export default function Polar({ pointer, datasets }: { pointer?: PolarPointer; d
 				backgroundColor: pointer.backgroundColor,
 				pointBackgroundColor: pointer.backgroundColor,
 				pointStyle: 'circle',
-				pointRadius: (ctx) => (ctx.dataIndex == 0 ? 0 : 5),
+				pointRadius: (ctx) => (ctx.dataIndex === 0 ? 0 : 5),
 				showLine: true,
 				animation: {
 					easing: 'linear',

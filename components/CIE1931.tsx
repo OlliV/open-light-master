@@ -159,7 +159,7 @@ export default function CIE1931({ Ex, Ey }) {
 							datalabels: { display: false },
 						},
 						{
-							data: markers as { x: number, y: number }[],
+							data: markers as { x: number; y: number }[],
 							animation: false,
 							borderColor: 'black',
 							pointStyle: 'line',
@@ -233,7 +233,6 @@ export default function CIE1931({ Ex, Ey }) {
 						tooltip: {
 							enabled: true,
 							callbacks: {
-								//label: (tooltipItem) => tooltipItem.dataIndex == 0 ? 'Hello' : 'Hi',
 								title: (tooltipItems) =>
 									toolTipTitle(
 										tooltipItems[0].datasetIndex,

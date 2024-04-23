@@ -39,7 +39,7 @@ function closest(needle: number, haystack: number[]) {
 		let aDiff = Math.abs(a - needle);
 		let bDiff = Math.abs(b - needle);
 
-		if (aDiff == bDiff) {
+		if (aDiff === bDiff) {
 			return a > b ? a : b;
 		} else {
 			return bDiff < aDiff ? b : a;
