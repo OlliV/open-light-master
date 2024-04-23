@@ -159,7 +159,7 @@ export default function CIE1931({ Ex, Ey }) {
 							datalabels: { display: false },
 						},
 						{
-							data: markers.map(({ x, y }) => ({ x, y })),
+							data: markers as { x: number, y: number }[],
 							animation: false,
 							borderColor: 'black',
 							pointStyle: 'line',
