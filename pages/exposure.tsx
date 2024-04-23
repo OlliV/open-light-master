@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -23,27 +23,29 @@ export default function Text() {
 	const [shutterStr, setShutterStr] = useState('4');
 	const [apertureStr, setApertureStr] = useState('4');
 	const [invalid, setInvalid] = useState(0);
-	const ev = calcEV(meas.Lux, Number.isNaN(iso) ? DEFAULT_ISO : iso, gain);
-
-	const updateParam = (newShutter: number, newAperture: number) => {
+	const updateParam = useCallback((newEv: number, newShutter: number, newAperture: number) => {
 		if (auto == 0) {
-			const autoShutter = calcShutter(ev, newAperture);
+			const autoShutter = calcShutter(newEv, newAperture);
 			const str = `${1 / closestShutter(autoShutter)}`;
 			setParam([autoShutter, newAperture]);
 			setShutterStr(str);
 		} else {
-			const autoAperture = calcFstop(ev, newShutter);
+			const autoAperture = calcFstop(newEv, newShutter);
 			const tradFstop = closestAperture(autoAperture);
 			const str = tradFstop < 10 ? tradFstop.toFixed(1) : `${tradFstop}`;
 			setParam([newShutter, autoAperture]);
 			setApertureStr(str);
 		}
-	};
-	useEffect(() => updateParam(shutter, aperture), [ev]);
+	}, [setParam, setShutterStr, setApertureStr, auto]);
+	const ev = useMemo(() => {
+		const ev = calcEV(meas.Lux, Number.isNaN(iso) ? DEFAULT_ISO : iso, gain);
+		updateParam(ev, shutter, aperture);
+		return ev;
+	}, [updateParam, meas.Lux, iso, gain, shutter, aperture]);
 	const updateExposure = (newShutter: number, newAperture: number) => {
 		const newInvalid = (Number(Number.isNaN(newShutter)) & 1) | ((Number(Number.isNaN(newAperture)) & 1) << 1);
 		setInvalid(newInvalid);
-		updateParam(newShutter, newAperture);
+		updateParam(ev, newShutter, newAperture);
 	};
 
 	return (
