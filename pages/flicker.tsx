@@ -115,7 +115,7 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 		}
 		return Array.from(fftshift(mag).slice(fftSize / 2, fftSize));
 	}, [fft, wave]);
-	useEffect(() => setFc((1e3 * data.indexOf(Math.max(...data.slice(1)))) / freqDiv), [data]);
+	useEffect(() => setFc((1e3 * data.indexOf(Math.max(...data.slice(1)))) / freqDiv), [freqDiv, setFc, data]);
 
 	return (
 		<Container>
