@@ -1,3 +1,7 @@
+//
+// This CRI calculation is specific to LM3 and won't work correctly
+// with any other device.
+//
 import { normalize as normalizeVec, transform as transformVec, dotProdC } from './vector';
 
 const pow_m = [
