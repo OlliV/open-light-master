@@ -8,7 +8,7 @@ export type SPD = {
 
 export function interpolateSPD(input: SPD, increment: number = 5) {
 	const xs = [380, ...input.map(({ wl }) => wl), 780];
-	const ys = [0, ...input.map(({ p }) => p), 0];
+	const ys = [0, ...input.map(({ p }) => p), input[input.length - 1].p];
 
 	const spline = new Spline(xs, ys);
 	return wlMap((wl) => ({ wl, p: spline.at(wl) }), increment);

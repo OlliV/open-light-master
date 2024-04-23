@@ -326,5 +326,12 @@ export function calcCRI(CCT: number, test: number[]) {
 	const R = DE.map((delta) => 100 - 4.6 * delta);
 	R.unshift(calcRa(R));
 
-	return R;
+	return {
+		UVPairs: TCSrefUVW.map((UVWref, i) => ({
+			ref: [UVWref[0], UVWref[1]],
+			test: [adaptUVW[i][0], adaptUVW[i][1]],
+		})),
+		DE,
+		R,
+	};
 }

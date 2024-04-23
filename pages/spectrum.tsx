@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import Box from '@mui/system/Box';
+import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import MyHead from '../components/MyHead';
@@ -49,17 +50,6 @@ const SpectrumBar = ({ data }) => {
 
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
-	const data1 = useMemo(() => {
-		const norm = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
-		return interpolateSPD([
-			{ wl: 450, p: norm[0] },
-			{ wl: 500, p: norm[1] },
-			{ wl: 550, p: norm[2] },
-			{ wl: 570, p: norm[3] },
-			{ wl: 600, p: norm[4] },
-			{ wl: 650, p: norm[5] },
-		]);
-	}, [meas]);
 	const data = useMemo(() => {
 		const norm = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
 		return [
@@ -89,6 +79,17 @@ export default function Text() {
 			},
 		];
 	}, [meas]);
+	const dataInterpolated = useMemo(() => {
+		const norm = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
+		return interpolateSPD([
+			{ wl: 450, p: norm[0] },
+			{ wl: 500, p: norm[1] },
+			{ wl: 550, p: norm[2] },
+			{ wl: 570, p: norm[3] },
+			{ wl: 600, p: norm[4] },
+			{ wl: 650, p: norm[5] },
+		]).map(({ wl, p }) => ({ x: wl, y: p }));
+	}, [meas]);
 
 	return (
 		<Container maxWidth="md">
@@ -107,8 +108,8 @@ export default function Text() {
 							}}
 						/>
 					</Box>
-					<SpectrumBar data={data} />
-					<Box>
+					<Carousel>
+						<SpectrumBar data={data} />
 						<Scatter
 							data={{
 								datasets: [
@@ -117,12 +118,29 @@ export default function Text() {
 										datalabels: { display: false },
 										showLine: true,
 										pointStyle: false,
-										data: data1.map(({ wl, p }) => ({ x: wl, y: p })),
+										borderColor: 'black',
+										data: dataInterpolated,
 									},
 								],
 							}}
+							options={{
+								plugins: {
+									legend: {
+										display: false,
+									},
+								},
+								scales: {
+									x: {
+										min: 380,
+										max: 780,
+									},
+									y: {
+										min: 0,
+									},
+								},
+							}}
 						/>
-					</Box>
+					</Carousel>
 				</Paper>
 			</Box>
 		</Container>

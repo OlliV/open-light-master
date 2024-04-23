@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import { Scatter } from './Chart';
+import { Scatter, pointRotationAuto } from './Chart';
 import planckianCalc_xy from '../lib/planckian';
 
 const spectral = [
@@ -136,17 +136,6 @@ function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any
 		default:
 			return `${defaultLabel}`;
 	}
-}
-
-function pointRotationAuto(ctx, C: number) {
-	const i = ctx.dataIndex;
-	const { data } = ctx.dataset;
-	const point1 = data[i];
-	const point2 = i >= data.length - 1 && i > 0 ? data[i - 1] : i > 0 && data.length > 0 ? data[i + 1] : point1;
-	if (point1 == point2) {
-		return 0;
-	}
-	return (180 / Math.PI) * Math.atan(Math.abs((point2.y - point1.y) / (point2.x, -point2.y))) + C;
 }
 
 export default function CIE1931({ Ex, Ey }) {
