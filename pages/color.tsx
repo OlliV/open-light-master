@@ -44,7 +44,12 @@ export default function Text() {
 
 		return ds;
 	}, [meas]);
-	const {Lab, hab: posHab, chroma, sat} = useMemo(() => {
+	const {
+		Lab,
+		hab: posHab,
+		chroma,
+		sat,
+	} = useMemo(() => {
 		const x = meas.Ex;
 		const y = meas.Ey;
 		const Y = meas.Lux;

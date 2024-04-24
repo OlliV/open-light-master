@@ -18,7 +18,6 @@ export default function CIEXYZtoLab(X: number, Y: number, Z: number, XYZn: numbe
 	return [L, a, b];
 }
 
-
 export function LabHue(a: number, b: number) {
 	return Math.atan2(b, a);
 }

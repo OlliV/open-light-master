@@ -35,7 +35,12 @@ export default function Text() {
 			{ id: 0, name: 'Illuminance', value: Math.round(meas.Lux), unit: 'lx' },
 			{ id: 0, name: 'Illuminance [fc]', value: Math.round(meas.Lux * 0.09293680297), unit: 'ft⋅cd' },
 			{ id: 0, name: 'Ra', value: Math.round(cri.R[0]), unit: null },
-			...Array.from({ length: 14}).map((_, i) => ({ id: 0, name: `R${i + 1}`, value: Math.round(cri.R[i + 1]), unit: null })),
+			...Array.from({ length: 14 }).map((_, i) => ({
+				id: 0,
+				name: `R${i + 1}`,
+				value: Math.round(cri.R[i + 1]),
+				unit: null,
+			})),
 			{ id: 0, name: 'Temperature', value: meas.temperature, unit: '°C' },
 		];
 		for (let i = 0; i < array.length; i++) array[i].id = i;

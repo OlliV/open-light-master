@@ -36,23 +36,22 @@ const swatch = [
 function CriText({ cri }: { cri: ReturnType<typeof calcCRI> }) {
 	return (
 		<Box>
-		{
-		cri.R.map((r, i) => (
-			<TextField
-				key={`cri${i}`}
-				label={`R${i === 0 ? 'a' : i}`}
-				disabled
-				sx={{ m: 1, width: '15ch' }}
-				value={`${Math.round(r)}`}
-			/>
-		))}
-	</Box>
+			{cri.R.map((r, i) => (
+				<TextField
+					key={`cri${i}`}
+					label={`R${i === 0 ? 'a' : i}`}
+					disabled
+					sx={{ m: 1, width: '15ch' }}
+					value={`${Math.round(r)}`}
+				/>
+			))}
+		</Box>
 	);
 }
 
-const criBarLabels = [ 'Ra', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14' ];
+const criBarLabels = ['Ra', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14'];
 
-function CriBars({ cri, showAll }: { cri: ReturnType<typeof calcCRI>, showAll: boolean }) {
+function CriBars({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll: boolean }) {
 	return (
 		<Bar
 			data={{
@@ -63,9 +62,9 @@ function CriBars({ cri, showAll }: { cri: ReturnType<typeof calcCRI>, showAll: b
 						datalabels: { display: false },
 						borderWidth: 1,
 						borderColor: (c) => 'black',
-						backgroundColor: (c) => c.dataIndex == 0 ? 'black' : swatch[c.dataIndex - 1],
+						backgroundColor: (c) => (c.dataIndex == 0 ? 'black' : swatch[c.dataIndex - 1]),
 						data: showAll ? cri.R : cri.R.slice(0, 9),
-					}
+					},
 				],
 			}}
 			options={{
@@ -157,7 +156,7 @@ export default function Cri() {
 						<CCT value={meas.CCT} />
 						<Duv value={meas.Duv} />
 					</Box>
-						<CriText cri={cri} />
+					<CriText cri={cri} />
 					<FormGroup>
 						<FormControlLabel
 							control={<Switch onChange={(event) => setChartShowAll(event.target.checked)} />}
