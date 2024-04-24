@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import { Scatter, pointRotationAuto } from './Chart';
+import { Scatter, makeChartTitle, pointRotationAuto } from './Chart';
 import planckianCalc_xy from '../lib/planckian';
 
 const spectral = [
@@ -216,16 +216,9 @@ export default function CIE1931({ Ex, Ey }) {
 				options={{
 					aspectRatio: 1,
 					plugins: {
+						title: makeChartTitle('CIE 1931'),
 						legend: {
 							display: false,
-						},
-						title: {
-							display: true,
-							text: 'CIE 1931',
-							position: 'bottom',
-							padding: {
-								top: -10, // This fixes the aspect ratio shift
-							},
 						},
 						datalabels: {
 							display: true,

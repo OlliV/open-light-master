@@ -99,6 +99,7 @@ export default function Text() {
 					</Box>
 					<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
 						<Polar
+							title="Hue vs Sat"
 							pointer={{
 								borderColor: 'black',
 								backgroundColor: `hsl(${posHab}, 100%, 45%)`,

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Scatter } from './Chart';
+import { Scatter, makeChartTitle } from './Chart';
 
 const axisAngles = [
 	0, // red
@@ -45,7 +45,15 @@ type PolarDataset = {
 	data: { r: number; angle: number; label: string }[];
 };
 
-export default function Polar({ pointer, datasets }: { pointer?: PolarPointer; datasets: PolarDataset[] }) {
+export default function Polar({
+	title,
+	pointer,
+	datasets,
+}: {
+	title?: string;
+	pointer?: PolarPointer;
+	datasets: PolarDataset[];
+}) {
 	const scatterDatasets = useMemo(() => {
 		const ds: any[] = datasets.map((dataset) => ({
 			borderColor: dataset.borderColor,
@@ -89,14 +97,7 @@ export default function Polar({ pointer, datasets }: { pointer?: PolarPointer; d
 				aspectRatio: 1,
 				maintainAspectRatio: true,
 				plugins: {
-					title: {
-						display: true,
-						text: 'Hue vs Sat',
-						position: 'bottom',
-						padding: {
-							top: -10, // This fixes the aspect ratio shift
-						},
-					},
+					title: title && makeChartTitle(title),
 					tooltip: {
 						callbacks: {
 							label: (ctx) =>

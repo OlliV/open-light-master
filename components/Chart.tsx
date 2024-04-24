@@ -49,4 +49,20 @@ function gridColorAuto({ tick }: ScriptableScaleContext) {
 	return tick.value === 0 ? 'black' : 'lightgrey';
 }
 
-export { Bar, Line, Scatter, pointRotationAuto, gridColorAuto };
+function makeChartTitle(title: string): {
+	display: boolean;
+	text: string;
+	position: 'bottom';
+	padding: { top: number };
+} {
+	return {
+		display: true,
+		text: title,
+		position: 'bottom',
+		padding: {
+			top: -10, // This fixes the aspect ratio shift
+		},
+	};
+}
+
+export { Bar, Line, Scatter, pointRotationAuto, gridColorAuto, makeChartTitle };

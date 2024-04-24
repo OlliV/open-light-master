@@ -163,7 +163,7 @@ export default function Cri() {
 							label="Show R9-R14"
 						/>
 					</FormGroup>
-					<Carousel autoPlay={false}>
+					<Carousel autoPlay={false} animation="slide">
 						<Box sx={{ height: 400 }}>
 							<CriChart cri={cri} showAll={chartShowAll} />
 						</Box>

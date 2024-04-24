@@ -7,7 +7,7 @@ import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
-import { Bar, Scatter } from '../components/Chart';
+import { Bar, Scatter, makeChartTitle } from '../components/Chart';
 import { useGlobalState } from '../lib/global';
 import { normalize2 } from '../lib/vector';
 import wavelengthToColor from '../lib/wl2rgb';
@@ -15,36 +15,35 @@ import { interpolateSPD } from '../lib/spd';
 
 const SpectrumBar = ({ data }) => {
 	return (
-		<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
-			<Bar
-				width={1}
-				height={1}
-				data={{
-					labels: data.map(({ l }) => `${l} nm`),
-					datasets: [
-						{
-							label: 'nm',
-							datalabels: { display: false },
-							data: data.map(({ v }) => v),
-							backgroundColor: data.map(({ l }) => wavelengthToColor(l)[0]),
-						},
-					],
-				}}
-				options={{
-					scales: {
-						y: {
-							min: 0,
-							max: 1,
-						},
+		<Bar
+			width={1}
+			height={1}
+			data={{
+				labels: data.map(({ l }) => `${l} nm`),
+				datasets: [
+					{
+						label: 'nm',
+						datalabels: { display: false },
+						data: data.map(({ v }) => v),
+						backgroundColor: data.map(({ l }) => wavelengthToColor(l)[0]),
 					},
-					plugins: {
-						legend: {
-							display: false,
-						},
+				],
+			}}
+			options={{
+				scales: {
+					y: {
+						min: 0,
+						max: 1,
 					},
-				}}
-			/>
-		</Container>
+				},
+				plugins: {
+					title: makeChartTitle('Measured SPD'),
+					legend: {
+						display: false,
+					},
+				},
+			}}
+		/>
 	);
 };
 
@@ -108,38 +107,43 @@ export default function Text() {
 							}}
 						/>
 					</Box>
-					<Carousel autoPlay={false}>
-						<SpectrumBar data={data} />
-						<Scatter
-							data={{
-								datasets: [
-									{
-										label: 'SPD',
-										datalabels: { display: false },
-										showLine: true,
-										pointStyle: false,
-										borderColor: 'black',
-										data: dataInterpolated,
+					<Carousel autoPlay={false} animation="slide">
+						<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
+							<SpectrumBar data={data} />
+						</Container>
+						<Container sx={{ height: '400px' }}>
+							<Scatter
+								data={{
+									datasets: [
+										{
+											label: 'SPD',
+											datalabels: { display: false },
+											showLine: true,
+											pointStyle: false,
+											borderColor: 'black',
+											data: dataInterpolated,
+										},
+									],
+								}}
+								options={{
+									plugins: {
+										title: makeChartTitle('Interpolated SPD'),
+										legend: {
+											display: false,
+										},
 									},
-								],
-							}}
-							options={{
-								plugins: {
-									legend: {
-										display: false,
+									scales: {
+										x: {
+											min: 380,
+											max: 780,
+										},
+										y: {
+											min: 0,
+										},
 									},
-								},
-								scales: {
-									x: {
-										min: 380,
-										max: 780,
-									},
-									y: {
-										min: 0,
-									},
-								},
-							}}
-						/>
+								}}
+							/>
+						</Container>
 					</Carousel>
 				</Paper>
 			</Box>
