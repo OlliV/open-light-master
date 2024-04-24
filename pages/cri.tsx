@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import Box from '@mui/system/Box';
+import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
@@ -11,7 +12,7 @@ import Title from '../components/Title';
 import CCT from '../components/CCT';
 import Duv from '../components/Duv';
 import { useGlobalState } from '../lib/global';
-import { Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
+import { Bar, Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
 import { calcCRI } from '../lib/cri';
 import lm3CalcCRI from '../lib/lm3cri';
 
@@ -32,6 +33,72 @@ const swatch = [
 	'rgb(0, 96, 68)',
 ];
 
+function CriText({ cri }: { cri: ReturnType<typeof calcCRI> }) {
+	return (
+		<Box>
+		{
+		cri.R.map((r, i) => (
+			<TextField
+				key={`cri${i}`}
+				label={`R${i === 0 ? 'a' : i}`}
+				disabled
+				sx={{ m: 1, width: '15ch' }}
+				value={`${Math.round(r)}`}
+			/>
+		))}
+	</Box>
+	);
+}
+
+const criBarLabels = [ 'Ra', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14' ];
+
+function CriBars({ cri, showAll }: { cri: ReturnType<typeof calcCRI>, showAll: boolean }) {
+	return (
+		<Bar
+			data={{
+				labels: showAll ? criBarLabels : criBarLabels.slice(0, 9),
+				datasets: [
+					{
+						label: 'CRI',
+						datalabels: { display: false },
+						borderWidth: 1,
+						borderColor: (c) => 'black',
+						backgroundColor: (c) => c.dataIndex == 0 ? 'black' : swatch[c.dataIndex - 1],
+						data: showAll ? cri.R : cri.R.slice(0, 9),
+					}
+				],
+			}}
+			options={{
+				indexAxis: 'y',
+				elements: {
+					bar: {
+						borderWidth: 2,
+					},
+				},
+				scales: {
+					x: {
+						min: 0,
+						max: 100,
+						grid: {
+							display: true,
+						},
+					},
+					y: {
+						grid: {
+							display: true,
+						},
+					},
+				},
+				plugins: {
+					legend: {
+						display: false,
+					},
+				},
+			}}
+		/>
+	);
+}
+
 function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?: boolean }) {
 	return (
 		<Scatter
@@ -41,6 +108,7 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 				datasets: cri.UVPairs.slice(0, showAll ? cri.UVPairs.length : 8).map(({ ref, test }, i) => ({
 					label: `R${i + 1}`,
 					borderColor: swatch[i],
+					backgroundColor: swatch[i],
 					datalabels: { display: false },
 					pointStyle: 'rect',
 					pointRotation: (ctx) => pointRotationAuto(ctx, 45),
@@ -89,26 +157,21 @@ export default function Cri() {
 						<CCT value={meas.CCT} />
 						<Duv value={meas.Duv} />
 					</Box>
-					<Box>
-						{cri.R.map((r, i) => (
-							<TextField
-								key={`cri${i}`}
-								label={`R${i === 0 ? 'a' : i}`}
-								disabled
-								sx={{ m: 1, width: '15ch' }}
-								value={`${Math.round(r)}`}
-							/>
-						))}
-					</Box>
+						<CriText cri={cri} />
 					<FormGroup>
 						<FormControlLabel
 							control={<Switch onChange={(event) => setChartShowAll(event.target.checked)} />}
 							label="Show R9-R14"
 						/>
 					</FormGroup>
-					<Box sx={{ width: 400 }}>
-						<CriChart cri={cri} showAll={chartShowAll} />
-					</Box>
+					<Carousel autoPlay={false}>
+						<Box sx={{ height: 400 }}>
+							<CriChart cri={cri} showAll={chartShowAll} />
+						</Box>
+						<Box sx={{ height: 400 }}>
+							<CriBars cri={cri} showAll={chartShowAll} />
+						</Box>
+					</Carousel>
 				</Paper>
 			</Box>
 		</Container>
