@@ -8,8 +8,7 @@ import MyHead from '../components/MyHead';
 import Title from '../components/Title';
 import Polar from '../components/Polar';
 import { useGlobalState } from '../lib/global';
-import CIEXYZtoLab, { XYZnD65 } from '../lib/CIEXYZtoLab';
-import { LabChroma, LabHue, LabSat } from '../lib/huesat';
+import { CalcLabHueChromaSat } from '../lib/Lab';
 import { normalize2 } from '../lib/vector';
 import wl2rgb from '../lib/wl2rgb';
 
@@ -45,19 +44,15 @@ export default function Text() {
 
 		return ds;
 	}, [meas]);
-	const [L, a, b] = useMemo(() => {
+	const {Lab, hab: posHab, chroma, sat} = useMemo(() => {
 		const x = meas.Ex;
 		const y = meas.Ey;
 		const Y = meas.Lux;
 		const X = (Y / y) * x;
 		const Z = (Y / y) * (1 - x - y);
 
-		return CIEXYZtoLab(X, Y, Z, XYZnD65);
+		return CalcLabHueChromaSat(X, Y, Z);
 	}, [meas.Ex, meas.Ey, meas.Lux]);
-	const hab = LabHue(a, b) * (180 / Math.PI) || 0;
-	const posHab = Math.round((hab + 360) % 360);
-	const chroma = LabChroma(a, b);
-	const sat = LabSat(chroma, L);
 
 	return (
 		<Container maxWidth="md">
@@ -70,7 +65,7 @@ export default function Text() {
 							label="L*a*b*"
 							disabled
 							sx={{ m: 1, width: '28ch' }}
-							value={`${L.toFixed(3)}, ${a.toFixed(3)}, ${b.toFixed(3)}`}
+							value={`${Lab[0].toFixed(3)}, ${Lab[1].toFixed(3)}, ${Lab[2].toFixed(3)}`}
 						/>
 						<TextField
 							label="Hue"

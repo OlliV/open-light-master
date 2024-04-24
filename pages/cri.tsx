@@ -8,14 +8,12 @@ import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
-import Typography from '@mui/material/Typography';
 import CCT from '../components/CCT';
 import Duv from '../components/Duv';
 import { useGlobalState } from '../lib/global';
-import { calcCRI } from '../lib/cri';
-import { interpolateSPD } from '../lib/spd';
-import { calcCRI as calcCRI2 } from '../lib/cri2';
 import { Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
+import { calcCRI } from '../lib/cri';
+import lm3CalcCRI from '../lib/lm3cri';
 
 const swatch = [
 	'rgb(242, 185, 158)',
@@ -34,7 +32,7 @@ const swatch = [
 	'rgb(0, 96, 68)',
 ];
 
-function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI2>; showAll?: boolean }) {
+function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?: boolean }) {
 	return (
 		<Scatter
 			width={1}
@@ -78,21 +76,7 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI2>; showAll?
 
 export default function Cri() {
 	const [meas] = useGlobalState('res_lm_measurement');
-	const cri = useMemo(() => calcCRI(meas), [meas]);
-	const cri2 = useMemo(() => {
-		const spd = interpolateSPD([
-			{ wl: 450, p: meas.V1 },
-			{ wl: 500, p: meas.B1 },
-			{ wl: 550, p: meas.G1 },
-			{ wl: 570, p: meas.Y1 },
-			{ wl: 600, p: meas.O1 },
-			{ wl: 650, p: meas.R1 },
-		]);
-		return calcCRI2(
-			meas.CCT,
-			spd.map(({ p }) => p)
-		);
-	}, [meas]);
+	const cri = useMemo(() => lm3CalcCRI(meas), [meas]);
 	const [chartShowAll, setChartShowAll] = useState(false);
 
 	return (
@@ -106,12 +90,7 @@ export default function Cri() {
 						<Duv value={meas.Duv} />
 					</Box>
 					<Box>
-						<TextField label="Ra" disabled sx={{ m: 1, width: '15ch' }} value={`${Math.round(cri.R[0])}`} />
-						<TextField label="cs" disabled sx={{ m: 1, width: '15ch' }} value={`${cri.cs.toFixed(6)}`} />
-					</Box>
-					<Typography>Alternative CRI Calculation</Typography>
-					<Box>
-						{cri2.R.map((r, i) => (
+						{cri.R.map((r, i) => (
 							<TextField
 								key={`cri${i}`}
 								label={`R${i === 0 ? 'a' : i}`}
@@ -128,7 +107,7 @@ export default function Cri() {
 						/>
 					</FormGroup>
 					<Box sx={{ width: 400 }}>
-						<CriChart cri={cri2} showAll={chartShowAll} />
+						<CriChart cri={cri} showAll={chartShowAll} />
 					</Box>
 				</Paper>
 			</Box>
