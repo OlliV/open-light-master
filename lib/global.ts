@@ -22,10 +22,10 @@ export type GlobalState = {
 		temperature: number;
 		// calculated
 		mode: number;
-		Eu: number;
-		Ev: number;
 		Ey: number;
 		Ex: number;
+		Eu: number;
+		Ev: number;
 		CCT: number;
 		Duv: number;
 		tint: number;
@@ -63,10 +63,10 @@ const initialState: GlobalState = {
 		O1: 0,
 		R1: 0,
 		mode: 0,
-		Eu: 0,
-		Ev: 0,
 		Ey: 0,
 		Ex: 0,
+		Eu: 0,
+		Ev: 0,
 		CCT: 0,
 		Duv: 0,
 		tint: 0,

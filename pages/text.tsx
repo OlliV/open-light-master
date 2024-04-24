@@ -7,14 +7,14 @@ import DataArray from '../components/DataArray';
 import { GridLogicOperator } from '@mui/x-data-grid';
 import { useGlobalState } from '../lib/global';
 import lm3CalcCRI from '../lib/lm3cri';
-import { CalcLabHueChromaSat } from '../lib/Lab';
+import { XYZnD65, xy2XYZ, XYZ2Lab } from '../lib/CIEConv';
+import { LabHueSatChroma } from '../lib/Lab';
 
 function calcHueSat(x: number, y: number, Lux: number) {
-	const Y = Lux;
-	const X = (Y / y) * x;
-	const Z = (Y / y) * (1 - x - y);
+	const [X, Y, Z] = xy2XYZ(x, y, Lux);
+	const [L, a, b] = XYZ2Lab(X, Y, Z, XYZnD65);
 
-	return CalcLabHueChromaSat(X, Y, Z);
+	return LabHueSatChroma(L, a, b);
 }
 
 export default function Text() {

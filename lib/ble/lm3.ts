@@ -3,6 +3,7 @@ import calcCCT from '../cct';
 import calcDuv from '../duv';
 import calcTint from '../tint';
 import { calcFlicker } from '../flicker';
+import { XYZ2xy, xy2uv } from '../CIEConv';
 
 export const BLE_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const RX_CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
@@ -62,27 +63,23 @@ function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, 
 	const w = matMul(tristimulusM[mode - 1], 3, 7, [[V1], [B1], [G1], [Y1], [O1], [R1], [C1]], 7, 1);
 
 	// Tristimulus
-	let X, Y, Z;
+	let X: number;
+	let Y: number;
+	let Z: number;
 	(X = w[0][0]) < 0 && (X = 0);
 	(Y = w[1][0]) < 0 && (Y = 0);
 	(Z = w[2][0]) < 0 && (Z = 0);
 
-	// chromacity coords
-	let x = X / (X + Y + Z);
-	let y = Y / (X + Y + Z);
-
-	// MacAdam simplified Judd's
-	const nj = -2 * x + 12 * y + 3;
-	const Eu = (4 * x) / nj;
-	const Ev = (6 * y) / nj;
+	let [x, y] = XYZ2xy([X, Y, Z]);
+	const [Eu, Ev] = xy2uv(x, y);
 
 	return (
 		0 == X && 0 == Y && 0 == Z && ((x = 0), (y = 0)),
 		{
-			Eu,
-			Ev,
 			Ey: y,
 			Ex: x,
+			Eu,
+			Ev,
 			CCT: calcCCT(x, y),
 			Duv: calcDuv(Eu, Ev),
 			tint: calcTint(x, y)[1],

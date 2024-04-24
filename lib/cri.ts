@@ -1,5 +1,6 @@
 import calcCCT from './cct';
 import wlMap from './wlmap';
+import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 
 const nmIncrement = 5;
 
@@ -213,31 +214,6 @@ function spd2XYZ(spd: number[], cmf: number[]) {
 	return [(100 * xsum) / ysum, 100, (100 * zsum) / ysum];
 }
 
-function XYZ2xy(XYZ: number[]) {
-	const x = XYZ[0] / (XYZ[0] + XYZ[1] + XYZ[2]);
-	const y = XYZ[1] / (XYZ[0] + XYZ[1] + XYZ[2]);
-
-	return [x, y];
-}
-
-function xy2uv(xy: number[]) {
-	const [x, y] = xy;
-	const nj = -2 * x + 12 * y + 3;
-	const u = (4 * x) / nj;
-	const v = (6 * y) / nj;
-	return [u, v];
-}
-
-function XYZ2UVW(XYZ: number[], u0: number, v0: number) {
-	const [u, v] = xy2uv(XYZ2xy(XYZ));
-
-	const W = 25 * XYZ[1] ** (1 / 3) - 17;
-	const U = 13 * W * (u - u0);
-	const V = 13 * W * (v - v0);
-
-	return [U, V, W];
-}
-
 function uv2cd(u: number, v: number) {
 	const c = (4 - u - 10 * v) / v;
 	const d = (1.708 * v + 0.404 - 1.481 * u) / v;
@@ -254,7 +230,7 @@ function calcRef(CCT: number) {
 	const ref = normalizeSPD(referenceIlluminant(CCT));
 	const XYZ = spd2XYZ(ref, CIE_CMF);
 	const [x, y] = XYZ2xy(XYZ);
-	const [u, v] = xy2uv([x, y]);
+	const [u, v] = xy2uv(x, y);
 	const [cr, dr] = uv2cd(u, v);
 
 	return {
@@ -291,9 +267,9 @@ export function calcCRI(CCT: number, test: number[]) {
 	// Test
 	const testIlluminantNorm = normalizeSPD(test);
 	const TCStestIlluminantXYZ = calcAllTCS_XYZ(testIlluminantNorm, CIE_CMF);
-	const TCStestIlluminantuv = TCStestIlluminantXYZ.map((XYZ) => xy2uv(XYZ2xy(XYZ)));
+	const TCStestIlluminantuv = TCStestIlluminantXYZ.map((XYZ) => xy2uv(...XYZ2xy(XYZ)));
 	const XYZtest = spd2XYZ(testIlluminantNorm, CIE_CMF);
-	const [ut, vt] = xy2uv(XYZ2xy(XYZtest));
+	const [ut, vt] = xy2uv(...XYZ2xy(XYZtest));
 	const [ct, dt] = uv2cd(ut, vt);
 	const uat =
 		(10.872 + 0.404 * (ref.cr / ct) * ct - 4 * (ref.dr / dt) * dt) /
@@ -302,7 +278,7 @@ export function calcCRI(CCT: number, test: number[]) {
 
 	// Adaptation Correction
 	const adaptUVW = TCStestIlluminantXYZ.map((XYZ) => {
-		const [u, v] = xy2uv(XYZ2xy(XYZ));
+		const [u, v] = xy2uv(...XYZ2xy(XYZ));
 		const [cs, ds] = uv2cd(u, v);
 		const uas =
 			(10.872 + 0.404 * (ref.cr / ct) * cs - 4 * (ref.dr / dt) * ds) /

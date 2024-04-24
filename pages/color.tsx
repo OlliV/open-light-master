@@ -8,7 +8,8 @@ import MyHead from '../components/MyHead';
 import Title from '../components/Title';
 import Polar from '../components/Polar';
 import { useGlobalState } from '../lib/global';
-import { CalcLabHueChromaSat } from '../lib/Lab';
+import { XYZnD65, xy2XYZ, XYZ2Lab } from '../lib/CIEConv';
+import { LabHueSatChroma } from '../lib/Lab';
 import { normalize2 } from '../lib/vector';
 import wl2rgb from '../lib/wl2rgb';
 
@@ -50,13 +51,13 @@ export default function Text() {
 		chroma,
 		sat,
 	} = useMemo(() => {
-		const x = meas.Ex;
-		const y = meas.Ey;
-		const Y = meas.Lux;
-		const X = (Y / y) * x;
-		const Z = (Y / y) * (1 - x - y);
+		const [X, Y, Z] = xy2XYZ(meas.Ex, meas.Ey, meas.Lux);
+		const Lab = XYZ2Lab(X, Y, Z, XYZnD65);
 
-		return CalcLabHueChromaSat(X, Y, Z);
+		return {
+			...LabHueSatChroma(...Lab),
+			Lab,
+		};
 	}, [meas.Ex, meas.Ey, meas.Lux]);
 
 	return (
