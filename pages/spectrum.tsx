@@ -108,7 +108,7 @@ export default function Text() {
 							}}
 						/>
 					</Box>
-					<Carousel>
+					<Carousel autoPlay={false}>
 						<SpectrumBar data={data} />
 						<Scatter
 							data={{
