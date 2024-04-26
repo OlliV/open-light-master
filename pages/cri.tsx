@@ -145,9 +145,10 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 						enabled: true,
 						callbacks: {
 							title: (tooltipItems) => `Difference`,
-							beforeLabel: (tooltipItem) => `R${tooltipItem.datasetIndex + 1}`,
+							beforeLabel: (tooltipItem) =>
+								`R${tooltipItem.datasetIndex + 1} ${tooltipItem.dataIndex == 0 ? 'Ref' : 'Test'}`,
 							label: (tooltipItem) =>
-								`∆E: ${cri.DE[tooltipItem.dataIndex].toFixed(3)} U*V*: ${tooltipItem.formattedValue}`,
+								`U*V*: ${tooltipItem.formattedValue} ${tooltipItem.dataIndex == 0 ? '' : `∆E: ${cri.DE[tooltipItem.datasetIndex].toFixed(3)}`}`,
 						},
 					},
 				},
