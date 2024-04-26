@@ -19,20 +19,17 @@ import { Scatter } from 'react-chartjs-2';
 import Datalabels from 'chartjs-plugin-datalabels';
 import Annotation from 'chartjs-plugin-annotation';
 
-ChartJS.register(
-	Annotation,
-	BarElement,
-	CategoryScale,
-	Datalabels,
-	Filler,
-	Legend,
-	LineElement,
-	LinearScale,
-	PointElement,
-	RadialLinearScale,
-	Title,
-	Tooltip
-);
+const customCanvasBackgroundColor = {
+	id: 'customCanvasBackgroundColor',
+	beforeDraw: (chart, args, options) => {
+		const { ctx } = chart;
+		ctx.save();
+		ctx.globalCompositeOperation = 'destination-over';
+		ctx.fillStyle = options.color || 'rgb(255,255,255)';
+		ctx.fillRect(0, 0, chart.width, chart.height);
+		ctx.restore();
+	},
+};
 
 function pointRotationAuto(ctx: ScriptableContext<'line'>, C: number) {
 	const i = ctx.dataIndex;
@@ -64,5 +61,21 @@ function makeChartTitle(title: string): {
 		},
 	};
 }
+
+ChartJS.register(
+	Annotation,
+	BarElement,
+	CategoryScale,
+	customCanvasBackgroundColor,
+	Datalabels,
+	Filler,
+	Legend,
+	LineElement,
+	LinearScale,
+	PointElement,
+	RadialLinearScale,
+	Title,
+	Tooltip
+);
 
 export { Bar, Line, Scatter, pointRotationAuto, gridColorAuto, makeChartTitle };

@@ -16,6 +16,7 @@ import { Bar, Scatter, gridColorAuto, pointRotationAuto } from '../components/Ch
 import { calcCRI } from '../lib/cri';
 import lm3CalcCRI from '../lib/lm3cri';
 
+const lightBlack = 'rgb(50,50,50)';
 const swatch = [
 	'rgb(242, 185, 158)',
 	'rgb(206, 177, 82)',
@@ -30,6 +31,22 @@ const swatch = [
 	'rgb(0, 137, 94)',
 	'rgb(0, 60, 149)',
 	'rgb(244, 232, 219)',
+	'rgb(0, 96, 68)',
+];
+const swatchBorder = [
+	'rgb(242, 185, 158)',
+	'rgb(206, 177, 82)',
+	'rgb(128, 186, 76)',
+	'rgb(0, 168, 166)',
+	'rgb(0, 159, 222)',
+	'rgb(0, 134, 205)',
+	'rgb(165, 148, 198)',
+	'rgb(233, 155, 193)',
+	'rgb(230, 0, 54)',
+	lightBlack,
+	'rgb(0, 137, 94)',
+	'rgb(0, 60, 149)',
+	lightBlack,
 	'rgb(0, 96, 68)',
 ];
 
@@ -61,8 +78,8 @@ function CriBars({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll: b
 						label: 'CRI',
 						datalabels: { display: false },
 						borderWidth: 1,
-						borderColor: (c) => 'black',
-						backgroundColor: (c) => (c.dataIndex == 0 ? 'black' : swatch[c.dataIndex - 1]),
+						borderColor: lightBlack,
+						backgroundColor: (c) => (c.dataIndex == 0 ? lightBlack : swatch[c.dataIndex - 1]),
 						data: showAll ? cri.R : cri.R.slice(0, 9),
 					},
 				],
@@ -106,10 +123,9 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 			data={{
 				datasets: cri.UVPairs.slice(0, showAll ? cri.UVPairs.length : 8).map(({ ref, test }, i) => ({
 					label: `R${i + 1}`,
-					borderColor: swatch[i],
+					borderColor: swatchBorder[i],
 					backgroundColor: swatch[i],
 					datalabels: { display: false },
-					pointStyle: 'rect',
 					pointRotation: (ctx) => pointRotationAuto(ctx, 45),
 					pointRadius: (ctx) => ctx.dataIndex != 0 && 3,
 					showLine: true,
@@ -120,20 +136,44 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 				})),
 			}}
 			options={{
+				plugins: {
+					// @ts-ignore
+					customCanvasBackgroundColor: {
+						color: 'white',
+					},
+					tooltip: {
+						enabled: true,
+						callbacks: {
+							title: (tooltipItems) => `Difference`,
+							beforeLabel: (tooltipItem) => `R${tooltipItem.datasetIndex + 1}`,
+							label: (tooltipItem) =>
+								`∆E: ${cri.DE[tooltipItem.dataIndex].toFixed(3)} U*V*: ${tooltipItem.formattedValue}`,
+						},
+					},
+				},
 				scales: {
 					x: {
-						min: -40,
-						max: 40,
+						min: showAll ? -60 : -40,
+						max: showAll ? 120 : 40,
 						grid: {
 							color: gridColorAuto,
 						},
 					},
 					y: {
-						min: -40,
-						max: 40,
+						min: showAll ? -50 : -40,
+						max: showAll ? 60 : 40,
 						grid: {
 							color: gridColorAuto,
 						},
+					},
+				},
+				elements: {
+					line: {
+						borderWidth: 2,
+					},
+					point: {
+						pointStyle: 'rect',
+						borderWidth: 1,
 					},
 				},
 			}}
