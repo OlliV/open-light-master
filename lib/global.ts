@@ -28,7 +28,20 @@ export type MemoryItem = {
 	name: string;
 	type: string;
 	created: number;
-	recall: boolean /*!< Set true if should be shown on the screen. */;
+	/**
+	 * Set true if should be shown on the screen.
+	 */
+	recall: boolean;
+	meas: {
+		Ex: number;
+		Ey: number;
+		Eu: number;
+		Ev: number;
+		CCT: number;
+		Duv: number;
+		tint: number;
+		Lux: number;
+	};
 };
 
 export type LM3MemoryItem = {
@@ -139,7 +152,7 @@ function saveConfig() {
 	localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
 }
 
-export default function useMemoryRecall(): MemoryItem[] {
+function useMemoryRecall(): MemoryItem[] {
 	const [memory] = useGlobalState('memory');
 	return useMemo(() => memory.filter((m: MemoryItem) => m.recall), [memory]);
 }

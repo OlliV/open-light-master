@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
 import { Bar, Scatter, makeChartTitle } from '../components/Chart';
 import Memory from '../components/Memory';
-import useMemoryRecall, { LM3MemoryItem, useGlobalState } from '../lib/global';
+import { LM3MemoryItem, useMemoryRecall, useGlobalState } from '../lib/global';
 import wavelengthToColor from '../lib/wl2rgb';
 import { SPD, interpolateSPD } from '../lib/spd';
 import { lm3NormSPD } from '../lib/lm3calc';
