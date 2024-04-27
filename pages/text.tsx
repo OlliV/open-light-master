@@ -6,7 +6,7 @@ import Title from '../components/Title';
 import DataArray from '../components/DataArray';
 import { GridLogicOperator } from '@mui/x-data-grid';
 import { useGlobalState } from '../lib/global';
-import lm3CalcCRI from '../lib/lm3cri';
+import lm3CalcCRI from '../lib/lm3calc';
 import { XYZnD65, xy2XYZ, XYZ2Lab } from '../lib/CIEConv';
 import { LabHueSatChroma } from '../lib/Lab';
 

@@ -1,4 +1,4 @@
-export default function wavelengthToColor(wl: number) {
+export default function wavelengthToColor(wl: number): [string, number, number, number, number] {
 	let R: number;
 	let G: number;
 	let B: number;
@@ -44,5 +44,5 @@ export default function wavelengthToColor(wl: number) {
 		alpha = 1;
 	}
 
-	return ['rgba(' + R * 100 + '%,' + G * 100 + '%,' + B * 100 + '%, ' + alpha + ')', R, G, B, alpha];
+	return [`rgba(${R * 100}%,${G * 100}%,${B * 100}%,${alpha})`, R, G, B, alpha];
 }

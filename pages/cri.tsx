@@ -14,7 +14,7 @@ import Duv from '../components/Duv';
 import { useGlobalState } from '../lib/global';
 import { Bar, Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
 import { calcCRI } from '../lib/cri';
-import lm3CalcCRI from '../lib/lm3cri';
+import lm3CalcCRI from '../lib/lm3calc';
 
 const lightBlack = 'rgb(50,50,50)';
 const swatch = [
@@ -144,7 +144,7 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 					tooltip: {
 						enabled: true,
 						callbacks: {
-							title: (tooltipItems) => `Difference`,
+							title: (_tooltipItems) => `Difference`,
 							beforeLabel: (tooltipItem) =>
 								`R${tooltipItem.datasetIndex + 1} ${tooltipItem.dataIndex == 0 ? 'Ref' : 'Test'}`,
 							label: (tooltipItem) =>

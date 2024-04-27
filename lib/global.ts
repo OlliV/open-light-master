@@ -1,7 +1,40 @@
+import { useMemo } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 import { BtDevice } from './ble';
 
-const defaultScene = [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0.5, 1], [0, 1], 'limited'];
+export type LM3Measurement = {
+	// corrected
+	V1: number;
+	B1: number;
+	G1: number;
+	Y1: number;
+	O1: number;
+	R1: number;
+	temperature: number;
+	// calculated
+	mode: number;
+	Ex: number;
+	Ey: number;
+	Eu: number;
+	Ev: number;
+	CCT: number;
+	Duv: number;
+	tint: number;
+	Lux: number;
+	eml: number;
+};
+
+export type MemoryItem = {
+	name: string;
+	type: string;
+	created: number;
+	recall: boolean /*!< Set true if should be shown on the screen. */;
+};
+
+export type LM3MemoryItem = {
+	type: 'LM3';
+	meas: LM3Measurement;
+} & MemoryItem;
 
 export type GlobalState = {
 	// Devices
@@ -11,27 +44,7 @@ export type GlobalState = {
 	// Set values
 	running: boolean;
 	// Reported values
-	res_lm_measurement: {
-		// corrected
-		V1: number;
-		B1: number;
-		G1: number;
-		Y1: number;
-		O1: number;
-		R1: number;
-		temperature: number;
-		// calculated
-		mode: number;
-		Ey: number;
-		Ex: number;
-		Eu: number;
-		Ev: number;
-		CCT: number;
-		Duv: number;
-		tint: number;
-		Lux: number;
-		eml: number;
-	};
+	res_lm_measurement: LM3Measurement;
 	res_lm_freq: {
 		CCT: number;
 		Lux: number;
@@ -44,6 +57,8 @@ export type GlobalState = {
 	// Settings
 	hz: number;
 	avg: number;
+	// Memory function
+	memory: Array<MemoryItem | LM3MemoryItem>;
 };
 
 const LOCAL_STORAGE_KEY = 'olm_settings';
@@ -63,8 +78,8 @@ const initialState: GlobalState = {
 		O1: 0,
 		R1: 0,
 		mode: 0,
-		Ey: 0,
 		Ex: 0,
+		Ey: 0,
 		Eu: 0,
 		Ev: 0,
 		CCT: 0,
@@ -85,24 +100,31 @@ const initialState: GlobalState = {
 	// Settings
 	hz: 1,
 	avg: 1,
+	// Memory feature
+	memory: [],
 	// Load config from local storage
 	...(typeof window === 'undefined' ? {} : JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))),
 };
 
 const { useGlobalState: _useGlobalState, getGlobalState, setGlobalState } = createGlobalState(initialState);
 
-type ConfigKey = 'avg' | 'hz';
+type ConfigKey = 'avg' | 'hz' | 'memory';
 
-function useGlobalState(key: keyof GlobalState) {
+type SetStateAction<S> = S | ((prevState: S) => S);
+function useGlobalState<StateKey extends keyof GlobalState>(
+	key: StateKey
+): readonly [GlobalState[StateKey], (u: SetStateAction<GlobalState[StateKey]>) => void] {
 	const [value, setValue] = _useGlobalState(key);
 
 	const setAndSaveValue = (value: Parameters<typeof setValue>[0]) => {
 		setValue(value);
 
-		// Defer saving to not disturb the render loop.
-		setTimeout(() => {
-			saveConfig();
-		}, 0);
+		if (['hz', 'avg', 'memory'].includes(key)) {
+			// Defer saving to not disturb the render loop.
+			setTimeout(() => {
+				saveConfig();
+			}, 0);
+		}
 	};
 
 	return [value, setAndSaveValue] as const;
@@ -112,8 +134,14 @@ function saveConfig() {
 	const config: { [k in ConfigKey]: any } = {
 		hz: getGlobalState('hz'),
 		avg: getGlobalState('avg'),
+		memory: getGlobalState('memory'),
 	};
 	localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
 }
 
-export { useGlobalState, getGlobalState, setGlobalState /* saveConfig */ };
+export default function useMemoryRecall(): MemoryItem[] {
+	const [memory] = useGlobalState('memory');
+	return useMemo(() => memory.filter((m: MemoryItem) => m.recall), [memory]);
+}
+
+export { useGlobalState, getGlobalState, setGlobalState /* saveConfig */, useMemoryRecall };

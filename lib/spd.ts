@@ -2,14 +2,14 @@ import Spline from './spline';
 import wlMap from './wlmap';
 
 export type SPD = {
-	wl: number;
-	p: number;
+	l: number /*!< wavelength. */;
+	v: number /*!< power. */;
 }[];
 
-export function interpolateSPD(input: SPD, increment: number = 5) {
-	const xs = [380, ...input.map(({ wl }) => wl), 780];
-	const ys = [0, ...input.map(({ p }) => p), input[input.length - 1].p];
+export function interpolateSPD(input: SPD, increment: number = 5): SPD {
+	const xs = [380, ...input.map(({ l }) => l), 780];
+	const ys = [0, ...input.map(({ v }) => v), input[input.length - 1].v];
 
 	const spline = new Spline(xs, ys);
-	return wlMap((wl) => ({ wl, p: spline.at(wl) }), increment);
+	return wlMap((l) => ({ l, v: spline.at(l) }), increment);
 }
