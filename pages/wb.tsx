@@ -28,7 +28,7 @@ export default function Text() {
 							value={`${Math.round(meas.tint)}`}
 						/>
 					</Box>
-					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} />
+					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} Duv={meas.Duv} />
 				</Paper>
 			</Box>
 		</Container>
