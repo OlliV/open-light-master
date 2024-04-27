@@ -20,5 +20,11 @@ export function getDayPeriod(date: Date): string {
 }
 
 export function getDateTime(date: Date): string {
-	return new Intl.DateTimeFormat(getClientLang(), { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }).format(date);
+	return new Intl.DateTimeFormat(getClientLang(), {
+		day: '2-digit',
+		month: '2-digit',
+		year: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+	}).format(date);
 }

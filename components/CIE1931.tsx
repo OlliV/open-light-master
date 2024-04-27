@@ -138,7 +138,7 @@ function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any
 	}
 }
 
-export default function CIE1931({ Ex, Ey, Duv }: { Ex: number, Ey: number, Duv: number }) {
+export default function CIE1931({ Ex, Ey, Duv }: { Ex: number; Ey: number; Duv: number }) {
 	return (
 		<Container sx={{ minWidth: 400 }}>
 			<Scatter
@@ -239,8 +239,8 @@ export default function CIE1931({ Ex, Ey, Duv }: { Ex: number, Ey: number, Duv: 
 										tooltipItems[0].dataIndex,
 										tooltipItems[0].label
 									),
-									beforeLabel: (tooltipItem) => tooltipItem.dataset.label,
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue}`,
+								beforeLabel: (tooltipItem) => tooltipItem.dataset.label,
+								label: (tooltipItem) => `xy: ${tooltipItem.formattedValue}`,
 							},
 						},
 					},

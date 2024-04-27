@@ -17,7 +17,7 @@ import { lm3NormSPD } from '../lib/lm3calc';
 type RecallData = {
 	name: string;
 	norm: SPD;
-	scatter: Array<{x: number, y: number}>;
+	scatter: Array<{ x: number; y: number }>;
 };
 
 function spd2bar(spd: SPD) {
@@ -73,7 +73,7 @@ function SpectrumBar({ data, recallData }: { data: SPD; recallData: RecallData[]
 	);
 }
 
-function SpectrumScatter({ data, recallData }: { data: Array<{x: number, y: number}>; recallData: RecallData[] }) {
+function SpectrumScatter({ data, recallData }: { data: Array<{ x: number; y: number }>; recallData: RecallData[] }) {
 	return (
 		<Scatter
 			data={{
@@ -86,7 +86,7 @@ function SpectrumScatter({ data, recallData }: { data: Array<{x: number, y: numb
 					...recallData.map((m) => ({
 						label: m.name,
 						data: m.scatter,
-					}))
+					})),
 				],
 			}}
 			options={{
@@ -131,15 +131,17 @@ export default function Text() {
 		return [norm, scatter];
 	}, [meas]);
 	const recallData = useMemo<RecallData[]>(() => {
-		return recall.filter((m) => m.type === 'LM3').map(({ name, meas }: LM3MemoryItem): RecallData => {
-			const norm = lm3NormSPD(meas);
+		return recall
+			.filter((m) => m.type === 'LM3')
+			.map(({ name, meas }: LM3MemoryItem): RecallData => {
+				const norm = lm3NormSPD(meas);
 
-			return {
-				name: name,
-				norm,
-				scatter: interpolateSPD2Chart(norm),
-			};
-		});
+				return {
+					name: name,
+					norm,
+					scatter: interpolateSPD2Chart(norm),
+				};
+			});
 	}, [recall]);
 
 	return (
@@ -158,9 +160,9 @@ export default function Text() {
 								endAdornment: <InputAdornment position="end">lx</InputAdornment>,
 							}}
 						/>
-					<Box sx={{ float: 'right', paddingTop: 1, paddingRight: 1 }}>
-						<Memory />
-					</Box>
+						<Box sx={{ float: 'right', paddingTop: 1, paddingRight: 1 }}>
+							<Memory />
+						</Box>
 					</Box>
 					<Carousel autoPlay={false} animation="slide">
 						<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>

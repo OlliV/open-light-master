@@ -11,10 +11,10 @@ import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {IconButton, ListItem} from '@mui/material';
+import { IconButton, ListItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { MemoryItem, useGlobalState } from '../lib/global';
-import {getDateTime} from '../lib/locale';
+import { getDateTime } from '../lib/locale';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -40,11 +40,11 @@ function MemoryList() {
 						setMemory(
 							memory.map((m: MemoryItem) => (m == item ? { ...m, recall: !(m.recall ?? false) } : m))
 						);
-					const deleteItem = () =>
-						setMemory(memory.filter((m: MemoryItem) => m != item));
+					const deleteItem = () => setMemory(memory.filter((m: MemoryItem) => m != item));
 
 					return (
-						<ListItem key={i}
+						<ListItem
+							key={i}
 							secondaryAction={
 								<IconButton edge="end" aria-label="delete" onClick={deleteItem}>
 									<DeleteIcon />
@@ -59,11 +59,11 @@ function MemoryList() {
 									inputProps={{
 										'aria-labelledby': labelId,
 									}}
-									 onClick={toggle}
+									onClick={toggle}
 								/>
 							</ListItemIcon>
 							<ListItemText id={labelId} primary={`${item.name}`} />
-					</ListItem>
+						</ListItem>
 					);
 				})}
 			</List>
@@ -76,7 +76,16 @@ export default function Memory() {
 	const [memory, setMemory] = useGlobalState('memory');
 	const [name, setName] = useState<string>('');
 	const handleSave = () =>
-		setMemory([...memory, { name: name.length > 0 ? name : `${getDateTime(new Date())}: ${meas.CCT.toFixed(0)} K`, created: Date.now(), type: 'LM3', recall: false, meas }]);
+		setMemory([
+			...memory,
+			{
+				name: name.length > 0 ? name : `${getDateTime(new Date())}: ${meas.CCT.toFixed(0)} K`,
+				created: Date.now(),
+				type: 'LM3',
+				recall: false,
+				meas,
+			},
+		]);
 	const [openRecallModal, setOpenRecallModal] = useState(false);
 	const handleOpen = () => setOpenRecallModal(true);
 	const handleClose = () => {
