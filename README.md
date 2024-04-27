@@ -9,6 +9,8 @@ Features
 --------
 
 - Exposure meter
-- CCT, WB, Duv, Tint, CRI, Lux, ft⋅cd
+- CCT, WB, Duv, Tint, CRI (Ra, R1-R14), Lux, ft⋅cd
+- Spectrum (SPD)
 - Flicker analysis (FFT)
 - CSV Export, printable reports
+- Memory Save/Recall
