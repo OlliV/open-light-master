@@ -24,6 +24,18 @@ export type LM3Measurement = {
 	eml: number;
 };
 
+export type RefMeasurement = {
+	SPD: number[];
+	Ex: number;
+	Ey: number;
+	Eu: number;
+	Ev: number;
+	CCT: number;
+	Duv: number;
+	tint: number;
+	Lux: number;
+};
+
 export type MemoryItem = {
 	name: string;
 	type: string;
@@ -43,6 +55,11 @@ export type MemoryItem = {
 		Lux: number;
 	};
 };
+
+export type RefMemoryItem = {
+	type: 'ref';
+	meas: RefMeasurement;
+} & MemoryItem;
 
 export type LM3MemoryItem = {
 	type: 'LM3';
@@ -71,7 +88,7 @@ export type GlobalState = {
 	hz: number;
 	avg: number;
 	// Memory function
-	memory: Array<MemoryItem | LM3MemoryItem>;
+	memory: Array<MemoryItem | RefMemoryItem | LM3MemoryItem>;
 };
 
 const LOCAL_STORAGE_KEY = 'olm_settings';

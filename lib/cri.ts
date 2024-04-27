@@ -1,51 +1,11 @@
+import { CIE1931_2DEG_CMF } from './CMF';
 import calcCCT from './cct';
 import wlMap from './wlmap';
+import { SPDofD, SPDofPlanck } from './spdIlluminants';
+import { spd2XYZ, normalizeSPD } from './spd';
 import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 
 const nmIncrement = 5;
-
-// 380 - 780
-// S0(L), S1(L), S2(L)
-// step: 5 nm
-const CIE_DIlluminant = [
-	63.4, 38.5, 3.0, 64.6, 36.75, 2.1, 65.8, 35.0, 1.2, 80.3, 39.2, 0.05, 94.8, 43.4, -1.1, 99.8, 44.85, -0.8, 104.8,
-	46.3, -0.5, 105.35, 45.1, -0.6, 105.9, 43.9, -0.7, 101.35, 40.5, -0.95, 96.8, 37.1, -1.2, 105.35, 36.9, -1.9, 113.9,
-	36.7, -2.6, 119.75, 36.3, -2.75, 125.6, 35.9, -2.9, 125.55, 34.25, -2.85, 125.5, 32.6, -2.8, 123.4, 30.25, -2.7,
-	121.3, 27.9, -2.6, 121.3, 26.1, -2.6, 121.3, 24.3, -2.6, 117.4, 22.2, -2.2, 113.5, 20.1, -1.8, 113.3, 18.15, -1.65,
-	113.1, 16.2, -1.5, 111.95, 14.7, -1.4, 110.8, 13.2, -1.3, 108.65, 10.9, -1.25, 106.5, 8.6, -1.2, 107.65, 7.35, -1.1,
-	108.8, 6.1, -1.0, 107.05, 5.15, -0.75, 105.3, 4.2, -0.5, 104.85, 3.05, -0.4, 104.4, 1.9, -0.3, 102.2, 0.95, -0.15,
-	100.0, 0.0, 0.0, 98.0, -0.8, 0.1, 96.0, -1.6, 0.2, 95.55, -2.55, 0.35, 95.1, -3.5, 0.5, 92.1, -3.5, 1.3, 89.1, -3.5,
-	2.1, 89.8, -4.65, 2.65, 90.5, -5.8, 3.2, 90.4, -6.5, 3.65, 90.3, -7.2, 4.1, 89.35, -7.9, 4.4, 88.4, -8.6, 4.7, 86.2,
-	-9.05, 4.9, 84.0, -9.5, 5.1, 84.55, -10.2, 5.9, 85.1, -10.9, 6.7, 83.5, -10.8, 7.0, 81.9, -10.7, 7.3, 82.25, -11.35,
-	7.95, 82.6, -12.0, 8.6, 83.75, -13.0, 9.2, 84.9, -14.0, 9.8, 83.1, -13.8, 10.0, 81.3, -13.6, 10.2, 76.6, -12.8,
-	9.25, 71.9, -12.0, 8.3, 73.1, -12.65, 8.95, 74.3, -13.3, 9.6, 75.35, -13.1, 9.05, 76.4, -12.9, 8.5, 69.85, -11.75,
-	7.75, 63.3, -10.6, 7.0, 67.5, -11.1, 7.3, 71.7, -11.6, 7.6, 74.35, -11.9, 7.8, 77.0, -12.2, 8.0, 71.1, -11.2, 7.35,
-	65.2, -10.2, 6.7, 56.45, -9.0, 5.95, 47.7, -7.8, 5.2, 58.15, -9.5, 6.3, 68.6, -11.2, 7.4, 66.8, -10.8, 7.1, 65.0,
-	-10.4, 6.8,
-];
-
-// 2deg CIE Color Matching Functions
-// x(lambda), y(lambda), z(lambda)
-// 380 - 780 nm
-// step: 5 nm
-const CIE_CMF = [
-	0.0014, 0.0, 0.0065, 0.0022, 0.0001, 0.0105, 0.0042, 0.0001, 0.0201, 0.0076, 0.0002, 0.0362, 0.0143, 0.0004, 0.0679,
-	0.0232, 0.0006, 0.1102, 0.0435, 0.0012, 0.2074, 0.0776, 0.0022, 0.3713, 0.1344, 0.004, 0.6456, 0.2148, 0.0073,
-	1.0391, 0.2839, 0.0116, 1.3856, 0.3285, 0.0168, 1.623, 0.3483, 0.023, 1.7471, 0.3481, 0.0298, 1.7825, 0.3362, 0.038,
-	1.7721, 0.3187, 0.048, 1.7441, 0.2908, 0.06, 1.6692, 0.2511, 0.0739, 1.5281, 0.1954, 0.091, 1.2876, 0.1421, 0.1126,
-	1.0419, 0.0956, 0.139, 0.813, 0.058, 0.1693, 0.6162, 0.032, 0.208, 0.4652, 0.0147, 0.2586, 0.3533, 0.0049, 0.323,
-	0.272, 0.0024, 0.4073, 0.2123, 0.0093, 0.503, 0.1582, 0.0291, 0.6082, 0.1117, 0.0633, 0.71, 0.0782, 0.1096, 0.7932,
-	0.0573, 0.1655, 0.862, 0.0422, 0.2257, 0.9149, 0.0298, 0.2904, 0.954, 0.0203, 0.3597, 0.9803, 0.0134, 0.4333, 0.995,
-	0.0087, 0.5121, 1.0, 0.0057, 0.5945, 0.995, 0.0039, 0.6784, 0.9786, 0.0027, 0.7621, 0.952, 0.0021, 0.8425, 0.9154,
-	0.0018, 0.9163, 0.87, 0.0017, 0.9786, 0.8163, 0.0014, 1.0263, 0.757, 0.0011, 1.0567, 0.6949, 0.001, 1.0622, 0.631,
-	0.0008, 1.0456, 0.5668, 0.0006, 1.0026, 0.503, 0.0003, 0.9384, 0.4412, 0.0002, 0.8544, 0.381, 0.0002, 0.7514, 0.321,
-	0.0, 0.6424, 0.265, 0.0, 0.5419, 0.217, 0.0, 0.4479, 0.175, 0.0, 0.3608, 0.1382, 0.0, 0.2835, 0.107, 0.0, 0.2187,
-	0.0816, 0.0, 0.1649, 0.061, 0.0, 0.1212, 0.0446, 0.0, 0.0874, 0.032, 0.0, 0.0636, 0.0232, 0.0, 0.0468, 0.017, 0.0,
-	0.0329, 0.0119, 0.0, 0.0227, 0.0082, 0.0, 0.0158, 0.0057, 0.0, 0.0114, 0.0041, 0.0, 0.0081, 0.0029, 0.0, 0.0058,
-	0.0021, 0.0, 0.0041, 0.0015, 0.0, 0.0029, 0.001, 0.0, 0.002, 0.0007, 0.0, 0.0014, 0.0005, 0.0, 0.001, 0.0003, 0.0,
-	0.0007, 0.00025, 0.0, 0.0005, 0.0002, 0.0, 0.0003, 0.0001, 0.0, 0.0003, 0.0001, 0.0, 0.0002, 0.0001, 0.0, 0.0002,
-	0.0001, 0.0, 0.0001, 0.0001, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0,
-];
 
 const TCSSamples = [
 	// 1: 7.5R6/4
@@ -174,23 +134,7 @@ const TCSSamples = [
 ];
 
 function referenceIlluminant(CCT: number) {
-	if (CCT < 5000) {
-		return wlMap((wl) => {
-			const wlp = wl * 10 ** -9;
-			return 1.191027e-16 / (wlp ** 5 * (Math.exp(0.0143876 / (wlp * CCT)) - 1)); // Planck
-		}, nmIncrement);
-	} else {
-		const xlo = -4.607e9 / CCT ** 3 + 2.9678e6 / CCT ** 2 + 0.09911e3 / CCT + 0.244063; // 4000 - 7000 K
-		const xhi = 2.0064e9 / CCT ** 3 + 1.9018e6 / CCT ** 2 + 0.24748e3 / CCT + 0.23704; // 7001 - 25000 K
-		const xd = CCT < 7000 ? xlo : xhi;
-		const yd = -3 * xd ** 2 + 2.87 * xd - 0.275;
-
-		return wlMap((_, i) => {
-			const M1 = (-1.3515 - 1.7703 * xd + 5.9114 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
-			const M2 = (0.03 - 31.4424 * xd + 30.0717 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
-			return CIE_DIlluminant[i * 3] + M1 * CIE_DIlluminant[i * 3 + 1] + M2 * CIE_DIlluminant[i * 3 + 2]; // D illuminant
-		}, nmIncrement);
-	}
+	return CCT < 5000 ? SPDofPlanck(CCT) : SPDofD(CCT);
 }
 
 function calcTCS_XYZ(spd: number[], cmf: number[], TCSSample: number[]) {
@@ -206,14 +150,6 @@ function calcAllTCS_XYZ(spd: number[], cmf: number[]) {
 	return TCSSamples.map((sample) => calcTCS_XYZ(spd, cmf, sample));
 }
 
-function spd2XYZ(spd: number[], cmf: number[]) {
-	const xsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3], 0);
-	const ysum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 1], 0);
-	const zsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 2], 0);
-
-	return [(100 * xsum) / ysum, 100, (100 * zsum) / ysum];
-}
-
 function uv2cd(u: number, v: number) {
 	const c = (4 - u - 10 * v) / v;
 	const d = (1.708 * v + 0.404 - 1.481 * u) / v;
@@ -221,14 +157,10 @@ function uv2cd(u: number, v: number) {
 	return [c, d];
 }
 
-function normalizeSPD(spd: number[]) {
-	return spd.map((v, _, a) => v / a[36]);
-}
-
 function calcRef(CCT: number) {
 	// Normalize by index 36 that is 560 nm
 	const ref = normalizeSPD(referenceIlluminant(CCT));
-	const XYZ = spd2XYZ(ref, CIE_CMF);
+	const XYZ = spd2XYZ(ref, CIE1931_2DEG_CMF);
 	const [x, y] = XYZ2xy(XYZ);
 	const [u, v] = xy2uv(x, y);
 	const [cr, dr] = uv2cd(u, v);
@@ -261,14 +193,14 @@ function calcRa(R: number[]) {
 export function calcCRI(CCT: number, test: number[]) {
 	// Reference
 	const ref = calcRef(CCT);
-	const TCSrefXYZ = calcAllTCS_XYZ(ref.data, CIE_CMF);
+	const TCSrefXYZ = calcAllTCS_XYZ(ref.data, CIE1931_2DEG_CMF);
 	const TCSrefUVW = TCSrefXYZ.map((sref) => XYZ2UVW(sref, ref.u, ref.v));
 
 	// Test
 	const testIlluminantNorm = normalizeSPD(test);
-	const TCStestIlluminantXYZ = calcAllTCS_XYZ(testIlluminantNorm, CIE_CMF);
+	const TCStestIlluminantXYZ = calcAllTCS_XYZ(testIlluminantNorm, CIE1931_2DEG_CMF);
 	const TCStestIlluminantuv = TCStestIlluminantXYZ.map((XYZ) => xy2uv(...XYZ2xy(XYZ)));
-	const XYZtest = spd2XYZ(testIlluminantNorm, CIE_CMF);
+	const XYZtest = spd2XYZ(testIlluminantNorm, CIE1931_2DEG_CMF);
 	const [ut, vt] = xy2uv(...XYZ2xy(XYZtest));
 	const [ct, dt] = uv2cd(ut, vt);
 	const uat =

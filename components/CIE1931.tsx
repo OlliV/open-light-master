@@ -138,7 +138,17 @@ function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any
 	}
 }
 
-export default function CIE1931({ Ex, Ey, Duv, secondaryPoints }: { Ex: number; Ey: number; Duv: number, secondaryPoints?: { label: string, Ex: number, Ey: number, Duv: number}[] }) {
+export default function CIE1931({
+	Ex,
+	Ey,
+	Duv,
+	secondaryPoints,
+}: {
+	Ex: number;
+	Ey: number;
+	Duv: number;
+	secondaryPoints?: { label: string; Ex: number; Ey: number; Duv: number }[];
+}) {
 	return (
 		<Container sx={{ minWidth: 400 }}>
 			<Scatter
@@ -228,7 +238,8 @@ export default function CIE1931({ Ex, Ey, Duv, secondaryPoints }: { Ex: number; 
 							tooltip: {
 								callbacks: {
 									beforeLabel: () => point.label,
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} Duv: ${point.Duv.toFixed(3)}`,
+									label: (tooltipItem) =>
+										`xy: ${tooltipItem.formattedValue} Duv: ${point.Duv.toFixed(3)}`,
 								},
 							},
 						})),

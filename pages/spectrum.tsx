@@ -9,10 +9,19 @@ import TextField from '@mui/material/TextField';
 import Title from '../components/Title';
 import { Bar, Scatter, makeChartTitle } from '../components/Chart';
 import Memory from '../components/Memory';
-import { LM3MemoryItem, useMemoryRecall, useGlobalState } from '../lib/global';
+import {
+	LM3MemoryItem,
+	useMemoryRecall,
+	useGlobalState,
+	RefMemoryItem,
+	LM3Measurement,
+	RefMeasurement,
+} from '../lib/global';
 import wavelengthToColor from '../lib/wl2rgb';
 import { SPD, interpolateSPD } from '../lib/spd';
 import { lm3NormSPD } from '../lib/lm3calc';
+import wlMap from 'lib/wlmap';
+import { normalize2 } from 'lib/vector';
 
 type RecallData = {
 	name: string;
@@ -132,15 +141,41 @@ export default function Text() {
 	}, [meas]);
 	const recallData = useMemo<RecallData[]>(() => {
 		return recall
-			.filter((m) => m.type === 'LM3')
-			.map(({ name, meas }: LM3MemoryItem): RecallData => {
-				const norm = lm3NormSPD(meas);
+			.filter((m) => ['ref', 'LM3'].includes(m.type))
+			.map(({ name, type, meas }): RecallData => {
+				if (type === 'ref') {
+					const normBars = normalize2([
+						// @ts-ignore
+						meas.SPD[14], // 450 nm
+						// @ts-ignore
+						meas.SPD[24], // 500 nm
+						// @ts-ignore
+						meas.SPD[34], // 550 nm
+						// @ts-ignore
+						meas.SPD[38], // 570 nm
+						// @ts-ignore
+						meas.SPD[44], // 600 nm
+						// @ts-ignore
+						meas.SPD[54], // 650 nm
+					]);
+					// @ts-ignore
+					const normScatter = normalize2(meas.SPD);
 
-				return {
-					name: name,
-					norm,
-					scatter: interpolateSPD2Chart(norm),
-				};
+					return {
+						name,
+						norm: wlMap((l, i) => ({ l, v: normBars[i] }), 5),
+						scatter: wlMap((l, i) => ({ x: l, y: normScatter[i] }), 5),
+					};
+				} else if (type === 'LM3') {
+					// @ts-ignore
+					const norm = lm3NormSPD(meas);
+
+					return {
+						name,
+						norm,
+						scatter: interpolateSPD2Chart(norm),
+					};
+				}
 			});
 	}, [recall]);
 

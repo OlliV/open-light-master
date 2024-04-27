@@ -1,42 +1,25 @@
+import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import SensorWindowIcon from '@mui/icons-material/SensorWindow';
-import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
-import Title from '../../components/Title';
-import Typography from '@mui/material/Typography';
-import { green } from '@mui/material/colors';
-import SxPropsTheme from '../../lib/SxPropsTheme';
-import { BtDevice, pairDevice } from '../../lib/ble';
-import { useEffect, useState } from 'react';
-import MyHead from '../../components/MyHead';
-import Parameters from '../../components/Parameters';
-import { getGlobalState, useGlobalState } from '../../lib/global';
-import { BLE_SERVICE_UUID as LM3_SERVICE_UUID, createLm3 } from '../../lib/ble/lm3';
+import MyHead from 'components/MyHead';
+import Parameters from 'components/settings/Parameters';
+import Title from 'components/Title';
+import { iconStyle, SettingsCard, ActionButton } from 'components/settings/SettingsCard';
+import { BtDevice, pairDevice } from 'lib/ble';
+import { MemorySettings } from 'components/Memory';
+import { getGlobalState, useGlobalState } from 'lib/global';
+import { BLE_SERVICE_UUID as LM3_SERVICE_UUID, createLm3 } from 'lib/ble/lm3';
 
 type Severity = 'error' | 'info' | 'success' | 'warning';
 
 type InfoMessage = {
 	message: string;
 	severity: Severity;
-};
-
-const buttonProgressStyle: SxPropsTheme = {
-	color: green[500],
-	position: 'absolute',
-	top: '50%',
-	left: '50%',
-	marginTop: -12,
-	marginLeft: -12,
-};
-const iconStyle: SxPropsTheme = {
-	fontSize: '18px !important',
 };
 
 function DeviceStatus({ wait, severity, children }: { wait?: boolean; severity: Severity; children: any }) {
@@ -47,28 +30,7 @@ function DeviceStatus({ wait, severity, children }: { wait?: boolean; severity: 
 	);
 }
 
-function ActionButton({
-	wait,
-	onClick,
-	disabled,
-	children,
-}: {
-	wait: boolean;
-	onClick?: () => void;
-	disabled?: boolean;
-	children: any;
-}) {
-	return (
-		<Box>
-			<Button disabled={wait || disabled} variant="contained" onClick={onClick}>
-				{children}
-				{wait && <CircularProgress size={24} sx={buttonProgressStyle} />}
-			</Button>
-		</Box>
-	);
-}
-
-function LM3(props: { children: any }) {
+function LM3() {
 	const pairedWithMessage = (btd): InfoMessage => ({
 		message: btd ? `Paired with\n${btd.device.name}` : 'Not configured',
 		severity: 'info',
@@ -156,23 +118,10 @@ function LM3(props: { children: any }) {
 	};
 
 	return (
-		<Grid item xs="auto">
-			<Card variant="outlined" sx={{ height: '19em', width: '15em' }}>
-				<CardContent sx={{ height: '15em' }}>
-					<Typography gutterBottom variant="h5" component="h2">
-						{props.children}
-					</Typography>
-					<Box>
-						<DeviceStatus wait={isPairing} severity={info.severity}>
-							{info.message.split('\n').map((line, i) => (
-								<span key={i}>
-									{`${line}`}
-									<br />
-								</span>
-							))}
-						</DeviceStatus>
-					</Box>
-				</CardContent>
+		<SettingsCard
+			icon={<SensorWindowIcon sx={iconStyle} />}
+			title="LM3"
+			actions={
 				<CardActions>
 					<ActionButton wait={isPairing} disabled={!btAvailable} onClick={scanDevices}>
 						Scan
@@ -181,8 +130,17 @@ function LM3(props: { children: any }) {
 						Unpair
 					</ActionButton>
 				</CardActions>
-			</Card>
-		</Grid>
+			}
+		>
+			<DeviceStatus wait={isPairing} severity={info.severity}>
+				{info.message.split('\n').map((line, i) => (
+					<span key={i}>
+						{`${line}`}
+						<br />
+					</span>
+				))}
+			</DeviceStatus>
+		</SettingsCard>
 	);
 }
 
@@ -193,12 +151,9 @@ export default function Setup() {
 			<Box>
 				<Title href="/">Setup</Title>
 				<Grid container direction="row" alignItems="center" spacing={2}>
-					<LM3>
-						<SensorWindowIcon sx={iconStyle} /> LM3
-					</LM3>
-					<Parameters>
-						<DisplaySettingsIcon sx={iconStyle} /> Parameters
-					</Parameters>
+					<LM3 />
+					<Parameters />
+					<MemorySettings />
 				</Grid>
 			</Box>
 		</Container>

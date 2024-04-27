@@ -1,11 +1,19 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, ReactNode } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function SetupDialog({ btnText, title, children }) {
+export default function SetupDialog({
+	btnText,
+	title,
+	children,
+}: {
+	btnText: ReactNode;
+	title: string;
+	children: ReactNode;
+}) {
 	const [open, setOpen] = useState(false);
 
 	const handleClickOpen = () => {
