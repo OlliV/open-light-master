@@ -137,6 +137,7 @@ export default function Memory() {
 
 const SPDs = [
 	{ label: 'Planck', SPD: std.SPDofPlanck },
+	{ label: 'A', SPD: std.SPDofA },
 	{ label: 'D', SPD: std.SPDofD },
 	{ label: 'D50', SPD: std.SPDofD(5000) },
 	{ label: 'D55', SPD: std.SPDofD(5500) },
