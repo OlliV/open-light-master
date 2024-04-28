@@ -148,9 +148,9 @@ export default function CIE1931({
 }: {
 	Ex: number;
 	Ey: number;
-	CCT: number,
-	Duv: number,
-	secondaryPoints?: { label: string; Ex: number; Ey: number; CCT: number, Duv: number }[];
+	CCT: number;
+	Duv: number;
+	secondaryPoints?: { label: string; Ex: number; Ey: number; CCT: number; Duv: number }[];
 }) {
 	return (
 		<Container sx={{ minWidth: 400 }}>
@@ -200,7 +200,8 @@ export default function CIE1931({
 							tooltip: {
 								callbacks: {
 									beforeLabel: () => 'Planckian locus',
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+									label: (tooltipItem) =>
+										`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
 								},
 							},
 						},
@@ -225,7 +226,8 @@ export default function CIE1931({
 							// @ts-ignore
 							tooltip: {
 								callbacks: {
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${CCTMarkers[tooltipItem.dataIndex].T} K`,
+									label: (tooltipItem) =>
+										`xy: ${tooltipItem.formattedValue} CCT: ${CCTMarkers[tooltipItem.dataIndex].T} K`,
 								},
 							},
 						},
@@ -239,7 +241,8 @@ export default function CIE1931({
 							tooltip: {
 								callbacks: {
 									beforeLabel: () => 'current',
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${CCT.toFixed(0)} K Duv: ${Duv.toFixed(3)}`,
+									label: (tooltipItem) =>
+										`xy: ${tooltipItem.formattedValue} CCT: ${CCT.toFixed(0)} K Duv: ${Duv.toFixed(3)}`,
 								},
 							},
 						},
