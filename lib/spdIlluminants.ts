@@ -160,7 +160,7 @@ export const SPDofFL9 = [
 ];
 
 /**
- * Fluorescent 3 Band FL0.
+ * Fluorescent 3 Band FL10.
  * 5000 K
  */
 export const SPDofFL10 = [
