@@ -1,6 +1,7 @@
 import Container from '@mui/material/Container';
 import { Scatter, makeChartTitle, pointRotationAuto } from './Chart';
 import planckianCalc_xy from '../lib/planckian';
+import calcCCT from 'lib/cct';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -141,13 +142,15 @@ function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any
 export default function CIE1931({
 	Ex,
 	Ey,
+	CCT,
 	Duv,
 	secondaryPoints,
 }: {
 	Ex: number;
 	Ey: number;
-	Duv: number;
-	secondaryPoints?: { label: string; Ex: number; Ey: number; Duv: number }[];
+	CCT: number,
+	Duv: number,
+	secondaryPoints?: { label: string; Ex: number; Ey: number; CCT: number, Duv: number }[];
 }) {
 	return (
 		<Container sx={{ minWidth: 400 }}>
@@ -155,7 +158,6 @@ export default function CIE1931({
 				width={1}
 				height={1}
 				data={{
-					labels: locus.map(({ T }) => `${T} K`),
 					datasets: [
 						{
 							label: 'Spectral locus',
@@ -194,6 +196,13 @@ export default function CIE1931({
 							borderWidth: 1,
 							pointRadius: 0,
 							datalabels: { display: false },
+							// @ts-ignore
+							tooltip: {
+								callbacks: {
+									beforeLabel: () => 'Planckian locus',
+									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+								},
+							},
 						},
 						{
 							data: CCTMarkers.map(({ x, y }) => ({ x, y })),
@@ -213,6 +222,12 @@ export default function CIE1931({
 									},
 								},
 							},
+							// @ts-ignore
+							tooltip: {
+								callbacks: {
+									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${CCTMarkers[tooltipItem.dataIndex].T} K`,
+								},
+							},
 						},
 						{
 							label: 'current',
@@ -224,7 +239,7 @@ export default function CIE1931({
 							tooltip: {
 								callbacks: {
 									beforeLabel: () => 'current',
-									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} Duv: ${Duv.toFixed(3)}`,
+									label: (tooltipItem) => `xy: ${tooltipItem.formattedValue} CCT: ${CCT.toFixed(0)} K Duv: ${Duv.toFixed(3)}`,
 								},
 							},
 						},
@@ -239,7 +254,7 @@ export default function CIE1931({
 								callbacks: {
 									beforeLabel: () => point.label,
 									label: (tooltipItem) =>
-										`xy: ${tooltipItem.formattedValue} Duv: ${point.Duv.toFixed(3)}`,
+										`xy: ${tooltipItem.formattedValue} CCT: ${point.CCT.toFixed(0)} K Duv: ${point.Duv.toFixed(3)}`,
 								},
 							},
 						})),

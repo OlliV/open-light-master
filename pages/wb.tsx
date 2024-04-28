@@ -39,7 +39,7 @@ export default function Text() {
 							<Memory />
 						</Box>
 					</Box>
-					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} Duv={meas.Duv} secondaryPoints={secondary} />
+					<CIE1931 Ex={meas.Ex} Ey={meas.Ey} CCT={meas.CCT} Duv={meas.Duv}  secondaryPoints={secondary} />
 				</Paper>
 			</Box>
 		</Container>
