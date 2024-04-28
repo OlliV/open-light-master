@@ -144,6 +144,7 @@ const SPDs = [
 	{ label: 'D60', SPD: std.SPDofD(6000) },
 	{ label: 'D65', SPD: std.SPDofD(6500) },
 	{ label: 'D93', SPD: std.SPDofD(9300) },
+	{ label: 'E', SPD: std.SPDofE },
 	{ label: 'FL1', SPD: std.SPDofFL1 },
 	{ label: 'FL2', SPD: std.SPDofFL2 },
 	{ label: 'FL3', SPD: std.SPDofFL3 },
@@ -156,6 +157,18 @@ const SPDs = [
 	{ label: 'FL10', SPD: std.SPDofFL10 },
 	{ label: 'FL11', SPD: std.SPDofFL11 },
 	{ label: 'FL12', SPD: std.SPDofFL12 },
+	{ label: 'Xenon', SPD: std.SPDofXenon },
+	{ label: 'HMI 6002 K', SPD: std.SPDofHMI1 },
+	{ label: 'HMI 5630 K', SPD: std.SPDofHMI2 },
+	{ label: 'LED-B1', SPD: std.SPDofLED_B1 },
+	{ label: 'LED-B2', SPD: std.SPDofLED_B2 },
+	{ label: 'LED-B3', SPD: std.SPDofLED_B3 },
+	{ label: 'LED-B4', SPD: std.SPDofLED_B4 },
+	{ label: 'LED-B5', SPD: std.SPDofLED_B5 },
+	{ label: 'LED-BH1', SPD: std.SPDofLED_BH1 },
+	{ label: 'LED-RGB1', SPD: std.SPDofLED_RGB1 },
+	{ label: 'LED-V1', SPD: std.SPDofLED_V1 },
+	{ label: 'LED-V2', SPD: std.SPDofLED_V2 },
 ];
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
