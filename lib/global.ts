@@ -107,6 +107,7 @@ const initialState: GlobalState = {
 		Y1: 0,
 		O1: 0,
 		R1: 0,
+		temperature: 20,
 		mode: 0,
 		Ex: 0,
 		Ey: 0,
