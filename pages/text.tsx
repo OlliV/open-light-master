@@ -185,7 +185,11 @@ export default function Text() {
 			<Box position="relative" sx={{ flexGrow: 1 }}>
 				<Title>OLM - Text</Title>
 				<Paper>
-					<Memory />
+					<Box sx={{ width: '100%', height: 75 }}>
+						<Box sx={{ float: 'right', paddingTop: 1, paddingRight: 1, paddingBottom: 1 }}>
+							<Memory />
+						</Box>
+					</Box>
 					<DataArray
 						rows={rows}
 						pageSize={9}
