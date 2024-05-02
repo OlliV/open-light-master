@@ -28,6 +28,11 @@ export function interpolateSPD(input: SPD, increment: number = 5, min: number = 
 	return wlMap((l) => ({ l, v: spline.at(l) }), increment);
 }
 
+/**
+ * Calculate tristimulus from an spd.
+ * @param spd spd must be 380..780 nm with 5 nm steps.
+ * @param cmf Color matching function. This should always almost be the CIE1931_2DEG_CMF.
+ */
 export function spd2XYZ(spd: number[], cmf: number[]) {
 	const xsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3], 0);
 	const ysum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 1], 0);
@@ -36,10 +41,20 @@ export function spd2XYZ(spd: number[], cmf: number[]) {
 	return [(100 * xsum) / ysum, 100, (100 * zsum) / ysum];
 }
 
+/**
+ * Normalize by 560 nm.
+ * @param spd spd must be 380..780 nm with 5 nm steps.
+ */
 export function normalizeSPD(spd: number[]) {
 	return spd.map((v, _, a) => v / a[36]);
 }
 
+/**
+ * Calculate a reference.
+ * Calculate a reference measurement that can be used to compare against real
+ * measurements.
+ * @param spd spd must be 380..780 nm with 5 nm steps.
+ */
 export function calcRefMeas(spd: number[]) {
 	const ref = normalizeSPD(spd);
 	const XYZ = spd2XYZ(ref, CIE1931_2DEG_CMF);
