@@ -88,7 +88,7 @@ export default function Text() {
 		}
 
 		return [allSpd.map((m) => m.name), mat];
-	}, [measSpd, recall]);
+	}, [measSpd, recallSpd]);
 	useEffect(() => {
 		setIsClient(true);
 	}, []);
