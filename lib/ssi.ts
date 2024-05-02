@@ -1,6 +1,6 @@
 import { SPD, interpolateSPD } from './spd';
 import { matrixMul } from './matrix';
-import { sub as vecSub, convolve } from './vector';
+import { normalize3, sub as vecSub, convolve } from './vector';
 
 const trap30x301 = (() => {
 	const trap = [0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5];
@@ -14,11 +14,6 @@ const trap30x301 = (() => {
 
 	return out;
 })();
-
-function normSSIVec(v: number[]) {
-	const sum = v.reduce((sum, cur) => sum + cur, 0);
-	return v.map((x) => x / sum);
-}
 
 const spectralWeight = [
 	12 / 45,
@@ -64,8 +59,8 @@ export function ssi(ref: SPD, test: SPD) {
 		interpolateSPD(test, 1, 380, 670).map(({ v }) => [v])
 	).map(([v]) => v);
 
-	const refNorm = normSSIVec(refVec); // step 2
-	const testNorm = normSSIVec(testVec);
+	const refNorm = normalize3(refVec); // step 2
+	const testNorm = normalize3(testVec);
 
 	const diffNorm = vecSub(testNorm, refNorm); // step 3
 	const diffRela = diffNorm.map((x, i) => x / (refNorm[i] + 1 / refNorm.length)); // step 4

@@ -1,12 +1,26 @@
+/**
+ * Normalize by the sum of squared values.
+ */
 export function normalize(v: number[]) {
 	const div = Math.sqrt(v.reduce((res, vn) => res + Math.pow(vn, 2), 0));
 
 	return v.map((vn) => vn / div);
 }
 
+/**
+ * Normalize by the largest element; i.e. so that the largest element will be 1.
+ */
 export function normalize2(v: number[]) {
 	const max = Math.max(...v);
 	return max === 0 ? v.slice(0) : v.map((v) => v / max);
+}
+
+/**
+ * Normalize so that the sum of elements is 1.
+ */
+export function normalize3(v: number[]) {
+	const sum = v.reduce((sum, cur) => sum + cur, 0);
+	return v.map((x) => x / sum);
 }
 
 export function sub(a: number[], b: number[]) {
