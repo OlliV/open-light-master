@@ -5,13 +5,13 @@ import Paper from '@mui/material/Paper';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { GridLogicOperator } from '@mui/x-data-grid';
 import Memory from 'components/Memory';
-import MyHead from '../components/MyHead';
-import Title from '../components/Title';
-import lm3CalcCRI from '../lib/lm3calc';
-import { useGlobalState, useMemoryRecall } from '../lib/global';
-import { XYZnD65, xy2XYZ, XYZ2Lab } from '../lib/CIEConv';
-import { LabHueSatChroma } from '../lib/Lab';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import lm3CalcCRI from 'lib/lm3calc';
+import { LabHueSatChroma } from 'lib/Lab';
+import { XYZnD65, xy2XYZ, XYZ2Lab } from 'lib/CIEConv';
 import { calcCRI } from 'lib/cri';
+import { useGlobalState, useMemoryRecall } from 'lib/global';
 
 const rowFormatter: { [key: string]: (value: never) => string } = {
 	CCT: (value: number) => `${Math.round(value)} K`,

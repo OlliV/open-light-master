@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import Notifications from './Notifications';
 import PowerStatus from './PowerStatus';
-import MeasControl from '../MeasControl';
+import MeasControl from 'components/MeasControl';
 
 const sxArrowEnabled = {
 	'&:hover': {

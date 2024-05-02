@@ -4,14 +4,14 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Container from '@mui/material/Container';
-import MyHead from '../components/MyHead';
-import Title from '../components/Title';
-import Polar from '../components/Polar';
-import { useGlobalState } from '../lib/global';
-import { XYZnD65, xy2XYZ, XYZ2Lab } from '../lib/CIEConv';
-import { LabHueSatChroma } from '../lib/Lab';
-import { normalize2 } from '../lib/vector';
-import wl2rgb from '../lib/wl2rgb';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import Polar from 'components/Polar';
+import { useGlobalState } from 'lib/global';
+import { XYZnD65, xy2XYZ, XYZ2Lab } from 'lib/CIEConv';
+import { LabHueSatChroma } from 'lib/Lab';
+import { normalize2 } from 'lib/vector';
+import wl2rgb from 'lib/wl2rgb';
 
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');

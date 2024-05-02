@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 import Paper from '@mui/material/Paper';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
@@ -12,13 +14,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import webfft from 'webfft';
-import { fftshift } from '../lib/fftshift';
-import MyHead from '../components/MyHead';
-import Title from '../components/Title';
-import IconButton from '@mui/material/IconButton';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
-import { useGlobalState } from '../lib/global';
-import { Line } from '../components/Chart';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import { Line } from 'components/Chart';
+import { fftshift } from 'lib/fftshift';
+import { useGlobalState } from 'lib/global';
 
 function mean(x: number[]) {
 	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;

@@ -3,25 +3,18 @@ import Box from '@mui/system/Box';
 import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
-import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import Title from '../components/Title';
-import { Bar, Scatter, makeChartTitle } from '../components/Chart';
-import Memory from '../components/Memory';
-import {
-	LM3MemoryItem,
-	useMemoryRecall,
-	useGlobalState,
-	RefMemoryItem,
-	LM3Measurement,
-	RefMeasurement,
-} from '../lib/global';
-import wavelengthToColor from '../lib/wl2rgb';
-import { SPD, interpolateSPD } from '../lib/spd';
-import { lm3NormSPD } from '../lib/lm3calc';
+import Memory from 'components/Memory';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import { Bar, Scatter, makeChartTitle } from 'components/Chart';
+import wavelengthToColor from 'lib/wl2rgb';
 import wlMap from 'lib/wlmap';
+import { SPD, interpolateSPD } from 'lib/spd';
+import { lm3NormSPD } from 'lib/lm3calc';
 import { normalize2 } from 'lib/vector';
+import { useMemoryRecall, useGlobalState } from 'lib/global';
 
 type RecallData = {
 	name: string;

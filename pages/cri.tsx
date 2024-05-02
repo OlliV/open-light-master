@@ -4,17 +4,17 @@ import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import Title from '../components/Title';
-import CCT from '../components/CCT';
-import Duv from '../components/Duv';
-import { useGlobalState } from '../lib/global';
-import { Bar, Scatter, gridColorAuto, pointRotationAuto } from '../components/Chart';
-import { calcCRI } from '../lib/cri';
-import lm3CalcCRI from '../lib/lm3calc';
+import CCT from 'components/CCT';
+import Duv from 'components/Duv';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import { useGlobalState } from 'lib/global';
+import { Bar, Scatter, gridColorAuto, pointRotationAuto } from 'components/Chart';
+import { calcCRI } from 'lib/cri';
+import lm3CalcCRI from 'lib/lm3calc';
 
 const lightBlack = 'rgb(50,50,50)';
 const swatch = [

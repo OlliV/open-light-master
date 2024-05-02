@@ -2,13 +2,13 @@ import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import CCT from '../components/CCT';
-import CIE1931 from '../components/CIE1931';
-import Duv from '../components/Duv';
-import Memory from '../components/Memory';
-import MyHead from '../components/MyHead';
-import Title from '../components/Title';
-import { useGlobalState, useMemoryRecall } from '../lib/global';
+import CCT from 'components/CCT';
+import CIE1931 from 'components/CIE1931';
+import Duv from 'components/Duv';
+import Memory from 'components/Memory';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import { useGlobalState, useMemoryRecall } from 'lib/global';
 
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');

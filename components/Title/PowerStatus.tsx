@@ -1,10 +1,6 @@
-import { BatteryLevel, PowerAdapter } from '../BatteryLevel';
-import { useGlobalState } from '../../lib/global';
+import { BatteryLevel } from 'components/BatteryLevel';
+import { useGlobalState } from 'lib/global';
 import { useEffect } from 'react';
-
-// TODO Battery status is unstable
-// Unfortunately 9.0 is very unstable.
-// It just oscillates between AC on and off.
 
 export default function PowerStatus() {
 	// @ts-ignore

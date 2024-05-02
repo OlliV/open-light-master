@@ -2,15 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
-import MyHead from '../components/MyHead';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import Title from '../components/Title';
 import Typography from '@mui/material/Typography';
-import { useGlobalState } from '../lib/global';
-import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from '../lib/exposure';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
+import { useGlobalState } from 'lib/global';
+import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from 'lib/exposure';
 
 const DEFAULT_ISO = 100;
 

@@ -8,9 +8,9 @@ import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { AlertColor } from '@mui/material/Alert';
-import { BatteryLevel } from '../BatteryLevel';
+import { BatteryLevel } from 'components/BatteryLevel';
 import { ReactNode, MouseEvent, useState } from 'react';
-import { useGlobalState } from '../../lib/global';
+import { useGlobalState } from 'lib/global';
 
 type Notification = {
 	severity: AlertColor;

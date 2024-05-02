@@ -12,8 +12,8 @@ import ExposureIcon from '@mui/icons-material/Exposure';
 import FluorescentIcon from '@mui/icons-material/Fluorescent';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
-import MyHead from '../components/MyHead';
-import Title from '../components/Title';
+import MyHead from 'components/MyHead';
+import Title from 'components/Title';
 
 const Item = styled(Paper)(({ theme }) => ({
 	backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

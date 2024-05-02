@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
 import { Scatter, makeChartTitle, pointRotationAuto } from './Chart';
-import planckianCalc_xy from '../lib/planckian';
+import planckianCalc_xy from 'lib/planckian';
 import calcCCT from 'lib/cct';
 
 const spectral = [
