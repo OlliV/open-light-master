@@ -11,9 +11,18 @@ export type SPD = {
 	v: number /*!< power. */;
 }[];
 
-export function interpolateSPD(input: SPD, increment: number = 5): SPD {
-	const xs = [380, ...input.map(({ l }) => l), 780];
-	const ys = [0, ...input.map(({ v }) => v), input[input.length - 1].v];
+export function interpolateSPD(input: SPD, increment: number = 5, min: number = 380, max: number = 780): SPD {
+	const xs = [...input.map(({ l }) => l)];
+	const ys = [...input.map(({ v }) => v)];
+
+	if (xs[0] > min) {
+		xs.unshift(min);
+		ys.unshift(0);
+	}
+	if (xs[xs.length - 1] < max) {
+		xs.push(max);
+		ys.push(ys[ys.length - 1]);
+	}
 
 	const spline = new Spline(xs, ys);
 	return wlMap((l) => ({ l, v: spline.at(l) }), increment);

@@ -1,9 +1,9 @@
 import { getGlobalState, setGlobalState } from '../global';
-import calcCCT from '../cct';
-import calcDuv from '../duv';
-import calcTint from '../tint';
-import { calcFlicker } from '../flicker';
-import { XYZ2xy, xy2uv } from '../CIEConv';
+import calcCCT from 'lib/cct';
+import calcDuv from 'lib/duv';
+import calcTint from 'lib/tint';
+import { calcFlicker } from 'lib/flicker';
+import { XYZ2xy, xy2uv } from 'lib/CIEConv';
 
 export const BLE_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const RX_CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';

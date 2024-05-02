@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import ContrastIcon from '@mui/icons-material/Contrast';
 import DataArrayIcon from '@mui/icons-material/DataArray';
+import DifferenceIcon from '@mui/icons-material/Difference';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import ExposureIcon from '@mui/icons-material/Exposure';
 import FluorescentIcon from '@mui/icons-material/Fluorescent';
@@ -66,6 +67,10 @@ export default function Home() {
 					<MenuItem href="/spectrum">
 						Spectrum <br />
 						<EqualizerIcon />
+					</MenuItem>
+					<MenuItem href="/ssi">
+						SSI <br />
+						<DifferenceIcon />
 					</MenuItem>
 					<MenuItem href="/text">
 						Text <br />
