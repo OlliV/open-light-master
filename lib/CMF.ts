@@ -1,4 +1,4 @@
-// 2deg CIE Color Matching Functions
+// 2deg CIE 1931 Color Matching Functions
 // x(lambda), y(lambda), z(lambda)
 // 380 - 780 nm
 // step: 5 nm
