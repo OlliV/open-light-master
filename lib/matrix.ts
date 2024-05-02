@@ -50,8 +50,8 @@ const matrixMinor = (matrix: number[][], row: number, col: number) =>
 		: matrix.filter((i, ix) => ix !== row - 1).map((i) => i.filter((j, jx) => jx !== col - 1));
 
 // TODO FIX
-// @ts-ignore
 export const matrixTrans = (matrix: number[][]) =>
+	// @ts-ignore
 	makeMatrix(...shifter(matrixSize(matrix), 1), (i: number, j: number) => matrix[j][i]);
 
 export const matrixDet = (matrix: number[][]) =>
