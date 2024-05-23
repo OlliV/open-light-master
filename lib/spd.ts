@@ -28,6 +28,11 @@ export function interpolateSPD(input: SPD, increment: number = 5, min: number = 
 	return wlMap((l) => ({ l, v: spline.at(l) }), increment);
 }
 
+// Convert any SPD that covers 380..780 nm to an spd array.
+export function SPD2spd(input: SPD): number[] {
+	return input.filter(({ l }) => l >= 380 && l <= 780 && l % 5 == 0).map(({ v }) => v);
+}
+
 /**
  * Calculate tristimulus from an spd.
  * @param spd spd must be 380..780 nm with 5 nm steps.
@@ -46,7 +51,9 @@ export function spd2XYZ(spd: number[], cmf: number[]) {
  * @param spd spd must be 380..780 nm with 5 nm steps.
  */
 export function normalizeSPD(spd: number[]) {
-	return spd.map((v, _, a) => v / a[36]);
+	const center = spd[36];
+
+	return spd.map((v) => v / center);
 }
 
 /**
