@@ -209,6 +209,11 @@ const SPDs: {
 	{ label: 'LED-RGB1', desc: '2840 K mixing of red, green, and blue LEDs.', SPD: std.SPDofLED_RGB1 },
 	{ label: 'LED-V1', desc: '2724 K violet-pumped phosphor-type LEDs.', SPD: std.SPDofLED_V1 },
 	{ label: 'LED-V2', desc: '4070 K violet-pumped phosphor-type LEDs.', SPD: std.SPDofLED_V2 },
+	{ label: 'HP1', desc: 'CIE Standard high pressure sodium lamp', SPD: std.SPDofHP1 },
+	{ label: 'HP2', desc: 'CIE Colour enhanced high pressure sodium lamp', SPD: std.SPDofHP2 },
+	{ label: 'HP3', desc: 'CIE  High pressure metal halide lamp', SPD: std.SPDofHP3 },
+	{ label: 'HP4', desc: 'CIE High pressure metal halide lamp', SPD: std.SPDofHP4 },
+	{ label: 'HP5', desc: 'CIE High pressure metal halide lamp', SPD: std.SPDofHP5 },
 ];
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
