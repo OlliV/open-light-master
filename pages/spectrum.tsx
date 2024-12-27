@@ -192,7 +192,7 @@ export default function Text() {
 							<Memory />
 						</Box>
 					</Box>
-					<Carousel autoPlay={false} animation="slide">
+					<Carousel autoPlay={false} animation="slide" swipe={false}>
 						<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
 							<SpectrumBar data={norm} recallData={recallData} />
 						</Container>
