@@ -38,7 +38,7 @@ export function SPD2spd(input: SPD): number[] {
  * @param spd spd must be 380..780 nm with 5 nm steps.
  * @param cmf Color matching function. This should always almost be the CIE1931_2DEG_CMF.
  */
-export function spd2XYZ(spd: number[], cmf: number[]) {
+export function spd2XYZ(spd: number[], cmf: Float64Array) {
 	const xsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3], 0);
 	const ysum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 1], 0);
 	const zsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 2], 0);
