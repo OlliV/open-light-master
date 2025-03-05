@@ -25,7 +25,7 @@ export default function lm3CalcCRI(meas: MeasurementData) {
 
 	return calcCRI(
 		meas.CCT,
-		spd.map(({ v }) => v)
+		Float64Array.from(spd, (({ v }) => v))
 	);
 }
 

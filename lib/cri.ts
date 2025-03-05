@@ -135,7 +135,7 @@ function referenceIlluminant(CCT: number) {
 	return CCT < 5000 ? SPDofPlanck(CCT) : SPDofD(CCT);
 }
 
-function calcTCS_XYZ(spd: number[], cmf: number[] | Float64Array, TCSSample: number[] | Float64Array) {
+function calcTCS_XYZ(spd: Float64Array, cmf: Float64Array, TCSSample: number[] | Float64Array) {
 	const CIExsum = spd.reduce((sum, v, i) => sum + v * TCSSample[i] * cmf[i * 3], 0);
 	const CIEysum = spd.reduce((sum, v, i) => sum + v * TCSSample[i] * cmf[i * 3 + 1], 0);
 	const CIEzsum = spd.reduce((sum, v, i) => sum + v * TCSSample[i] * cmf[i * 3 + 2], 0);
@@ -144,7 +144,7 @@ function calcTCS_XYZ(spd: number[], cmf: number[] | Float64Array, TCSSample: num
 	return [(100 * CIExsum) / ysum, (100 * CIEysum) / ysum, (100 * CIEzsum) / ysum];
 }
 
-function calcAllTCS_XYZ(spd: number[], cmf: Float64Array) {
+function calcAllTCS_XYZ(spd: Float64Array, cmf: Float64Array) {
 	return TCSSamples.map((sample) => calcTCS_XYZ(spd, cmf, sample));
 }
 
@@ -188,7 +188,7 @@ function calcRa(R: number[]) {
 	return sum / 8;
 }
 
-export function calcCRI(CCT: number, test: number[]) {
+export function calcCRI(CCT: number, test: Float64Array) {
 	// Reference
 	const ref = calcRef(CCT);
 	const TCSrefXYZ = calcAllTCS_XYZ(ref.data, CIE1931_2DEG_CMF);

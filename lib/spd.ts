@@ -38,10 +38,10 @@ export function SPD2spd(input: SPD): number[] {
  * @param spd spd must be 380..780 nm with 5 nm steps.
  * @param cmf Color matching function. This should always almost be the CIE1931_2DEG_CMF.
  */
-export function spd2XYZ(spd: number[], cmf: Float64Array) {
-	const xsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3], 0);
-	const ysum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 1], 0);
-	const zsum = spd.reduce((sum, v, i) => sum + v * cmf[i * 3 + 2], 0);
+export function spd2XYZ(spd: Float64Array, cmf: Float64Array) {
+	const xsum = spd.reduce((sum: number, v: number, i: number, arr: number[] | Float64Array) => sum + v * cmf[i * 3], 0);
+	const ysum = spd.reduce((sum: number, v: number, i: number) => sum + v * cmf[i * 3 + 1], 0);
+	const zsum = spd.reduce((sum: number, v: number, i: number) => sum + v * cmf[i * 3 + 2], 0);
 
 	return [(100 * xsum) / ysum, 100, (100 * zsum) / ysum];
 }
@@ -50,10 +50,10 @@ export function spd2XYZ(spd: number[], cmf: Float64Array) {
  * Normalize by 560 nm.
  * @param spd spd must be 380..780 nm with 5 nm steps.
  */
-export function normalizeSPD(spd: number[]) {
+export function normalizeSPD(spd: Float64Array) {
 	const center = spd[36];
 
-	return spd.map((v) => v / center);
+	return spd.map((v: number) => v / center);
 }
 
 /**
@@ -62,7 +62,7 @@ export function normalizeSPD(spd: number[]) {
  * measurements.
  * @param spd spd must be 380..780 nm with 5 nm steps.
  */
-export function calcRefMeas(spd: number[]) {
+export function calcRefMeas(spd: Float64Array) {
 	const ref = normalizeSPD(spd);
 	const XYZ = spd2XYZ(ref, CIE1931_2DEG_CMF);
 	const [x, y] = XYZ2xy(XYZ);

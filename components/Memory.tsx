@@ -150,7 +150,7 @@ export default function Memory() {
 const SPDs: {
 	label: string;
 	desc: string;
-	SPD: number[] | ((CCT: number) => number[]);
+	SPD: Float64Array | ((CCT: number) => Float64Array);
 }[] = [
 	{ label: 'Planck', desc: 'Planckian locus.', SPD: std.SPDofPlanck },
 	{
@@ -219,7 +219,7 @@ const SPDs: {
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
 	? ElementType
 	: never;
-function SelectReferenceIlluminant({ onAdd }: { onAdd: (label: string, spd: number[]) => void }) {
+function SelectReferenceIlluminant({ onAdd }: { onAdd: (label: string, spd: Float64Array) => void }) {
 	const [selected, setSelected] = useState<ArrayElement<typeof SPDs>>();
 	const [CCT, setCCT] = useState(6500);
 	const handleAdd = () => {
@@ -280,7 +280,7 @@ export function MemorySettings() {
 	const [openAddModal, setOpenAddModal] = useState(false);
 	const handleOpen = () => setOpenAddModal(true);
 	const handleClose = () => setOpenAddModal(false);
-	const handleAdd = (label: string, spd: number[]) =>
+	const handleAdd = (label: string, spd: Float64Array) =>
 		setMemory([
 			...memory,
 			{
