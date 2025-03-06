@@ -29,8 +29,8 @@ export function interpolateSPD(input: SPD, increment: number = 5, min: number = 
 }
 
 // Convert any SPD that covers 380..780 nm to an spd array.
-export function SPD2spd(input: SPD): number[] {
-	return input.filter(({ l }) => l >= 380 && l <= 780 && l % 5 == 0).map(({ v }) => v);
+export function SPD2spd(input: SPD): Float64Array {
+	return Float64Array.from(input.filter(({ l }) => l >= 380 && l <= 780 && l % 5 == 0).map(({ v }) => v));
 }
 
 /**
@@ -39,10 +39,7 @@ export function SPD2spd(input: SPD): number[] {
  * @param cmf Color matching function. This should always almost be the CIE1931_2DEG_CMF.
  */
 export function spd2XYZ(spd: Float64Array, cmf: Float64Array) {
-	const xsum = spd.reduce(
-		(sum: number, v: number, i: number, arr: number[] | Float64Array) => sum + v * cmf[i * 3],
-		0
-	);
+	const xsum = spd.reduce((sum: number, v: number, i: number) => sum + v * cmf[i * 3], 0);
 	const ysum = spd.reduce((sum: number, v: number, i: number) => sum + v * cmf[i * 3 + 1], 0);
 	const zsum = spd.reduce((sum: number, v: number, i: number) => sum + v * cmf[i * 3 + 2], 0);
 
