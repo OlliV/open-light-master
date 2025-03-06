@@ -10,7 +10,7 @@ import MyHead from 'components/MyHead';
 import Parameters from 'components/settings/Parameters';
 import Title from 'components/Title';
 import { iconStyle, SettingsCard, ActionButton } from 'components/settings/SettingsCard';
-import { BtDevice, pairDevice } from 'lib/ble';
+import { Paired, pairDevice } from 'lib/ble';
 import { MemorySettings } from 'components/Memory';
 import { getGlobalState, useGlobalState } from 'lib/global';
 import { BLE_SERVICE_UUID as LM3_SERVICE_UUID, createLm3 } from 'lib/ble/lm3';
@@ -31,21 +31,21 @@ function DeviceStatus({ wait, severity, children }: { wait?: boolean; severity: 
 }
 
 function LM3() {
-	const pairedWithMessage = (btd): InfoMessage => ({
+	const pairedWithMessage = (btd: Paired): InfoMessage => ({
 		message: btd ? `Paired with\n${btd.device.name}` : 'Not configured',
 		severity: 'info',
 	});
 	const [btAvailable, setBtAvailable] = useState(false);
 	const [pairingRequest, setPairingRequest] = useState(false);
 	const [isPairing, setIsPairing] = useState(false);
-	const [btDevice, setBtDevice] = useGlobalState('btDevice_lm3') as [BtDevice, (BtDevice) => void];
-	const [lm3, setLm3] = useGlobalState('lm3');
+	const [btDevice, setBtDevice] = useGlobalState('btDevice_lm3');
+	const [, setLm3] = useGlobalState('lm3');
 	let [info, setInfo] = useState<InfoMessage>(pairedWithMessage(btDevice));
 
 	const unpairDevice = () => {
 		if (btDevice) {
+			console.log(btDevice);
 			if (btDevice.device.gatt.connected) {
-				//@ts-ignore
 				btDevice.disconnect();
 			}
 			setBtDevice(null);
@@ -77,7 +77,7 @@ function LM3() {
 					const newBtDevice = await pairDevice(
 						null,
 						[LM3_SERVICE_UUID],
-						async ({ device, server }) => {
+						async ({ device: _device, server }) => {
 							try {
 								const lm3 = await createLm3(server);
 								await lm3.startNotifications();

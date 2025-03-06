@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
-import { BtDevice } from './ble';
+import { Paired } from './ble';
 
 export type LM3Measurement = {
 	// corrected
@@ -68,7 +68,7 @@ export type LM3MemoryItem = {
 
 export type GlobalState = {
 	// Devices
-	btDevice_lm3: null | BtDevice;
+	btDevice_lm3: null | Paired;
 	// Control
 	lm3: any; // TODO Type
 	// Set values

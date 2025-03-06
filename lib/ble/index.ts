@@ -2,6 +2,7 @@ export interface BtDevice {
 	device: BluetoothDevice;
 	server: BluetoothRemoteGATTServer;
 }
+export type Paired = Awaited<ReturnType<typeof pairDevice>>;
 
 async function connect(device: BluetoothDevice): Promise<BluetoothRemoteGATTServer> {
 	try {
@@ -83,7 +84,9 @@ export async function stopNotifications(characteristic) {
 }
 
 async function exponentialBackoff<T>(max: number, delay: number, toTry: () => Promise<T>) {
-	return new Promise<ReturnType<typeof toTry>>((resolve, reject) => _exponentialBackoff(max, delay, toTry, resolve, reject));
+	return new Promise<ReturnType<typeof toTry>>((resolve, reject) =>
+		_exponentialBackoff(max, delay, toTry, resolve, reject)
+	);
 }
 
 async function _exponentialBackoff(max: number, delay: number, toTry, success, fail) {
