@@ -15,8 +15,7 @@ async function connect(device: BluetoothDevice): Promise<BluetoothRemoteGATTServ
 		);
 
 		console.log(`Bluetooth Device connected (${device.name}).`);
-		// TODO The typing of exponentialBackoff() is not correct
-		return server as BluetoothRemoteGATTServer;
+		return server;
 	} catch (err) {
 		throw err;
 	}
@@ -84,7 +83,7 @@ export async function stopNotifications(characteristic) {
 }
 
 async function exponentialBackoff(max: number, delay: number, toTry) {
-	return new Promise((resolve, reject) => _exponentialBackoff(max, delay, toTry, resolve, reject));
+	return new Promise<typeof toTry>((resolve, reject) => _exponentialBackoff(max, delay, toTry, resolve, reject));
 }
 
 async function _exponentialBackoff(max: number, delay: number, toTry, success, fail) {
