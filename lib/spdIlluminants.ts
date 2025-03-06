@@ -6,15 +6,19 @@ const nmIncrement = 5;
  * Black body radiant.
  */
 export function SPDofPlanck(CCT: number) {
-	return Float64Array.from(wlMap((wl) => {
-		const wlp = wl * 10 ** -9;
-		return 1.191027e-16 / (wlp ** 5 * (Math.exp(0.0143876 / (wlp * CCT)) - 1)); // Planck
-	}, nmIncrement));
+	return Float64Array.from(
+		wlMap((wl) => {
+			const wlp = wl * 10 ** -9;
+			return 1.191027e-16 / (wlp ** 5 * (Math.exp(0.0143876 / (wlp * CCT)) - 1)); // Planck
+		}, nmIncrement)
+	);
 }
 
-export const SPDofA = Float64Array.from(wlMap((wl) => {
-	return (100 * (560 / wl) ** 5 * (Math.exp(1.435e7 / (2848 * 560)) - 1)) / (Math.exp(1.435e7 / (2848 * wl)) - 1);
-}, nmIncrement));
+export const SPDofA = Float64Array.from(
+	wlMap((wl) => {
+		return (100 * (560 / wl) ** 5 * (Math.exp(1.435e7 / (2848 * 560)) - 1)) / (Math.exp(1.435e7 / (2848 * wl)) - 1);
+	}, nmIncrement)
+);
 
 // 380 - 780
 // S0(L), S1(L), S2(L)
@@ -42,11 +46,13 @@ export function SPDofD(CCT: number) {
 	const xd = CCT < 7000 ? xlo : xhi;
 	const yd = -3 * xd ** 2 + 2.87 * xd - 0.275;
 
-	return Float64Array.from(wlMap((_, i) => {
-		const M1 = (-1.3515 - 1.7703 * xd + 5.9114 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
-		const M2 = (0.03 - 31.4424 * xd + 30.0717 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
-		return CIE_DIlluminant[i * 3] + M1 * CIE_DIlluminant[i * 3 + 1] + M2 * CIE_DIlluminant[i * 3 + 2]; // D illuminant
-	}, nmIncrement));
+	return Float64Array.from(
+		wlMap((_, i) => {
+			const M1 = (-1.3515 - 1.7703 * xd + 5.9114 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
+			const M2 = (0.03 - 31.4424 * xd + 30.0717 * yd) / (0.0241 + 0.2562 * xd - 0.7341 * yd);
+			return CIE_DIlluminant[i * 3] + M1 * CIE_DIlluminant[i * 3 + 1] + M2 * CIE_DIlluminant[i * 3 + 2]; // D illuminant
+		}, nmIncrement)
+	);
 }
 
 export const SPDofE = Float64Array.from(wlMap((_wl) => 100, nmIncrement));
