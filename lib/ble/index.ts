@@ -82,8 +82,8 @@ export async function stopNotifications(characteristic) {
 	characteristic.stopNotifications();
 }
 
-async function exponentialBackoff(max: number, delay: number, toTry) {
-	return new Promise<typeof toTry>((resolve, reject) => _exponentialBackoff(max, delay, toTry, resolve, reject));
+async function exponentialBackoff<T>(max: number, delay: number, toTry: () => Promise<T>) {
+	return new Promise<ReturnType<typeof toTry>>((resolve, reject) => _exponentialBackoff(max, delay, toTry, resolve, reject));
 }
 
 async function _exponentialBackoff(max: number, delay: number, toTry, success, fail) {
