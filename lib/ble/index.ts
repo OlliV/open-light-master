@@ -38,7 +38,7 @@ export async function pairDevice(
 
 	const device = await navigator.bluetooth.requestDevice(options);
 	const onDisconnected = (e) => {
-		console.log(`> Bluetooth Device disconnected`); // TODO Show the name
+		console.log(`> Bluetooth Device "${e.currentTarget.gatt.device.name}" disconnected`);
 		connect(device)
 			.then(async (server) => {
 				const btDevice = {
