@@ -126,12 +126,8 @@ function interpolateSPD2Chart(data: SPD) {
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const recall = useMemoryRecall();
-	const [norm, scatter] = useMemo(() => {
-		const norm = lm3NormSPD(meas);
-		const scatter = interpolateSPD2Chart(norm);
-
-		return [norm, scatter];
-	}, [meas]);
+	const norm = lm3NormSPD(meas);
+	const scatter = interpolateSPD2Chart(norm);
 	const recallData = useMemo<RecallData[]>(() => {
 		return recall
 			.filter((m) => ['ref', 'LM3'].includes(m.type))
