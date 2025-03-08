@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -13,52 +12,43 @@ import { LabHueSatChroma } from 'lib/Lab';
 import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
 
+function borderColorSelector(context) {
+	const ctx = context.chart.ctx;
+	const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+
+	gradient.addColorStop(0, wl2rgb(650)[0]);
+	// TODO This is picking wrong colors most of the time
+	gradient.addColorStop(1 / 6, wl2rgb(600)[0]);
+	gradient.addColorStop(2 / 6, wl2rgb(570)[0]);
+	gradient.addColorStop(3 / 6, wl2rgb(550)[0]);
+	gradient.addColorStop(4 / 6, wl2rgb(500)[0]);
+	gradient.addColorStop(5 / 6, wl2rgb(450)[0]);
+	gradient.addColorStop(6 / 6, wl2rgb(650)[0]);
+
+	return gradient;
+}
+
 export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
-	const wls = useMemo(() => {
-		const r = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
-		const ds = {
-			borderColor: (context) => {
-				const ctx = context.chart.ctx;
-				const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-				gradient.addColorStop(0, wl2rgb(650)[0]);
-				// TODO This is picking wrong colors most of the time
-				gradient.addColorStop(1 / 6, wl2rgb(600)[0]);
-				gradient.addColorStop(2 / 6, wl2rgb(570)[0]);
-				gradient.addColorStop(3 / 6, wl2rgb(550)[0]);
-				gradient.addColorStop(4 / 6, wl2rgb(500)[0]);
-				gradient.addColorStop(5 / 6, wl2rgb(450)[0]);
-				gradient.addColorStop(6 / 6, wl2rgb(650)[0]);
-				return gradient;
-			},
-			backgroundColor: 'hsla(35, 40%, 40%, 50%)',
-			data: [
-				{ r: r[5], angle: 0, label: '650 nm' },
-				{ r: r[4], angle: 0.7803367085666647, label: '600 nm' },
-				{ r: r[3], angle: 1.1704177963873974, label: '570 nm' },
-				{ r: r[2], angle: 1.4250613342533702, label: '550 nm' },
-				{ r: r[1], angle: 2.6939157004532475, label: '500 nm' },
-				{ r: r[0], angle: 3.9013344769829246, label: '450 nm' },
-				{ r: r[5], angle: 2 * Math.PI, label: '650 nm' },
-			],
-		};
-
-		return ds;
-	}, [meas]);
-	const {
-		Lab,
-		hab: posHab,
-		chroma,
-		sat,
-	} = useMemo(() => {
-		const [X, Y, Z] = xy2XYZ(meas.Ex, meas.Ey, meas.Lux);
-		const Lab = XYZ2Lab(X, Y, Z, XYZnD65);
-
-		return {
-			...LabHueSatChroma(...Lab),
-			Lab,
-		};
-	}, [meas.Ex, meas.Ey, meas.Lux]);
+	// It may seem like a good idea to put useMemo here but it actually
+	// consumes 2x the time.
+	const r = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
+	const wls = {
+		borderColor: borderColorSelector,
+		backgroundColor: 'hsla(35, 40%, 40%, 50%)',
+		data: [
+			{ r: r[5], angle: 0, label: '650 nm' },
+			{ r: r[4], angle: 0.7803367085666647, label: '600 nm' },
+			{ r: r[3], angle: 1.1704177963873974, label: '570 nm' },
+			{ r: r[2], angle: 1.4250613342533702, label: '550 nm' },
+			{ r: r[1], angle: 2.6939157004532475, label: '500 nm' },
+			{ r: r[0], angle: 3.9013344769829246, label: '450 nm' },
+			{ r: r[5], angle: 2 * Math.PI, label: '650 nm' },
+		],
+	};
+	const [X, Y, Z] = xy2XYZ(meas.Ex, meas.Ey, meas.Lux);
+	const Lab = XYZ2Lab(X, Y, Z, XYZnD65);
+	const { hab: posHab, chroma, sat } = LabHueSatChroma(...Lab);
 
 	return (
 		<Container maxWidth="md">
