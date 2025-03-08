@@ -57,10 +57,8 @@ function Matrix({ head, m }: { head: string[]; m: number[][] }) {
 export default function Text() {
 	const [isClient, setIsClient] = useState(false);
 	const [meas] = useGlobalState('res_lm_measurement');
+	const measSpd = interpolateSPD(lm3NormSPD(meas));
 	const recall = useMemoryRecall();
-	const measSpd = useMemo<{ l: number; v: number }[]>(() => {
-		return interpolateSPD(lm3NormSPD(meas));
-	}, [meas]);
 	const recallSpd = useMemo<{ name: string; spd: { l: number; v: number }[] }[]>(() => {
 		return recall
 			.filter((m) => ['ref', 'LM3'].includes(m.type))
