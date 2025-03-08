@@ -19,6 +19,7 @@ import Title from 'components/Title';
 import { Line } from 'components/Chart';
 import { fftshift } from 'lib/fftshift';
 import { useGlobalState } from 'lib/global';
+import {init} from 'next/dist/compiled/webpack/webpack';
 
 function mean(x: number[]) {
 	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;
@@ -99,10 +100,13 @@ function Control({ n }) {
 	);
 }
 
-const FFT = ({ wave, freqDiv, setFc }) => {
-	const fftSize = 1024; // must be power of 2
-	const [fft] = useState(new webfft(fftSize));
+const fftSize = 1024; // must be power of 2
+function initFft() {
+	return new webfft(fftSize);
+}
 
+const FFT = ({ wave, freqDiv, setFc }) => {
+	const [fft] = useState(initFft);
 	const data: number[] = useMemo(() => {
 		if (wave.length != 1024) return [0];
 
