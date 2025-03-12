@@ -15,7 +15,7 @@ const trap30x301 = (() => {
 	return out;
 })();
 
-const spectralWeight = Float64Array.from([
+const spectralWeight = Object.freeze([
 	12 / 45,
 	22 / 45,
 	32 / 45,
