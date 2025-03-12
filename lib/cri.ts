@@ -5,7 +5,7 @@ import { spd2XYZ, normalizeSPD } from './spd';
 import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 
 //const nmIncrement = 5;
-const TCSSamples = [
+const TCSSamples = Object.freeze([
 	// 1: 7.5R6/4
 	Float64Array.from([
 		0.219, 0.239, 0.252, 0.256, 0.256, 0.254, 0.252, 0.248, 0.244, 0.24, 0.237, 0.232, 0.23, 0.226, 0.225, 0.222,
@@ -129,7 +129,7 @@ const TCSSamples = [
 		0.152, 0.169, 0.188, 0.207, 0.226, 0.243, 0.26, 0.277, 0.294, 0.31, 0.325, 0.339, 0.353, 0.366, 0.379, 0.39,
 		0.399,
 	]),
-];
+]);
 
 function referenceIlluminant(CCT: number) {
 	return CCT < 5000 ? SPDofPlanck(CCT) : SPDofD(CCT);
