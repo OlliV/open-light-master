@@ -1,5 +1,5 @@
 // Copyright 2018 GoPro, Inc.
-// Copyright 2024 Olli Vanhoja
+// Copyright 2024-2025 Olli Vanhoja
 // SPDX-License-Identifier: MIT
 
 const kTintScale = -3000.0;
@@ -8,11 +8,13 @@ const kTintScale = -3000.0;
 
 // Table from Wyszecki & Stiles, "Color Science", second edition, page 228.
 
+// kTempTable[i * 4 + j]
+// j:
 // r = 0
 // u = 1
 // v = 2
 // t = 3
-const kTempTable = [
+const kTempTable = Float64Array.from([
 	[0, 0.18006, 0.26352, -0.24341],
 	[10, 0.18066, 0.26589, -0.25479],
 	[20, 0.18133, 0.26846, -0.26876],
@@ -44,7 +46,7 @@ const kTempTable = [
 	[550, 0.32129, 0.36011, -23.325],
 	[575, 0.32931, 0.36038, -40.77],
 	[600, 0.33724, 0.36051, -116.45],
-];
+].flat());
 
 export default function calcTint(x: number, y: number) {
 	let fTemperature: number;
@@ -61,15 +63,15 @@ export default function calcTint(x: number, y: number) {
 	for (let i = 1; i <= 30; i++) {
 		// Convert slope to delta-u and delta-v, with length 1.
 		let du = 1.0;
-		let dv = kTempTable[i][3];
+		let dv = kTempTable[i * 4 + 3];
 		let len = Math.sqrt(1.0 + dv * dv);
 
 		du /= len;
 		dv /= len;
 
 		// Find delta from black body point to test coordinate.
-		let uu = u - kTempTable[i][1];
-		let vv = v - kTempTable[i][2];
+		let uu = u - kTempTable[i * 4 + 1];
+		let vv = v - kTempTable[i * 4 + 2];
 
 		// Find distance above or below line.
 		let dt = -uu * dv + vv * du;
@@ -83,21 +85,14 @@ export default function calcTint(x: number, y: number) {
 
 			dt = -dt;
 
-			let f;
-			if (i === 1) {
-				f = 0.0;
-			} else {
-				f = dt / (last_dt + dt);
-			}
+			const f = (i === 1) ? 0.0 : dt / (last_dt + dt);
 
 			// Interpolate the temperature.
-			fTemperature = 1.0e6 / (kTempTable[i - 1][0] * f + kTempTable[i][0] * (1.0 - f));
+			fTemperature = 1.0e6 / (kTempTable[(i - 1) * 4 + 0] * f + kTempTable[i * 4 + 0] * (1.0 - f));
 
 			// Find delta from black body point to test coordinate.
-
-			uu = u - (kTempTable[i - 1][1] * f + kTempTable[i][1] * (1.0 - f));
-
-			vv = v - (kTempTable[i - 1][2] * f + kTempTable[i][2] * (1.0 - f));
+			uu = u - (kTempTable[(i - 1) * 4 + 1] * f + kTempTable[i * 4 + 1] * (1.0 - f));
+			vv = v - (kTempTable[(i - 1) * 4 + 2] * f + kTempTable[i * 4 + 2] * (1.0 - f));
 
 			// Interpolate vectors along slope.
 
@@ -110,7 +105,6 @@ export default function calcTint(x: number, y: number) {
 			dv /= len;
 
 			// Find distance along slope.
-
 			fTint = (uu * du + vv * dv) * kTintScale;
 
 			break;
