@@ -12,18 +12,17 @@ import { LabHueSatChroma } from 'lib/Lab';
 import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
 
+// TODO This is picking wrong colors most of the time
+const wls = [0, 600, 570, 550, 500, 450, 650].map((wl, i, arr) => [i / arr.length, wl2rgb(wl)[0]]);
+Object.freeze(wls);
+
 function borderColorSelector(context) {
 	const ctx = context.chart.ctx;
 	const gradient = ctx.createLinearGradient(0, 0, 0, 200);
 
-	gradient.addColorStop(0, wl2rgb(650)[0]);
-	// TODO This is picking wrong colors most of the time
-	gradient.addColorStop(1 / 6, wl2rgb(600)[0]);
-	gradient.addColorStop(2 / 6, wl2rgb(570)[0]);
-	gradient.addColorStop(3 / 6, wl2rgb(550)[0]);
-	gradient.addColorStop(4 / 6, wl2rgb(500)[0]);
-	gradient.addColorStop(5 / 6, wl2rgb(450)[0]);
-	gradient.addColorStop(6 / 6, wl2rgb(650)[0]);
+	for (let v of wls) {
+		gradient.addColorStop(...v);
+	}
 
 	return gradient;
 }
