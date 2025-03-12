@@ -15,7 +15,7 @@ const trap30x301 = (() => {
 	return out;
 })();
 
-const spectralWeight = [
+const spectralWeight = Float64Array.from([
 	12 / 45,
 	22 / 45,
 	32 / 45,
@@ -46,10 +46,10 @@ const spectralWeight = [
 	1,
 	11 / 15,
 	3 / 15,
-];
-const convVec = [0.22, 0.56, 0.22];
+]);
+const convVec = Object.freeze([0.22, 0.56, 0.22]);
 
-export function ssi(ref: SPD, test: SPD) {
+export function ssi(ref: Readonly<SPD>, test: Readonly<SPD>) {
 	const refVec = matrixMul(
 		trap30x301,
 		interpolateSPD(ref, 1, 380, 670).map(({ v }) => [v])

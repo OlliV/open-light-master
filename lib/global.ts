@@ -81,7 +81,7 @@ export type GlobalState = {
 		fluDepth: number;
 		flickerIndex: number;
 		freqDiv: number;
-		wave: number[];
+		wave: readonly number[];
 	};
 	res_battery_level: number;
 	// Settings

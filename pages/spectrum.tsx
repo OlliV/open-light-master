@@ -57,15 +57,15 @@ const measToRecallData = Object.freeze({
 
 const barDataLabels = Object.freeze(['450 nm', '500 nm', '550 nm', '570 nm', '600 nm', '650 nm']);
 
-function spd2bar(spd: SPD) {
+function spd2bar(spd: Readonly<SPD>) {
 	return spd.map(({ v }) => v);
 }
 
-function spd2color(spd: SPD) {
+function spd2color(spd: Readonly<SPD>) {
 	return spd.map(({ l }) => wavelengthToColor(l)[0]);
 }
 
-function SpectrumBar({ data, recallData }: { data: SPD; recallData: RecallData[] }) {
+function SpectrumBar({ data, recallData }: { data: Readonly<SPD>; recallData: RecallData[] }) {
 	return (
 		<Bar
 			width={1}
@@ -155,7 +155,7 @@ function SpectrumScatter({ data, recallData }: { data: Array<{ x: number; y: num
 	);
 }
 
-function interpolateSPD2Chart(data: SPD) {
+function interpolateSPD2Chart(data: Readonly<SPD>) {
 	return interpolateSPD(data).map(({ l, v }) => ({ x: l, y: v }));
 }
 

@@ -31,7 +31,7 @@ export default function lm3CalcCRI(meas: MeasurementData) {
 
 export function lm3NormSPD(meas: MeasurementData) {
 	const norm = normalize2([meas.V1, meas.B1, meas.G1, meas.Y1, meas.O1, meas.R1]);
-	return [
+	return Object.freeze([
 		{
 			l: 450,
 			v: norm[0],
@@ -56,5 +56,5 @@ export function lm3NormSPD(meas: MeasurementData) {
 			l: 650,
 			v: norm[5],
 		},
-	];
+	]);
 }

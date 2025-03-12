@@ -1,14 +1,33 @@
+import webfft from 'webfft';
+import { fftshift } from 'lib/fftshift';
 import { setGlobalState } from './global';
 
-function mean(x: number[]) {
+const fftSize = 1024; // must be power of 2
+const fft = new webfft(fftSize);
+
+function mean(x: readonly number[]) {
 	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;
 }
 
+export function calcFft(wave: readonly number[]): number[] {
+	if (wave.length != fftSize) return [0];
+
+	const DC = mean(wave);
+	// The input is an interleaved complex array (IQIQIQIQ...), so it's twice the size
+	const fftOut = fft.fft(new Float32Array(wave.map((xn: number) => xn - DC).flatMap((xn: number) => [xn, 0])));
+	const mag = new Float32Array(fftSize);
+	for (let i = 0; i < fftSize; i++) {
+		mag[i] = Math.sqrt(fftOut[2 * i] * fftOut[2 * i] + fftOut[2 * i + 1] * fftOut[2 * i + 1]);
+	}
+
+	return Array.from(fftshift(mag).slice(fftSize / 2, fftSize));
+}
+
 export function calcFlicker(
-	waveData: { n: number; sRange: number; x: number[] },
+	waveData: { n: number; sRange: number; x: readonly number[] },
 	CCT: number,
 	Lux: number,
-	Ksensor: number[]
+	Ksensor: readonly number[]
 ) {
 	if (waveData.x.length != 1024) {
 		throw new Error('Expected 1024 samples');

@@ -13,33 +13,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import webfft from 'webfft';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
 import { Line } from 'components/Chart';
-import { fftshift } from 'lib/fftshift';
 import { useGlobalState } from 'lib/global';
-
-const fftSize = 1024; // must be power of 2
-const fft = new webfft(fftSize);
-
-function mean(x: number[]) {
-	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;
-}
-
-function calcFft(wave: number[]): number[] {
-	if (wave.length != 1024) return [0];
-
-	const DC = mean(wave);
-	// The input is an interleaved complex array (IQIQIQIQ...), so it's twice the size
-	const fftOut = fft.fft(new Float32Array(wave.map((xn: number) => xn - DC).flatMap((xn: number) => [xn, 0])));
-	const mag = new Float32Array(fftSize);
-	for (let i = 0; i < fftSize; i++) {
-		mag[i] = Math.sqrt(fftOut[2 * i] * fftOut[2 * i] + fftOut[2 * i + 1] * fftOut[2 * i + 1]);
-	}
-
-	return Array.from(fftshift(mag).slice(fftSize / 2, fftSize));
-}
+import { calcFft } from 'lib/flicker';
 
 const marks = [
 	{

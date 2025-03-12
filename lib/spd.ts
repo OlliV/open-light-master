@@ -11,7 +11,7 @@ export type SPD = {
 	v: number /*!< power. */;
 }[];
 
-export function interpolateSPD(input: SPD, increment: number = 5, min: number = 380, max: number = 780): SPD {
+export function interpolateSPD(input: Readonly<SPD>, increment: number = 5, min: number = 380, max: number = 780): SPD {
 	const xs = [...input.map(({ l }) => l)];
 	const ys = [...input.map(({ v }) => v)];
 

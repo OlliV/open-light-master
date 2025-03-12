@@ -59,7 +59,7 @@ export default function Text() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const measSpd = interpolateSPD(lm3NormSPD(meas));
 	const recall = useMemoryRecall();
-	const recallSpd = useMemo<{ name: string; spd: { l: number; v: number }[] }[]>(() => {
+	const recallSpd = useMemo<{ name: string; spd: readonly { l: number; v: number }[] }[]>(() => {
 		return recall
 			.filter((m) => ['ref', 'LM3'].includes(m.type))
 			.map(({ name, type, meas }) => {
