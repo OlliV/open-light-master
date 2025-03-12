@@ -77,6 +77,6 @@ export function calcRefMeas(spd: Float64Array) {
 		CCT: calcCCT(x, y),
 		Duv: calcDuv(u, v),
 		tint: calcTint(x, y)[1],
-		Lux: XYZ[1], // TODO This is a bit meaningless
+		Lux: XYZ[1],
 	};
 }
