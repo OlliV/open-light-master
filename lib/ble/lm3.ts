@@ -132,7 +132,7 @@ function lpfCalcNext(a: number, prev: number, sample: number) {
 	return a * prev + (1.0 - a) * sample;
 }
 
-function parseMeasurementData(data: readonly number[], prevMeas: readonly number[], coeff_a: number, kSensor: readonly number[]) {
+function parseMeasurementData(data: Uint8Array, prevMeas: readonly number[], coeff_a: number, kSensor: readonly number[]) {
 	const V0 = (data[1] << 8) + data[2];
 	const B0 = (data[3] << 8) + data[4];
 	const G0 = (data[5] << 8) + data[6];
@@ -173,7 +173,7 @@ function parseMeasurementData(data: readonly number[], prevMeas: readonly number
 	};
 }
 
-function parseWave(data: number[], len: number): number[] {
+function parseWave(data: Uint8Array, len: number): number[] {
 	const x: number[] = [];
 	for (let i = 0; i < len; i++) {
 		let a = (data[16 + 6 * i + 0] << 8) + data[16 + 6 * i + 1];
@@ -188,16 +188,6 @@ function parseWave(data: number[], len: number): number[] {
 	}
 
 	return x;
-}
-
-function buffer2array(data: DataView) {
-	const arr = [];
-
-	for (let i = 0; i < data.byteLength; i++) {
-		arr.push(data.getUint8(i));
-	}
-
-	return arr;
 }
 
 const batU = Object.freeze([4080, 3985, 3894, 3838, 3773, 3725, 3710, 3688, 3656, 3594, 3455]);
@@ -233,6 +223,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 	txCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
 		// @ts-ignore
 		const value = event.target.value;
+		const buf = new Uint8Array(value.buffer);
 
 		//console.log('event:', value);
 
@@ -242,26 +233,26 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 			switch (msgType) {
 				case PROTO_MSG_SINGLE: // Single fragment message
 					//console.log(`Single message. len: ${value.length}`);
-					parseMsg(buffer2array(value).slice(3));
+					parseMsg(buf.subarray(3));
 					break;
 				case PROTO_MSG_FFRAG: // First fragment of a message
 					const totalLen = (value.getUint8(1) << 8) | value.getUint8(2);
 					//const something = value.getUint8(3);
 					//console.log(`First fragment. totalLen: ${totalLen}`);
-					payload = new Uint8Array(buffer2array(value).slice(3));
+					payload = buf.subarray(3)
 					rxBuffer = new Uint8Array(totalLen);
 					rxBuffer.set(payload, 0);
 					rxBufferLen = payload.length;
 					break;
 				case PROTO_MSG_MFRAG: // Partial
 					//console.log(`Fragment. len: ${value.length}`);
-					payload = new Uint8Array(buffer2array(value).slice(1));
+					payload = buf.subarray(1)
 					rxBuffer.set(payload, rxBufferLen);
 					rxBufferLen += payload.length;
 					break;
 				case PROTO_MSG_LFRAG:
 					//console.log(`Last fragment. len: ${value.length}`);
-					payload = new Uint8Array(buffer2array(value).slice(1));
+					payload = buf.subarray(1)
 					rxBuffer.set(payload, rxBufferLen);
 					rxBufferLen += payload.length;
 					//console.log('buf len', rxBuffer.length, rxBufferLen);
@@ -329,7 +320,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		}
 	};
 
-	const parseMsg = (data: number[]) => {
+	const parseMsg = (data: Uint8Array) => {
 		const code = ((255 & data[9]) << 8) + data[10];
 		// We could theoretically implement a frame reassembly and callback
 		// response system here, but it's totally unnecessary because we
@@ -340,7 +331,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 		if (code === PROTO_RES_MEAS) {
 			// response to singleMeasure?
-			const res = parseMeasurementData(data.slice(11), prevMeas, coeff_a, calData.kSensor);
+			const res = parseMeasurementData(data.subarray(11), prevMeas, coeff_a, calData.kSensor);
 			prevMeas[0] = res.result.V1;
 			prevMeas[1] = res.result.B1;
 			prevMeas[2] = res.result.G1;
@@ -357,7 +348,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 				return;
 			}
 			const len = data[12] === 3 ? 61 : 65;
-			const wave = parseWave(data.slice(12), len);
+			const wave = parseWave(data.subarray(12), len);
 
 			waveData.x.push(...wave);
 			if (len === 61) {
