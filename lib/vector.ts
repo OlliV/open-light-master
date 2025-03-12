@@ -1,7 +1,7 @@
 /**
  * Normalize by the sum of squared values.
  */
-export function normalize(v: number[]) {
+export function normalize(v: readonly number[]) {
 	const div = Math.sqrt(v.reduce((res, vn) => res + Math.pow(vn, 2), 0));
 
 	return v.map((vn) => vn / div);
@@ -10,7 +10,7 @@ export function normalize(v: number[]) {
 /**
  * Normalize by the largest element; i.e. so that the largest element will be 1.
  */
-export function normalize2(v: number[]) {
+export function normalize2(v: readonly number[]) {
 	const max = Math.max(...v);
 	return max === 0 ? v.slice(0) : v.map((v) => v / max);
 }
@@ -18,24 +18,24 @@ export function normalize2(v: number[]) {
 /**
  * Normalize so that the sum of elements is 1.
  */
-export function normalize3(v: number[]) {
+export function normalize3(v: readonly number[]) {
 	const sum = v.reduce((sum, cur) => sum + cur, 0);
 	return v.map((x) => x / sum);
 }
 
-export function sub(a: number[], b: number[]) {
+export function sub(a: readonly number[], b: readonly number[]) {
 	return a.map((x, i) => x - b[i]);
 }
 
-export function transform(v: number[], sub: number[], coeff: number[]) {
+export function transform(v: readonly number[], sub: readonly number[], coeff: readonly number[]) {
 	return v.map((xn, i) => (xn - sub[i]) / coeff[i]);
 }
 
-export function dotProdC(a: number[], b: number[], C: number) {
+export function dotProdC(a: readonly number[], b: readonly number[], C: number) {
 	return a.reduce((prev, an, n) => prev + an * b[n], C);
 }
 
-export function convolve(volume: number[], kernel: number[]) {
+export function convolve(volume: readonly number[], kernel: readonly number[]) {
 	const r = Array.from({ length: volume.length + kernel.length }, () => 0);
 
 	for (let j = 0; j < kernel.length; ++j) {

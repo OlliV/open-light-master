@@ -109,7 +109,7 @@ export default function Memory() {
 				created: Date.now(),
 				type: 'LM3',
 				recall: false,
-				meas,
+				meas: Object.freeze(meas),
 			},
 		]);
 	const [openRecallModal, setOpenRecallModal] = useState(false);
