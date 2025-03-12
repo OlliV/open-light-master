@@ -1,7 +1,7 @@
-export const XYZnD50 = [96.4212, 100, 82.5188];
-export const XYZnD65 = [95.0489, 100, 108.884];
+export const XYZnD50 = Object.freeze([96.4212, 100, 82.5188]);
+export const XYZnD65 = Object.freeze([95.0489, 100, 108.884]);
 
-export function XYZ2xy(XYZ: number[]) {
+export function XYZ2xy(XYZ: readonly number[]) {
 	const x = XYZ[0] / (XYZ[0] + XYZ[1] + XYZ[2]);
 	const y = XYZ[1] / (XYZ[0] + XYZ[1] + XYZ[2]);
 
@@ -16,7 +16,7 @@ export function xy2uv(x: number, y: number) {
 	return [u, v] as const;
 }
 
-export function XYZ2UVW(XYZ: number[], u0: number, v0: number) {
+export function XYZ2UVW(XYZ: readonly number[], u0: number, v0: number) {
 	const [u, v] = xy2uv(...XYZ2xy(XYZ));
 
 	const W = 25 * XYZ[1] ** (1 / 3) - 17;
@@ -35,7 +35,7 @@ function f(t: number) {
 	}
 }
 
-export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: number[]) {
+export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: readonly number[]) {
 	const L = 116 * f(Y / XYZn[1]) - 16;
 	const a = 500 * (f(X / XYZn[0]) - f(Y / XYZn[1]));
 	const b = 200 * (f(Y / XYZn[1]) - f(Z / XYZn[2]));
