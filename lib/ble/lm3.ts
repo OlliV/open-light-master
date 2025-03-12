@@ -27,23 +27,23 @@ enum LightMode {
 	GENERAL = 3,
 }
 
-const tristimulusM = [
-	[
+const tristimulusM = Object.freeze([
+	Object.freeze([
 		[0.06023, 0.00106, 0.02108, 0.03673, 0.1683, 0.02001, 0],
 		[0.00652, 0.04478, 0.16998, -0.03268, 0.07425, 0.00739, 0],
 		[0.33092, 0.12936, -0.15809, 0.19889, -0.0156, 0.00296, 0],
-	],
-	[
-		[-0.43786, 0.53102, -0.1453, 0.2316, 0.36758, -0.09047, 0],
-		[-0.23226, 0.69225, -0.39786, 0.22539, 0.47947, -0.17614, 0],
-		[-0.11002, 1.21259, -0.56003, 0.14487, 0.35074, -0.30248, 0],
-	],
-	[
-		[-0.05825, -0.0896, 0.25859, 0.19518, 0.10893, 0.06724, 0],
-		[-0.19865, 0.01337, 0.40651, 0.29702, -0.06287, 0.03282, 0],
-		[0.58258, 0.11548, 0.21823, -0.00136, -0.10732, -0.00915, 0],
-	],
-];
+	]),
+	Object.freeze([
+		Object.freeze([-0.43786, 0.53102, -0.1453, 0.2316, 0.36758, -0.09047, 0]),
+		Object.freeze([-0.23226, 0.69225, -0.39786, 0.22539, 0.47947, -0.17614, 0]),
+		Object.freeze([-0.11002, 1.21259, -0.56003, 0.14487, 0.35074, -0.30248, 0]),
+	]),
+	Object.freeze([
+		Object.freeze([-0.05825, -0.0896, 0.25859, 0.19518, 0.10893, 0.06724, 0]),
+		Object.freeze([-0.19865, 0.01337, 0.40651, 0.29702, -0.06287, 0.03282, 0]),
+		Object.freeze([0.58258, 0.11548, 0.21823, -0.00136, -0.10732, -0.00915, 0]),
+	]),
+]);
 
 function getLightMode(V1: number, B1: number, G1: number, Y1: number, O1: number, R1: number, C1: number): LightMode {
 	const a = (O1 + R1) / (V1 + B1 + G1 + Y1 + O1 + R1);
@@ -105,7 +105,7 @@ function calcEml(cct: number, v1: number, b1: number, g1: number, y1: number, o1
 	return eml < 0 ? 0 : eml;
 }
 
-function matMul(mat_a: number[][], m1: number, n1: number, mat_b: number[][], m2: number, n2: number) {
+function matMul(mat_a: readonly (readonly number[])[], m1: number, n1: number, mat_b: readonly (readonly number[])[], m2: number, n2: number) {
 	let mat_r = [
 		[0, 0, 0],
 		[0, 0, 0],
@@ -132,7 +132,7 @@ function lpfCalcNext(a: number, prev: number, sample: number) {
 	return a * prev + (1.0 - a) * sample;
 }
 
-function parseMeasurementData(data: number[], prevMeas: number[], coeff_a: number, kSensor: number[]) {
+function parseMeasurementData(data: readonly number[], prevMeas: readonly number[], coeff_a: number, kSensor: readonly number[]) {
 	const V0 = (data[1] << 8) + data[2];
 	const B0 = (data[3] << 8) + data[4];
 	const G0 = (data[5] << 8) + data[6];
@@ -200,14 +200,15 @@ function buffer2array(data: DataView) {
 	return arr;
 }
 
+const batU = Object.freeze([4080, 3985, 3894, 3838, 3773, 3725, 3710, 3688, 3656, 3594, 3455]);
+const batP = Object.freeze([100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 1]);
+
 function batteryLevel(voltage: number) {
-	const u = [4080, 3985, 3894, 3838, 3773, 3725, 3710, 3688, 3656, 3594, 3455];
-	const p = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 1];
 	let level = 1;
 
 	for (let i = 0; i < 9; i++) {
-		if (voltage > u[i + 1]) {
-			level = ((voltage - u[i + 1]) / (u[i] - u[i + 1])) * (p[i] - p[i + 1]) + p[i + 1];
+		if (voltage > batU[i + 1]) {
+			level = ((voltage - batU[i + 1]) / (batU[i] - batU[i + 1])) * (batP[i] - batP[i + 1]) + batP[i + 1];
 			break;
 		}
 	}
