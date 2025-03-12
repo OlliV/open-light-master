@@ -13,8 +13,7 @@ import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
 
 // TODO This is picking wrong colors most of the time
-const wls = [0, 600, 570, 550, 500, 450, 650].map((wl, i, arr) => [i / arr.length, wl2rgb(wl)[0]]);
-Object.freeze(wls);
+const wls = Object.freeze([0, 600, 570, 550, 500, 450, 650].map((wl, i, arr) => [i / arr.length, wl2rgb(wl)[0]]));
 
 function borderColorSelector(context) {
 	const ctx = context.chart.ctx;
