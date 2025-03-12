@@ -2,8 +2,8 @@
 // slightly edited from https://rikyperdana.medium.com/matrix-operations-in-functional-js-e3463f36b160
 
 const withAs = <T>(obj: T, cb: (obj: T) => T) => cb(obj);
-const sum = (arr: number[]) => arr.reduce((a, b) => a + b);
-const mul = (arr: number[]) => arr.reduce((a, b) => a * b);
+const sum = (arr: readonly number[]) => arr.reduce((a, b) => a + b);
+const mul = (arr: readonly number[]) => arr.reduce((a, b) => a * b);
 const sub = (arr: number[]) => arr.splice(1).reduce((a, b) => a - b, arr[0]);
 // TODO do something better
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -19,9 +19,9 @@ export const arr2mat = (rows: number, cols: number, arr: number[]) =>
 	Array.from({ length: rows }, (_, i) => arr.slice(i * cols, i * cols + cols));
 
 const matrixMap = (
-	matrix: number[][],
-	cb: (args: { i: number[]; ix: number; j: number; jx: number; matrix: number[][] }) => number
-) => deepClone(matrix).map((i: number[], ix: number) => i.map((j: number, jx: number) => cb({ i, ix, j, jx, matrix })));
+	matrix: readonly (readonly number[])[],
+	cb: (args: { i: readonly number[]; ix: number; j: number; jx: number; matrix: readonly (readonly number[])[] }) => number
+) => deepClone(matrix).map((i: readonly number[], ix: number) => i.map((j: number, jx: number) => cb({ i, ix, j, jx, matrix })));
 
 export const matrixScalar = (n: number, matrix: number[][]) => matrixMap(matrix, ({ j }) => n * j);
 
@@ -34,10 +34,10 @@ export const matrixAdd = (matrices: number[][][]) =>
 export const matrixSub = (matrices: number[][][]) =>
 	matrices.splice(1).reduce((acc, inc) => matrixMap(acc, ({ j, ix, jx }) => j - inc[ix][jx]), matrices[0]);
 
-export const matrixMul = (m1: number[][], m2: number[][]) =>
+export const matrixMul = (m1: readonly (readonly number[])[], m2: readonly (readonly number[])[]) =>
 	makeMatrix(m1.length, m2[0].length, (i, j) => sum(m1[i].map((k, kx) => k * m2[kx][j])));
 
-export const matrixMuls = (matrices: number[][][]) =>
+export const matrixMuls = (matrices: readonly (readonly (readonly number[])[])[]) =>
 	deepClone(matrices)
 		.splice(1)
 		.reduce(
@@ -46,7 +46,7 @@ export const matrixMuls = (matrices: number[][][]) =>
 			deepClone(matrices[0])
 		);
 
-const matrixMinor = (matrix: number[][], row: number, col: number) =>
+const matrixMinor = (matrix: readonly (readonly number[])[], row: number, col: number) =>
 	matrix.length < 3
 		? matrix
 		: matrix
@@ -54,11 +54,11 @@ const matrixMinor = (matrix: number[][], row: number, col: number) =>
 				.map((i) => i.filter((_j: number, jx: number) => jx !== col - 1));
 
 // TODO FIX
-export const matrixTrans = (matrix: number[][]) =>
+export const matrixTrans = (matrix: readonly (readonly number[])[]) =>
 	// @ts-ignore
 	makeMatrix(...shifter(matrixSize(matrix), 1), (i: number, j: number) => matrix[j][i]);
 
-export const matrixDet = (matrix: number[][]) =>
+export const matrixDet = (matrix: readonly (readonly number[])[]) =>
 	withAs(deepClone(matrix), (clone) =>
 		matrix.length < 3
 			? sub(matrixTrans(clone.map(shifter)).map(mul))
@@ -69,7 +69,7 @@ export const matrixDet = (matrix: number[][]) =>
 				)
 	);
 
-export const matrixCofactor = (matrix: number[][]) =>
+export const matrixCofactor = (matrix: readonly (readonly number[])[]) =>
 	matrixMap(matrix, ({ ix, jx }) =>
 		matrix[0].length > 2
 			? Math.pow(-1, ix + jx + 2) * matrixDet(matrixMinor(matrix, ix + 1, jx + 1))
@@ -78,5 +78,5 @@ export const matrixCofactor = (matrix: number[][]) =>
 				: matrix[+!ix][+!jx]
 	);
 
-export const matrixInverse = (matrix: [][]) =>
+export const matrixInverse = (matrix: readonly (readonly number[])[]) =>
 	matrixMap(matrixTrans(matrixCofactor(matrix)), ({ j }) => j / matrixDet(matrix));
