@@ -14,13 +14,48 @@ import wlMap from 'lib/wlmap';
 import { SPD, interpolateSPD } from 'lib/spd';
 import { lm3NormSPD } from 'lib/lm3calc';
 import { normalize2 } from 'lib/vector';
-import { useMemoryRecall, useGlobalState } from 'lib/global';
+import { useMemoryRecall, useGlobalState, LM3Measurement, RefMeasurement } from 'lib/global';
 
 type RecallData = {
 	name: string;
 	norm: SPD;
 	scatter: Array<{ x: number; y: number }>;
 };
+
+function refToRecallData(name: string, meas: RefMeasurement): RecallData {
+	const normBars = normalize2([
+		meas.SPD[14], // 450 nm
+		meas.SPD[24], // 500 nm
+		meas.SPD[34], // 550 nm
+		meas.SPD[38], // 570 nm
+		meas.SPD[44], // 600 nm
+		meas.SPD[54], // 650 nm
+	]);
+	const normScatter = normalize2(meas.SPD);
+
+	return {
+		name,
+		norm: wlMap((l, i) => ({ l, v: normBars[i] }), 5),
+		scatter: wlMap((l, i) => ({ x: l, y: normScatter[i] }), 5),
+	};
+}
+
+function lm3ToRecallData(name: string, meas: LM3Measurement) {
+	const norm = lm3NormSPD(meas);
+
+	return {
+		name,
+		norm,
+		scatter: interpolateSPD2Chart(norm),
+	};
+}
+
+const measToRecallData = Object.freeze({
+	ref: refToRecallData,
+	LM3: lm3ToRecallData,
+});
+
+const barDataLabels = Object.freeze(['450 nm', '500 nm', '550 nm', '570 nm', '600 nm', '650 nm']);
 
 function spd2bar(spd: SPD) {
 	return spd.map(({ v }) => v);
@@ -36,7 +71,8 @@ function SpectrumBar({ data, recallData }: { data: SPD; recallData: RecallData[]
 			width={1}
 			height={1}
 			data={{
-				labels: data.map(({ l }) => `${l} nm`),
+				// @ts-ignore
+				labels: barDataLabels,
 				datasets: [
 					...recallData.map((e) => ({
 						label: e.name,
@@ -123,50 +159,18 @@ function interpolateSPD2Chart(data: SPD) {
 	return interpolateSPD(data).map(({ l, v }) => ({ x: l, y: v }));
 }
 
-export default function Text() {
+export default function Spectrum() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const recall = useMemoryRecall();
 	const norm = lm3NormSPD(meas);
 	const scatter = interpolateSPD2Chart(norm);
-	const recallData = useMemo<RecallData[]>(() => {
-		return recall
-			.filter((m) => ['ref', 'LM3'].includes(m.type))
-			.map(({ name, type, meas }): RecallData => {
-				if (type === 'ref') {
-					const normBars = normalize2([
-						// @ts-ignore
-						meas.SPD[14], // 450 nm
-						// @ts-ignore
-						meas.SPD[24], // 500 nm
-						// @ts-ignore
-						meas.SPD[34], // 550 nm
-						// @ts-ignore
-						meas.SPD[38], // 570 nm
-						// @ts-ignore
-						meas.SPD[44], // 600 nm
-						// @ts-ignore
-						meas.SPD[54], // 650 nm
-					]);
-					// @ts-ignore
-					const normScatter = normalize2(meas.SPD);
-
-					return {
-						name,
-						norm: wlMap((l, i) => ({ l, v: normBars[i] }), 5),
-						scatter: wlMap((l, i) => ({ x: l, y: normScatter[i] }), 5),
-					};
-				} else if (type === 'LM3') {
-					// @ts-ignore
-					const norm = lm3NormSPD(meas);
-
-					return {
-						name,
-						norm,
-						scatter: interpolateSPD2Chart(norm),
-					};
-				}
-			});
-	}, [recall]);
+	const recallData = useMemo<RecallData[]>(
+		() =>
+			recall
+				.filter((m) => ['ref', 'LM3'].includes(m.type))
+				.map(({ name, type, meas }): RecallData => measToRecallData[type](name, meas)),
+		[recall]
+	);
 
 	return (
 		<Container maxWidth="md">
