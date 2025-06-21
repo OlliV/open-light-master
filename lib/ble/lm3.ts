@@ -105,7 +105,14 @@ function calcEml(cct: number, v1: number, b1: number, g1: number, y1: number, o1
 	return eml < 0 ? 0 : eml;
 }
 
-function matMul(mat_a: readonly (readonly number[])[], m1: number, n1: number, mat_b: readonly (readonly number[])[], m2: number, n2: number) {
+function matMul(
+	mat_a: readonly (readonly number[])[],
+	m1: number,
+	n1: number,
+	mat_b: readonly (readonly number[])[],
+	m2: number,
+	n2: number
+) {
 	let mat_r = [
 		[0, 0, 0],
 		[0, 0, 0],
@@ -132,7 +139,12 @@ function lpfCalcNext(a: number, prev: number, sample: number) {
 	return a * prev + (1.0 - a) * sample;
 }
 
-function parseMeasurementData(data: Uint8Array, prevMeas: readonly number[], coeff_a: number, kSensor: readonly number[]) {
+function parseMeasurementData(
+	data: Uint8Array,
+	prevMeas: readonly number[],
+	coeff_a: number,
+	kSensor: readonly number[]
+) {
 	const V0 = (data[1] << 8) + data[2];
 	const B0 = (data[3] << 8) + data[4];
 	const G0 = (data[5] << 8) + data[6];
@@ -239,20 +251,20 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 					const totalLen = (value.getUint8(1) << 8) | value.getUint8(2);
 					//const something = value.getUint8(3);
 					//console.log(`First fragment. totalLen: ${totalLen}`);
-					payload = buf.subarray(3)
+					payload = buf.subarray(3);
 					rxBuffer = new Uint8Array(totalLen);
 					rxBuffer.set(payload, 0);
 					rxBufferLen = payload.length;
 					break;
 				case PROTO_MSG_MFRAG: // Partial
 					//console.log(`Fragment. len: ${value.length}`);
-					payload = buf.subarray(1)
+					payload = buf.subarray(1);
 					rxBuffer.set(payload, rxBufferLen);
 					rxBufferLen += payload.length;
 					break;
 				case PROTO_MSG_LFRAG:
 					//console.log(`Last fragment. len: ${value.length}`);
-					payload = buf.subarray(1)
+					payload = buf.subarray(1);
 					rxBuffer.set(payload, rxBufferLen);
 					rxBufferLen += payload.length;
 					//console.log('buf len', rxBuffer.length, rxBufferLen);

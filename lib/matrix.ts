@@ -20,8 +20,17 @@ export const arr2mat = (rows: number, cols: number, arr: number[]) =>
 
 const matrixMap = (
 	matrix: readonly (readonly number[])[],
-	cb: (args: { i: readonly number[]; ix: number; j: number; jx: number; matrix: readonly (readonly number[])[] }) => number
-) => deepClone(matrix).map((i: readonly number[], ix: number) => i.map((j: number, jx: number) => cb({ i, ix, j, jx, matrix })));
+	cb: (args: {
+		i: readonly number[];
+		ix: number;
+		j: number;
+		jx: number;
+		matrix: readonly (readonly number[])[];
+	}) => number
+) =>
+	deepClone(matrix).map((i: readonly number[], ix: number) =>
+		i.map((j: number, jx: number) => cb({ i, ix, j, jx, matrix }))
+	);
 
 export const matrixScalar = (n: number, matrix: number[][]) => matrixMap(matrix, ({ j }) => n * j);
 

@@ -134,7 +134,12 @@ export default function Text() {
 		);
 		const array = [
 			{ id: 0, name: 'CCT', value: meas.CCT, ...makeRecallCols(recall.map((item) => item.meas.CCT)) },
-			{ id: 0, name: 'CCT [Mired]', value: KtoMK(meas.CCT), ...makeRecallCols(recall.map((item) => KtoMK(item.meas.CCT))) },
+			{
+				id: 0,
+				name: 'CCT [Mired]',
+				value: KtoMK(meas.CCT),
+				...makeRecallCols(recall.map((item) => KtoMK(item.meas.CCT))),
+			},
 			{ id: 0, name: 'x', value: meas.Ex, ...makeRecallCols(recall.map((item) => item.meas.Ex)) },
 			{ id: 0, name: 'y', value: meas.Ey, ...makeRecallCols(recall.map((item) => item.meas.Ey)) },
 			{ id: 0, name: 'u', value: meas.Eu, ...makeRecallCols(recall.map((item) => item.meas.Eu)) },
