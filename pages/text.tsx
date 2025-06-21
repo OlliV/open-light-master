@@ -15,6 +15,7 @@ import { useGlobalState, useMemoryRecall } from 'lib/global';
 
 const rowFormatter: { [key: string]: (value: never) => string } = {
 	CCT: (value: number) => `${Math.round(value)} K`,
+	'CCT [Mired]': (value: number) => `${Math.round(value)} MK⁻¹`,
 	x: (value: number) => `${value.toFixed(4)}`,
 	y: (value: number) => `${value.toFixed(4)}`,
 	u: (value: number) => `${value.toFixed(4)}`,
@@ -114,6 +115,9 @@ function calcHueSat(x: number, y: number, Lux: number) {
 	return LabHueSatChroma(L, a, b);
 }
 
+const KtoMK = (cct: number) => 1_000_000 / cct;
+const Lux2fc = (lux: number) => lux * 0.09293680297;
+
 function makeRecallCols(cols: number[]) {
 	return cols.reduce((prev, cur, i) => ((prev[`recall${i}`] = cur), prev), {});
 }
@@ -130,6 +134,7 @@ export default function Text() {
 		);
 		const array = [
 			{ id: 0, name: 'CCT', value: meas.CCT, ...makeRecallCols(recall.map((item) => item.meas.CCT)) },
+			{ id: 0, name: 'CCT [Mired]', value: KtoMK(meas.CCT), ...makeRecallCols(recall.map((item) => KtoMK(item.meas.CCT))) },
 			{ id: 0, name: 'x', value: meas.Ex, ...makeRecallCols(recall.map((item) => item.meas.Ex)) },
 			{ id: 0, name: 'y', value: meas.Ey, ...makeRecallCols(recall.map((item) => item.meas.Ey)) },
 			{ id: 0, name: 'u', value: meas.Eu, ...makeRecallCols(recall.map((item) => item.meas.Eu)) },
@@ -152,8 +157,8 @@ export default function Text() {
 			{
 				id: 0,
 				name: 'Illuminance [fc]',
-				value: meas.Lux * 0.09293680297,
-				...makeRecallCols(recall.map((item) => item.meas.Lux * 0.09293680297)),
+				value: Lux2fc(meas.Lux),
+				...makeRecallCols(recall.map((item) => Lux2fc(item.meas.Lux))),
 			},
 			{
 				id: 0,
