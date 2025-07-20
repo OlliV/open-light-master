@@ -8,7 +8,7 @@ export const XYZnD50 = Object.freeze([96.4212, 100, 82.5188]);
  * Reference white D65.
  * Y = 100, relative luminance.
  */
-export const XYZnD65 = Object.freeze([95.0489, 100, 108.884]);
+export const XYZnD65 = Object.freeze([95.0489, 100, 108.8840]);
 
 /**
  * XYZ to tristimulus to CIE 1931 (x, y) chromaticity.
@@ -44,15 +44,6 @@ export function XYZ2UVW(XYZ: readonly number[], u0: number, v0: number) {
 	return [U, V, W] as const;
 }
 
-function f(t: number) {
-	const δ = 6 / 29;
-	if (t > δ ** 3) {
-		return Math.cbrt(t);
-	} else {
-		return (1 / 3) * t * Math.pow(δ, -2) + 4 / 29;
-	}
-}
-
 /**
  * xyY color space to XYZ tristimulus.
  */
@@ -61,6 +52,24 @@ export function xy2XYZ(x: number, y: number, Y: number) {
 	const Z = (Y / y) * (1 - x - y);
 
 	return [X, Y, Z] as const;
+}
+
+const δ = 6 / 29;
+
+function f(t: number): number {
+	if (t > δ ** 3) {
+		return Math.cbrt(t);
+	} else {
+		return (1 / 3) * t * Math.pow(δ, -2) + 4 / 29;
+	}
+}
+
+function finv(t: number): number {
+	if (t > δ) {
+		return t ** 3;
+	} else {
+		return 3 * (δ ** 2) * (t - 4 / 29);
+	}
 }
 
 /**
@@ -72,6 +81,14 @@ export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: readonly number[]
 	const b = 200 * (f(Y / XYZn[1]) - f(Z / XYZn[2]));
 
 	return [L, a, b] as const;
+}
+
+export function Lab2XYZ(L: number, a: number, b: number, XYZn: readonly number[]) {
+	const X = XYZn[0] * finv(((L + 16) / 116) + a / 500);
+	const Y = XYZn[1] * finv((L + 16) / 116);
+	const Z = XYZn[2] * finv((L + 16) / 116 - b / 200);
+
+	return [X, Y, Z] as const;
 }
 
 function LabHue(a: number, b: number) {
