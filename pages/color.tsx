@@ -8,6 +8,7 @@ import Title from 'components/Title';
 import Polar from 'components/Polar';
 import { useGlobalState } from 'lib/global';
 import { XYZnD65, xy2XYZ, XYZ2Lab, LabHueSatChroma } from 'lib/CIEConv';
+import {Oklab2Oklch, XYZD65toOklab} from 'lib/Oklab';
 import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
 
@@ -46,6 +47,8 @@ export default function Text() {
 	const [X, Y, Z] = xy2XYZ(meas.Ex, meas.Ey, meas.Lux);
 	const Lab = XYZ2Lab(X, Y, Z, XYZnD65);
 	const { hab: posHab, chroma, sat } = LabHueSatChroma(...Lab);
+	const oklab = XYZD65toOklab(X, Y, Z);
+	const [ , okC, okH ] = Oklab2Oklch(...XYZD65toOklab(X, Y, Z));
 
 	return (
 		<Container maxWidth="md">
@@ -90,9 +93,9 @@ export default function Text() {
 							title="Hue vs Sat"
 							pointer={{
 								borderColor: 'black',
-								backgroundColor: `hsl(${posHab}, 100%, 45%)`,
+								backgroundColor: `oklch(45% ${okC} ${okH * 180 / Math.PI})`,
 								r: sat,
-								angle: (posHab * Math.PI) / 180,
+								angle: okH,
 							}}
 							// @ts-ignore
 							datasets={[wls]}
