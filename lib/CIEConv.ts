@@ -1,6 +1,18 @@
+/**
+ * Reference white D50.
+ * Y = 100, relative luminance.
+ */
 export const XYZnD50 = Object.freeze([96.4212, 100, 82.5188]);
+
+/**
+ * Reference white D65.
+ * Y = 100, relative luminance.
+ */
 export const XYZnD65 = Object.freeze([95.0489, 100, 108.884]);
 
+/**
+ * XYZ to tristimulus to CIE 1931 (x, y) chromaticity.
+ */
 export function XYZ2xy(XYZ: readonly number[]) {
 	const x = XYZ[0] / (XYZ[0] + XYZ[1] + XYZ[2]);
 	const y = XYZ[1] / (XYZ[0] + XYZ[1] + XYZ[2]);
@@ -8,7 +20,10 @@ export function XYZ2xy(XYZ: readonly number[]) {
 	return [x, y] as const;
 }
 
-// MacAdam simplified Judd's
+/**
+ * CIE 1931 (x, y) chromaticity to CIE 1960 UCS (u, v) chromaticity.
+ * MacAdam simplified Judd's
+ */
 export function xy2uv(x: number, y: number) {
 	const nj = -2 * x + 12 * y + 3;
 	const u = (4 * x) / nj;
@@ -16,6 +31,9 @@ export function xy2uv(x: number, y: number) {
 	return [u, v] as const;
 }
 
+/**
+ * CIE XYZ color space to CIE 1964 UVW color space.
+ */
 export function XYZ2UVW(XYZ: readonly number[], u0: number, v0: number) {
 	const [u, v] = xy2uv(...XYZ2xy(XYZ));
 
@@ -35,6 +53,19 @@ function f(t: number) {
 	}
 }
 
+/**
+ * xyY color space to XYZ tristimulus.
+ */
+export function xy2XYZ(x: number, y: number, Y: number) {
+	const X = (Y / y) * x;
+	const Z = (Y / y) * (1 - x - y);
+
+	return [X, Y, Z] as const;
+}
+
+/**
+ * CIE XYZ color space to CIELAB color space.
+ */
 export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: readonly number[]) {
 	const L = 116 * f(Y / XYZn[1]) - 16;
 	const a = 500 * (f(X / XYZn[0]) - f(Y / XYZn[1]));
@@ -43,9 +74,29 @@ export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: readonly number[]
 	return [L, a, b] as const;
 }
 
-export function xy2XYZ(x: number, y: number, Y: number) {
-	const X = (Y / y) * x;
-	const Z = (Y / y) * (1 - x - y);
+function LabHue(a: number, b: number) {
+	return Math.atan2(b, a);
+}
 
-	return [X, Y, Z] as const;
+// C_ab
+function LabChroma(a: number, b: number) {
+	return Math.sqrt(a ** 2 + b ** 2);
+}
+
+// S_ab
+function LabSat(Cab: number, L: number) {
+	return Cab / Math.sqrt(Cab ** 2 + L ** 2);
+}
+
+export function LabHueSatChroma(L: number, a: number, b: number) {
+	const hab = LabHue(a, b) * (180 / Math.PI) || 0;
+	const posHab = Math.round((hab + 360) % 360);
+	const chroma = LabChroma(a, b);
+	const sat = LabSat(chroma, L);
+
+	return {
+		hab: posHab,
+		sat,
+		chroma,
+	};
 }

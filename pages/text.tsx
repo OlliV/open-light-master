@@ -8,8 +8,7 @@ import Memory from 'components/Memory';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
 import lm3CalcCRI from 'lib/lm3calc';
-import { LabHueSatChroma } from 'lib/Lab';
-import { XYZnD65, xy2XYZ, XYZ2Lab } from 'lib/CIEConv';
+import { XYZnD65, xy2XYZ, XYZ2Lab, LabHueSatChroma } from 'lib/CIEConv';
 import { calcCRI } from 'lib/cri';
 import { useGlobalState, useMemoryRecall } from 'lib/global';
 

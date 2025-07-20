@@ -7,8 +7,7 @@ import MyHead from 'components/MyHead';
 import Title from 'components/Title';
 import Polar from 'components/Polar';
 import { useGlobalState } from 'lib/global';
-import { XYZnD65, xy2XYZ, XYZ2Lab } from 'lib/CIEConv';
-import { LabHueSatChroma } from 'lib/Lab';
+import { XYZnD65, xy2XYZ, XYZ2Lab, LabHueSatChroma } from 'lib/CIEConv';
 import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
 
