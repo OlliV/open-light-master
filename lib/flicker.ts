@@ -9,8 +9,8 @@ function mean(x: readonly number[]) {
 	return x.reduce((prev: number, xn: number) => prev + xn) / x.length;
 }
 
-export function calcFft(wave: readonly number[]): number[] {
-	if (wave.length != fftSize) return [0];
+export function calcFft(wave: readonly number[]): Float32Array {
+	if (wave.length != fftSize) return Float32Array.from([0]);
 
 	const DC = mean(wave);
 	// The input is an interleaved complex array (IQIQIQIQ...), so it's twice the size
@@ -20,7 +20,8 @@ export function calcFft(wave: readonly number[]): number[] {
 		mag[i] = Math.sqrt(fftOut[2 * i] * fftOut[2 * i] + fftOut[2 * i + 1] * fftOut[2 * i + 1]);
 	}
 
-	return Array.from(fftshift(mag).slice(fftSize / 2, fftSize));
+	//return Array.from(fftshift(mag).slice(fftSize / 2, fftSize));
+	return fftshift(mag).subarray(fftSize / 2, fftSize);
 }
 
 export function calcFlicker(

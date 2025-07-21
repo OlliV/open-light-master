@@ -94,9 +94,34 @@ function Control({ n }) {
 	);
 }
 
+type TypedArray =
+	| Int8Array
+	| Uint8Array
+	| Uint8ClampedArray
+	| Int16Array
+	| Uint16Array
+	| Int32Array
+	| Uint32Array
+	| Float32Array
+	| Float64Array;
+//| BigInt64Array
+//| BigUint64Array;
+
+function typedArrayMax(arr: TypedArray): number {
+	let max: number = arr.length > 0 ? arr[0] : -Infinity;
+
+	for (let v of arr) {
+		if (v > max) {
+			max = v;
+		}
+	}
+
+	return max;
+}
+
 const FFT = ({ wave, freqDiv, setFc }) => {
-	const data: number[] = useMemo(() => calcFft(wave), [wave]);
-	useEffect(() => setFc((1e3 * data.indexOf(Math.max(...data.slice(1)))) / freqDiv), [freqDiv, setFc, data]);
+	const data: Float32Array = useMemo(() => calcFft(wave), [wave]);
+	useEffect(() => setFc((1e3 * data.indexOf(typedArrayMax(data.subarray(1)))) / freqDiv), [freqDiv, setFc, data]);
 
 	return (
 		<Container>
