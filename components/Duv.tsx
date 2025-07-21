@@ -12,7 +12,7 @@ export default function Duv({ value }: { value: number }) {
 		<TextField
 			label="Duv"
 			disabled
-			sx={{ m: 1, width: '15ch' }}
+			sx={{ m: 1, width: '10ch' }}
 			variant="outlined"
 			error={duvErr}
 			value={`${value.toFixed(3)}`}

@@ -1,12 +1,12 @@
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
 import CCT from 'components/CCT';
 import CIE1931 from 'components/CIE1931';
 import Duv from 'components/Duv';
 import Memory from 'components/Memory';
 import MyHead from 'components/MyHead';
+import Tint from 'components/Tint';
 import Title from 'components/Title';
 import { useGlobalState, useMemoryRecall } from 'lib/global';
 
@@ -29,12 +29,7 @@ export default function Text() {
 					<Box>
 						<CCT value={meas.CCT} />
 						<Duv value={meas.Duv} />
-						<TextField
-							label="Tint"
-							disabled
-							sx={{ m: 1, width: '15ch' }}
-							value={`${Math.round(meas.tint)}`}
-						/>
+						<Tint value={meas.tint} />
 						<Box sx={{ float: 'right', paddingTop: 1, paddingRight: 1 }}>
 							<Memory />
 						</Box>
