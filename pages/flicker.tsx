@@ -119,8 +119,9 @@ function typedArrayMax(arr: TypedArray): number {
 	return max;
 }
 
-const FFT = ({ wave, freqDiv, setFc }) => {
+const FFT = ({ wave, freqDiv, setFc }: { wave: readonly number[], freqDiv: number, setFc: (fc: number) => void }) => {
 	const data: Float32Array = useMemo(() => calcFft(wave), [wave]);
+	const unitMul = freqDiv > 26 ? 1 : 1 / 1000;
 	useEffect(() => setFc((1e3 * data.indexOf(typedArrayMax(data.subarray(1)))) / freqDiv), [freqDiv, setFc, data]);
 
 	return (
@@ -156,13 +157,13 @@ const FFT = ({ wave, freqDiv, setFc }) => {
 							},
 							title: {
 								display: true,
-								text: 'Frequency [Hz]',
+								text: unitMul === 1 ? 'Frequency [Hz]' : 'Frequency [kHz]',
 								color: 'black',
 							},
 							ticks: {
 								display: true,
 								color: 'black',
-								callback: (tickValue, index, ticks) => Math.round((1e3 * Number(tickValue)) / freqDiv),
+								callback: (tickValue, index, ticks) => unitMul === 1 ? Math.round((1e3 * Number(tickValue)) / freqDiv) : ((1e3 * Number(tickValue)) / freqDiv * unitMul).toFixed(2),
 							},
 						},
 						y: {
