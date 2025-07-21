@@ -67,9 +67,9 @@ export function calcEV(lux: number, iso: number = 100, gain: number = 0): number
 }
 
 export function calcShutter(ev: number, fstop: number): number {
-	return (fstop * fstop) / (2 ** ev);
+	return (fstop * fstop) / 2 ** ev;
 }
 
 export function calcFstop(ev: number, shutter: number): number {
-	return Math.sqrt(shutter * (2 ** ev));
+	return Math.sqrt(shutter * 2 ** ev);
 }

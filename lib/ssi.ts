@@ -2,18 +2,20 @@ import { SPD, interpolateSPD } from './spd';
 import { matrixMul } from './matrix';
 import { normalize3, sub as vecSub, convolve } from './vector';
 
-const trap30x301 = Object.preventExtensions((() => {
-	const trap = [0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5];
-	const out = Array.from({ length: 30 }, () => Array.from({ length: 301 }, () => 0));
+const trap30x301 = Object.preventExtensions(
+	(() => {
+		const trap = [0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5];
+		const out = Array.from({ length: 30 }, () => Array.from({ length: 301 }, () => 0));
 
-	for (let i = 0; i < 30; i++) {
-		for (let j = 0; j < trap.length; j++) {
-			out[i][10 * i + j] = trap[j];
+		for (let i = 0; i < 30; i++) {
+			for (let j = 0; j < trap.length; j++) {
+				out[i][10 * i + j] = trap[j];
+			}
 		}
-	}
 
-	return out;
-})());
+		return out;
+	})()
+);
 
 const spectralWeight = Object.freeze([
 	12 / 45,
