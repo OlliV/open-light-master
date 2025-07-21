@@ -2,7 +2,7 @@ import webfft from 'webfft';
 import { fftshift } from 'lib/fftshift';
 import { setGlobalState } from './global';
 
-const fftSize = 1024; // must be power of 2
+const fftSize = 1024; // must be a power of 2
 const fft = new webfft(fftSize);
 
 function mean(x: readonly number[]) {
