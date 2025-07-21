@@ -31,6 +31,13 @@ export function xy2uv(x: number, y: number) {
 	return [u, v] as const;
 }
 
+export function uv2xy(u: number, v: number) {
+	const d = 2 * u - 8 * v + 4;
+	const x = 3 * u / d;
+	const y = 2 * v / d;
+	return [x, y] as const;
+}
+
 /**
  * CIE XYZ color space to CIE 1964 UVW color space.
  */

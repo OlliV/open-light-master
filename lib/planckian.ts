@@ -1,6 +1,9 @@
 // Krystek, Michael P. (January 1985).
 // "An algorithm to calculate correlated colour temperature".
 // Color Research & Application. 10 (1): 38–40.
+
+import { uv2xy, xy2uv } from "./CIEConv";
+
 // doi:10.1002/col.5080100109
 function calc_xyc_low(T: number) {
 	const uT =
@@ -37,7 +40,7 @@ function calc_yc_high(T: number, xc: number) {
 /**
  * Calculate Planckian locus for T
  */
-export default function calc_xy(T: number) {
+function calc_xy(T: number) {
 	if (T < 1000) {
 		return [NaN, NaN];
 	} else if (T < 1667) {
@@ -45,5 +48,26 @@ export default function calc_xy(T: number) {
 	} else {
 		const xc = calc_xc_high(T);
 		return [xc, calc_yc_high(T, xc)];
+	}
+}
+
+/**
+ * Calculate Planckian locus for T and Duv
+ */
+export default function planckian_xy(T: number, Duv: number = 0) {
+	if (Duv === 0) {
+		return calc_xy(T);
+	} else {
+		const dT = 0.01 // K
+		const xy0 = calc_xy(T);
+		const xy1 = calc_xy(T + dT);
+		const [u0, v0] = xy2uv(xy0[0], xy0[1]);
+		const [u1, v1] = xy2uv(xy1[0], xy1[1]);
+		const du = u1 - u0;
+		const dv = v1 - v0;
+		const sq = Math.sqrt(du * du + dv * dv);
+		const u = u0 - Duv * dv / sq;
+		const v = v0 + Duv * du / sq;
+		return uv2xy(u, v);
 	}
 }

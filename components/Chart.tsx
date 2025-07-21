@@ -19,6 +19,8 @@ import { Scatter } from 'react-chartjs-2';
 import Datalabels from 'chartjs-plugin-datalabels';
 import Annotation from 'chartjs-plugin-annotation';
 
+export type ScatterDataset = Parameters<typeof Scatter>[0]['data']['datasets'][0]
+
 const customCanvasBackgroundColor = {
 	id: 'customCanvasBackgroundColor',
 	beforeDraw: (chart, args, options) => {

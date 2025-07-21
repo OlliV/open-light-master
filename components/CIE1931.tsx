@@ -1,5 +1,6 @@
+import { Scatter as cScatter } from 'react-chartjs-2';
 import Container from '@mui/material/Container';
-import { Scatter, makeChartTitle, pointRotationAuto } from './Chart';
+import { Scatter, ScatterDataset, makeChartTitle, pointRotationAuto } from './Chart';
 import planckianCalc_xy from 'lib/planckian';
 import calcCCT from 'lib/cct';
 
@@ -128,6 +129,11 @@ const locus = Array.from({ length: (CCT_MAX - CCT_MIN) / CCT_STEP }, (_, i) => C
 	planckianXYT
 );
 
+const locusDuv = (Tmin: number, Tmax: number, Duv: number) => Array.from({ length: (Tmax - Tmin) / CCT_STEP }, (_, i) => Tmin + i * CCT_STEP).map((T) => {
+	const [x, y] = planckianCalc_xy(T, Duv);
+	return { x, y, T };
+});
+
 function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any) {
 	switch (datasetIndex) {
 		case 0:
@@ -138,6 +144,76 @@ function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any
 			return `${defaultLabel}`;
 	}
 }
+
+const datasetSpectralLocus: ScatterDataset = {
+	label: 'Spectral locus',
+	data: spectral,
+	animation: false,
+	tension: 0.3,
+	showLine: true,
+	borderColor: 'black',
+	borderWidth: 1,
+	pointRadius: 0,
+	datalabels: { display: false },
+};
+const datasetMarkers: ScatterDataset = {
+	data: markers as { x: number; y: number }[],
+	animation: false,
+	borderColor: 'black',
+	pointStyle: 'line',
+	borderWidth: 2,
+	pointRadius: 5,
+	pointRotation: (ctx) => pointRotationAuto(ctx, 110),
+	datalabels: {
+		labels: {
+			value: {
+				align: 'top',
+				formatter: (_value, context) => markers[context.dataIndex].wl,
+			},
+		},
+	},
+};
+const datasetLocus: ScatterDataset = {
+	label: 'Planckian locus',
+	data: locus.map(({ x, y }) => ({ x, y })),
+	animation: false,
+	showLine: true,
+	borderColor: 'black',
+	borderWidth: 1,
+	pointRadius: 0,
+	datalabels: { display: false },
+	// @ts-ignore
+	tooltip: {
+		callbacks: {
+			beforeLabel: () => 'Planckian locus',
+			label: (tooltipItem) =>
+			`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+		},
+	},
+};
+
+const makeTempLineDataset = (Tmin: number, Tmax: number, Duv: number): ScatterDataset => {
+	return {
+		label: 'Duv limit',
+		data: locusDuv(Tmin, Tmax, Duv).map(({ x, y }) => ({ x, y })),
+		animation: false,
+		showLine: true,
+		borderColor: 'grey',
+		borderWidth: 1,
+		pointRadius: 0,
+		datalabels: { display: false },
+		// @ts-ignore
+		tooltip: {
+			callbacks: {
+				beforeLabel: () => `Duv ${Duv}`,
+				label: (tooltipItem) =>
+				`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+			},
+		},
+	};
+}
+const datasetTempLinesm2 = makeTempLineDataset(2600, CCT_MAX, -0.02);
+const datasetTempLines2 = makeTempLineDataset(CCT_MIN, CCT_MAX, 0.02);
 
 export default function CIE1931({
 	Ex,
@@ -152,117 +228,76 @@ export default function CIE1931({
 	Duv: number;
 	secondaryPoints?: { label: string; Ex: number; Ey: number; CCT: number; Duv: number }[];
 }) {
+	const datasets: ScatterDataset[] = [
+		datasetSpectralLocus,
+		datasetMarkers,
+		datasetLocus,
+		datasetTempLinesm2,
+		datasetTempLines2,
+		{
+			data: CCTMarkers.map(({ x, y }) => ({ x, y })),
+			animation: false,
+			borderColor: 'black',
+			pointStyle: 'line',
+			borderWidth: 2,
+			pointRadius: 5,
+			pointRotation: [110, 90, 80, 65, 60, 50, 45],
+			datalabels: {
+				labels: {
+					value: {
+						align: 'top',
+						rotation: 45,
+						offset: (context) => context.dataIndex * 2,
+						formatter: (_value, context) => `${CCTMarkers[context.dataIndex].T} K`,
+					},
+				},
+			},
+			// @ts-ignore
+			tooltip: {
+				callbacks: {
+					label: (tooltipItem) =>
+						`xy: ${tooltipItem.formattedValue} CCT: ${CCTMarkers[tooltipItem.dataIndex].T} K`,
+				},
+			},
+		},
+		{
+			label: 'current',
+			data: [{ x: Ex, y: Ey }],
+			borderColor: 'black',
+			pointRadius: 2,
+			datalabels: { display: false },
+			// @ts-ignore
+			tooltip: {
+				callbacks: {
+					beforeLabel: () => 'current',
+					label: (tooltipItem) =>
+						`xy: ${tooltipItem.formattedValue} CCT: ${CCT.toFixed(0)} K Duv: ${Duv.toFixed(3)}`,
+				},
+			},
+		},
+		...(secondaryPoints || []).map((point) => ({
+			label: point.label,
+			data: [{ x: point.Ex, y: point.Ey }],
+			borderColor: 'grey',
+			pointRadius: 2,
+			datalabels: { display: false },
+			// @ts-ignore
+			tooltip: {
+				callbacks: {
+					beforeLabel: () => point.label,
+					label: (tooltipItem) =>
+						`xy: ${tooltipItem.formattedValue} CCT: ${point.CCT.toFixed(0)} K Duv: ${point.Duv.toFixed(3)}`,
+				},
+			},
+		})),
+	];
+
 	return (
 		<Container sx={{ minWidth: 400 }}>
 			<Scatter
 				width={1}
 				height={1}
-				data={{
-					datasets: [
-						{
-							label: 'Spectral locus',
-							data: spectral,
-							animation: false,
-							tension: 0.3,
-							showLine: true,
-							borderColor: 'black',
-							borderWidth: 1,
-							pointRadius: 0,
-							datalabels: { display: false },
-						},
-						{
-							data: markers as { x: number; y: number }[],
-							animation: false,
-							borderColor: 'black',
-							pointStyle: 'line',
-							borderWidth: 2,
-							pointRadius: 5,
-							pointRotation: (ctx) => pointRotationAuto(ctx, 110),
-							datalabels: {
-								labels: {
-									value: {
-										align: 'top',
-										formatter: (_value, context) => markers[context.dataIndex].wl,
-									},
-								},
-							},
-						},
-						{
-							label: 'Planckian locus',
-							data: locus.map(({ x, y }) => ({ x, y })),
-							animation: false,
-							showLine: true,
-							borderColor: 'black',
-							borderWidth: 1,
-							pointRadius: 0,
-							datalabels: { display: false },
-							// @ts-ignore
-							tooltip: {
-								callbacks: {
-									beforeLabel: () => 'Planckian locus',
-									label: (tooltipItem) =>
-										`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
-								},
-							},
-						},
-						{
-							data: CCTMarkers.map(({ x, y }) => ({ x, y })),
-							animation: false,
-							borderColor: 'black',
-							pointStyle: 'line',
-							borderWidth: 2,
-							pointRadius: 5,
-							pointRotation: [110, 90, 80, 65, 60, 50, 45],
-							datalabels: {
-								labels: {
-									value: {
-										align: 'top',
-										rotation: 45,
-										offset: (context) => context.dataIndex * 2,
-										formatter: (_value, context) => `${CCTMarkers[context.dataIndex].T} K`,
-									},
-								},
-							},
-							// @ts-ignore
-							tooltip: {
-								callbacks: {
-									label: (tooltipItem) =>
-										`xy: ${tooltipItem.formattedValue} CCT: ${CCTMarkers[tooltipItem.dataIndex].T} K`,
-								},
-							},
-						},
-						{
-							label: 'current',
-							data: [{ x: Ex, y: Ey }],
-							borderColor: 'black',
-							pointRadius: 2,
-							datalabels: { display: false },
-							// @ts-ignore
-							tooltip: {
-								callbacks: {
-									beforeLabel: () => 'current',
-									label: (tooltipItem) =>
-										`xy: ${tooltipItem.formattedValue} CCT: ${CCT.toFixed(0)} K Duv: ${Duv.toFixed(3)}`,
-								},
-							},
-						},
-						...(secondaryPoints || []).map((point) => ({
-							label: point.label,
-							data: [{ x: point.Ex, y: point.Ey }],
-							borderColor: 'grey',
-							pointRadius: 2,
-							datalabels: { display: false },
-							// @ts-ignore
-							tooltip: {
-								callbacks: {
-									beforeLabel: () => point.label,
-									label: (tooltipItem) =>
-										`xy: ${tooltipItem.formattedValue} CCT: ${point.CCT.toFixed(0)} K Duv: ${point.Duv.toFixed(3)}`,
-								},
-							},
-						})),
-					],
-				}}
+				data={{ datasets }}
 				options={{
 					aspectRatio: 1,
 					plugins: {
