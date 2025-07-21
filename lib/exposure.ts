@@ -34,7 +34,7 @@ const sspeeds = Object.freeze([
 	120,
 ]);
 
-function closest(needle: number, haystack: readonly number[]) {
+function closest(needle: number, haystack: readonly number[]): number {
 	return haystack.reduce((a, b) => {
 		let aDiff = Math.abs(a - needle);
 		let bDiff = Math.abs(b - needle);
@@ -47,15 +47,15 @@ function closest(needle: number, haystack: readonly number[]) {
 	});
 }
 
-export function closestShutter(shutter: number) {
+export function closestShutter(shutter: number): number {
 	return closest(shutter, sspeeds);
 }
 
-export function closestAperture(fstop: number) {
+export function closestAperture(fstop: number): number {
 	return closest(fstop, fStops);
 }
 
-export function calcEV(lux: number, iso: number = 100, gain: number = 0) {
+export function calcEV(lux: number, iso: number = 100, gain: number = 0): number {
 	const C = 250;
 	const EV100 = Math.log2((lux * 100) / C);
 
@@ -66,10 +66,10 @@ export function calcEV(lux: number, iso: number = 100, gain: number = 0) {
 	return EV100 + Math.log2(iso / 100) + gain / 6;
 }
 
-export function calcShutter(ev: number, fstop: number) {
-	return Math.pow(fstop, 2) / Math.pow(2, ev);
+export function calcShutter(ev: number, fstop: number): number {
+	return (fstop * fstop) / (2 ** ev);
 }
 
-export function calcFstop(ev: number, shutter: number) {
-	return Math.sqrt(shutter * Math.pow(2, ev));
+export function calcFstop(ev: number, shutter: number): number {
+	return Math.sqrt(shutter * (2 ** ev));
 }
