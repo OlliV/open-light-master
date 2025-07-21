@@ -33,7 +33,7 @@ const customCanvasBackgroundColor = {
 	},
 };
 
-function pointRotationAuto(ctx: ScriptableContext<'line'>, C: number) {
+function pointRotationAuto(ctx: ScriptableContext<'line'>) {
 	const i = ctx.dataIndex;
 	const { data } = ctx.dataset;
 	const point1 = data[i];
@@ -41,7 +41,10 @@ function pointRotationAuto(ctx: ScriptableContext<'line'>, C: number) {
 	if (point1 === point2 || typeof point1 === 'number' || typeof point2 === 'number') {
 		return 0;
 	}
-	return (180 / Math.PI) * Math.atan(Math.abs((point2.y - point1.y) / (point2.x, -point2.y))) + C;
+
+	const dx = point2.x - point1.x;
+	const dy = point2.y - point1.y;
+	return 180 - (180 / Math.PI) * Math.atan2(Math.abs(dx), Math.abs(dy));
 }
 
 function gridColorAuto({ tick }: ScriptableScaleContext) {

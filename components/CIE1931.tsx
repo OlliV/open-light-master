@@ -3,6 +3,7 @@ import Container from '@mui/material/Container';
 import { Scatter, ScatterDataset, makeChartTitle, pointRotationAuto } from './Chart';
 import planckianCalc_xy from 'lib/planckian';
 import calcCCT from 'lib/cct';
+import {useState} from 'react';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -157,14 +158,14 @@ const datasetSpectralLocus: ScatterDataset = {
 	pointRadius: 0,
 	datalabels: { display: false },
 };
-const datasetMarkers: ScatterDataset = {
+const datasetSpectralMarkers: ScatterDataset = {
 	data: markers as { x: number; y: number }[],
 	animation: false,
 	borderColor: 'black',
 	pointStyle: 'line',
 	borderWidth: 2,
 	pointRadius: 5,
-	pointRotation: (ctx) => pointRotationAuto(ctx, 110),
+	pointRotation: (ctx) => pointRotationAuto(ctx),
 	datalabels: {
 		labels: {
 			value: {
@@ -216,6 +217,21 @@ const makeTempLineDataset = (Tmin: number, Tmax: number, Duv: number): ScatterDa
 const datasetTempLinesm2 = makeTempLineDataset(2600, CCT_MAX, -0.02);
 const datasetTempLines2 = makeTempLineDataset(CCT_MIN, CCT_MAX, 0.02);
 
+const defaultDatasets: Array<ScatterDataset[]> = [
+	[
+		datasetSpectralLocus,
+		datasetSpectralMarkers,
+		datasetLocus,
+		datasetTempLinesm2,
+		datasetTempLines2,
+	],
+	[
+		datasetLocus,
+		datasetTempLinesm2,
+		datasetTempLines2,
+	]
+];
+
 export default function CIE1931({
 	Ex,
 	Ey,
@@ -229,12 +245,9 @@ export default function CIE1931({
 	Duv: number;
 	secondaryPoints?: { label: string; Ex: number; Ey: number; CCT: number; Duv: number }[];
 }) {
+	const [zoom, setZoom] = useState(false);
 	const datasets: ScatterDataset[] = [
-		datasetSpectralLocus,
-		datasetMarkers,
-		datasetLocus,
-		datasetTempLinesm2,
-		datasetTempLines2,
+		...defaultDatasets[+zoom],
 		{
 			data: CCTMarkers.map(({ x, y }) => ({ x, y })),
 			animation: false,
@@ -242,7 +255,7 @@ export default function CIE1931({
 			pointStyle: 'line',
 			borderWidth: 2,
 			pointRadius: 5,
-			pointRotation: [110, 90, 80, 65, 60, 50, 45],
+			pointRotation: [115, 100, 80, 65, 60, 50, 45],
 			datalabels: {
 				labels: {
 					value: {
@@ -325,8 +338,8 @@ export default function CIE1931({
 					},
 					scales: {
 						x: {
-							min: 0,
-							max: 0.8,
+							min: zoom ? 0.20 : 0.0,
+							max: zoom ? 0.55 : 0.8,
 							display: true,
 							grid: {
 								display: true,
@@ -341,8 +354,8 @@ export default function CIE1931({
 							},
 						},
 						y: {
-							min: 0,
-							max: 0.9,
+							min: zoom ? 0.20 : 0.0,
+							max: zoom ? 0.50 : 0.9,
 							display: true,
 							grid: {
 								display: true,
@@ -356,6 +369,9 @@ export default function CIE1931({
 								display: true,
 							},
 						},
+					},
+					onClick(event, elements, chart) {
+						setZoom(!zoom);
 					},
 				}}
 			/>
