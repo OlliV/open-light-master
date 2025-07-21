@@ -25,7 +25,7 @@ export type LM3Measurement = {
 };
 
 export type RefMeasurement = {
-	SPD: readonly number[];
+	SPD: Float64Array;
 	Ex: number;
 	Ey: number;
 	Eu: number;

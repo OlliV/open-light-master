@@ -10,9 +10,9 @@ export function normalize(v: readonly number[]) {
 /**
  * Normalize by the largest element; i.e. so that the largest element will be 1.
  */
-export function normalize2(v: readonly number[]) {
+export function normalize2(v: readonly number[] | Float64Array) {
 	const max = Math.max(...v);
-	return max === 0 ? v.slice(0) : v.map((v) => v / max);
+	return max === 0 ? v.slice(0) : v.map((v: number) => v / max);
 }
 
 /**

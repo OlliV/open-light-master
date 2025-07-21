@@ -5,6 +5,7 @@ import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 import calcCCT from './cct';
 import calcDuv from './duv';
 import calcTint from './tint';
+import { RefMeasurement } from './global';
 
 export type SPD = {
 	l: number /*!< wavelength. */;
@@ -62,7 +63,7 @@ export function normalizeSPD(spd: Float64Array) {
  * measurements.
  * @param spd spd must be 380..780 nm with 5 nm steps.
  */
-export function calcRefMeas(spd: Float64Array) {
+export function calcRefMeas(spd: Float64Array): RefMeasurement {
 	const ref = normalizeSPD(spd);
 	const XYZ = spd2XYZ(ref, CIE1931_2DEG_CMF);
 	const [x, y] = XYZ2xy(XYZ);

@@ -126,7 +126,7 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 					borderColor: swatchBorder[i],
 					backgroundColor: swatch[i],
 					datalabels: { display: false },
-					pointRotation: (ctx) => pointRotationAuto(ctx, 45),
+					pointRotation: (ctx) => pointRotationAuto(ctx),
 					pointRadius: (ctx) => ctx.dataIndex != 0 && 3,
 					showLine: true,
 					data: [
