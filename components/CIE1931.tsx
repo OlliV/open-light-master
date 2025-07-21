@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import { Scatter, ScatterDataset, makeChartTitle, pointRotationAuto } from './Chart';
 import planckianCalc_xy from 'lib/planckian';
 import calcCCT from 'lib/cct';
-import {useState} from 'react';
+import { useState } from 'react';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -218,18 +218,8 @@ const datasetTempLinesm2 = makeTempLineDataset(2600, CCT_MAX, -0.02);
 const datasetTempLines2 = makeTempLineDataset(CCT_MIN, CCT_MAX, 0.02);
 
 const defaultDatasets: Array<ScatterDataset[]> = [
-	[
-		datasetSpectralLocus,
-		datasetSpectralMarkers,
-		datasetLocus,
-		datasetTempLinesm2,
-		datasetTempLines2,
-	],
-	[
-		datasetLocus,
-		datasetTempLinesm2,
-		datasetTempLines2,
-	]
+	[datasetSpectralLocus, datasetSpectralMarkers, datasetLocus, datasetTempLinesm2, datasetTempLines2],
+	[datasetLocus, datasetTempLinesm2, datasetTempLines2],
 ];
 
 export default function CIE1931({
@@ -338,7 +328,7 @@ export default function CIE1931({
 					},
 					scales: {
 						x: {
-							min: zoom ? 0.20 : 0.0,
+							min: zoom ? 0.2 : 0.0,
 							max: zoom ? 0.55 : 0.8,
 							display: true,
 							grid: {
@@ -354,8 +344,8 @@ export default function CIE1931({
 							},
 						},
 						y: {
-							min: zoom ? 0.20 : 0.0,
-							max: zoom ? 0.50 : 0.9,
+							min: zoom ? 0.2 : 0.0,
+							max: zoom ? 0.5 : 0.9,
 							display: true,
 							grid: {
 								display: true,
