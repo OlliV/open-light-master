@@ -8,7 +8,7 @@ export const XYZnD50 = Object.freeze([96.4212, 100, 82.5188]);
  * Reference white D65.
  * Y = 100, relative luminance.
  */
-export const XYZnD65 = Object.freeze([95.0489, 100, 108.8840]);
+export const XYZnD65 = Object.freeze([95.0489, 100, 108.884]);
 
 /**
  * XYZ to tristimulus to CIE 1931 (x, y) chromaticity.
@@ -33,8 +33,8 @@ export function xy2uv(x: number, y: number) {
 
 export function uv2xy(u: number, v: number) {
 	const d = 2 * u - 8 * v + 4;
-	const x = 3 * u / d;
-	const y = 2 * v / d;
+	const x = (3 * u) / d;
+	const y = (2 * v) / d;
 	return [x, y] as const;
 }
 
@@ -75,7 +75,7 @@ function finv(t: number): number {
 	if (t > δ) {
 		return t ** 3;
 	} else {
-		return 3 * (δ ** 2) * (t - 4 / 29);
+		return 3 * δ ** 2 * (t - 4 / 29);
 	}
 }
 
@@ -91,7 +91,7 @@ export function XYZ2Lab(X: number, Y: number, Z: number, XYZn: readonly number[]
 }
 
 export function Lab2XYZ(L: number, a: number, b: number, XYZn: readonly number[]) {
-	const X = XYZn[0] * finv(((L + 16) / 116) + a / 500);
+	const X = XYZn[0] * finv((L + 16) / 116 + a / 500);
 	const Y = XYZn[1] * finv((L + 16) / 116);
 	const Z = XYZn[2] * finv((L + 16) / 116 - b / 200);
 

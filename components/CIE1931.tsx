@@ -129,10 +129,11 @@ const locus = Array.from({ length: (CCT_MAX - CCT_MIN) / CCT_STEP }, (_, i) => C
 	planckianXYT
 );
 
-const locusDuv = (Tmin: number, Tmax: number, Duv: number) => Array.from({ length: (Tmax - Tmin) / CCT_STEP }, (_, i) => Tmin + i * CCT_STEP).map((T) => {
-	const [x, y] = planckianCalc_xy(T, Duv);
-	return { x, y, T };
-});
+const locusDuv = (Tmin: number, Tmax: number, Duv: number) =>
+	Array.from({ length: (Tmax - Tmin) / CCT_STEP }, (_, i) => Tmin + i * CCT_STEP).map((T) => {
+		const [x, y] = planckianCalc_xy(T, Duv);
+		return { x, y, T };
+	});
 
 function toolTipTitle(datasetIndex: number, dataIndex: number, defaultLabel: any) {
 	switch (datasetIndex) {
@@ -187,7 +188,7 @@ const datasetLocus: ScatterDataset = {
 		callbacks: {
 			beforeLabel: () => 'Planckian locus',
 			label: (tooltipItem) =>
-			`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+				`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
 		},
 	},
 };
@@ -207,11 +208,11 @@ const makeTempLineDataset = (Tmin: number, Tmax: number, Duv: number): ScatterDa
 			callbacks: {
 				beforeLabel: () => `Duv ${Duv}`,
 				label: (tooltipItem) =>
-				`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
+					`xy: ${tooltipItem.formattedValue} CCT: ${calcCCT(tooltipItem.parsed.x, tooltipItem.parsed.y).toFixed(0)} K`,
 			},
 		},
 	};
-}
+};
 const datasetTempLinesm2 = makeTempLineDataset(2600, CCT_MAX, -0.02);
 const datasetTempLines2 = makeTempLineDataset(CCT_MIN, CCT_MAX, 0.02);
 

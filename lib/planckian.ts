@@ -2,7 +2,7 @@
 // "An algorithm to calculate correlated colour temperature".
 // Color Research & Application. 10 (1): 38–40.
 
-import { uv2xy, xy2uv } from "./CIEConv";
+import { uv2xy, xy2uv } from './CIEConv';
 
 // doi:10.1002/col.5080100109
 function calc_xyc_low(T: number) {
@@ -58,7 +58,7 @@ export default function planckian_xy(T: number, Duv: number = 0) {
 	if (Duv === 0) {
 		return calc_xy(T);
 	} else {
-		const dT = 0.01 // K
+		const dT = 0.01; // K
 		const xy0 = calc_xy(T);
 		const xy1 = calc_xy(T + dT);
 		const [u0, v0] = xy2uv(xy0[0], xy0[1]);
@@ -66,8 +66,8 @@ export default function planckian_xy(T: number, Duv: number = 0) {
 		const du = u1 - u0;
 		const dv = v1 - v0;
 		const sq = Math.sqrt(du * du + dv * dv);
-		const u = u0 - Duv * dv / sq;
-		const v = v0 + Duv * du / sq;
+		const u = u0 - (Duv * dv) / sq;
+		const v = v0 + (Duv * du) / sq;
 		return uv2xy(u, v);
 	}
 }
