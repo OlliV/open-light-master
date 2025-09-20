@@ -152,9 +152,10 @@ function useGlobalState<StateKey extends keyof GlobalState>(
 
 		if (['hz', 'avg', 'memory'].includes(key)) {
 			// Defer saving to not disturb the render loop.
-			setTimeout(() => {
-				saveConfig();
-			}, 0);
+			globalThis.scheduler.postTask(() => saveConfig(), {
+				priority: 'background',
+			});
+
 		}
 	};
 
