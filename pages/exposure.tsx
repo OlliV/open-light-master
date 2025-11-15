@@ -14,7 +14,7 @@ import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from 
 
 const DEFAULT_ISO = 100;
 
-export default function Text() {
+export default function Exposure() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const [iso, setIso] = useState(DEFAULT_ISO);
 	const [gain, setGain] = useState(0);
