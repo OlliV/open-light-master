@@ -1,21 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 import Paper from '@mui/material/Paper';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
 import { Line } from 'components/Chart';
+import Control from 'components/FreqMeasControl';
+import { FreqDataTable as DataTable } from 'components/FreqDataTable';
 import { useGlobalState } from 'lib/global';
 import { calcFft } from 'lib/flicker';
 
@@ -63,33 +57,6 @@ function DiscreteSliderValues({ onChange }: { onChange: (newValue: number) => vo
 					onChange(n);
 				}}
 			/>
-		</Box>
-	);
-}
-
-function Control({ n }) {
-	const [lm3] = useGlobalState('lm3');
-	const [meas] = useGlobalState('res_lm_freq');
-	const [working, setWorking] = useState(false);
-
-	useEffect(() => {
-		setWorking(!lm3);
-	}, [meas, lm3]);
-
-	return (
-		<Box sx={{ width: 10 }}>
-			<IconButton
-				disabled={working}
-				onClick={() => {
-					setWorking(true);
-					lm3.readFreq(0, n);
-				}}
-				size="large"
-				aria-label="start/pause measurements"
-				color="inherit"
-			>
-				{<ModelTrainingIcon />}
-			</IconButton>
 		</Box>
 	);
 }
@@ -190,33 +157,6 @@ const FFT = ({ wave, freqDiv, setFc }: { wave: readonly number[]; freqDiv: numbe
 		</Container>
 	);
 };
-
-function DataTable({ CCT, Lux, flickerIndex, fluDepth, fc }) {
-	return (
-		<TableContainer sx={{ marginTop: 3 }} component={Paper}>
-			<Table sx={{ minWidth: 300 }} aria-label="simple table">
-				<TableHead>
-					<TableRow>
-						<TableCell align="right">CCT</TableCell>
-						<TableCell align="right">Lux</TableCell>
-						<TableCell align="right">Flicker Index</TableCell>
-						<TableCell align="right">Modulation Depth [%]</TableCell>
-						<TableCell align="right">fc&nbsp;[Hz]</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					<TableRow key={0} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-						<TableCell align="right">{Math.round(CCT)}</TableCell>
-						<TableCell align="right">{Math.round(Lux)}</TableCell>
-						<TableCell align="right">{Math.round(flickerIndex)}</TableCell>
-						<TableCell align="right">{Math.round(fluDepth)}</TableCell>
-						<TableCell align="right">{Math.round(fc)}</TableCell>
-					</TableRow>
-				</TableBody>
-			</Table>
-		</TableContainer>
-	);
-}
 
 export default function Flicker() {
 	const [data] = useGlobalState('res_lm_freq');

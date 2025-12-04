@@ -34,6 +34,9 @@ function MenuItem({ href, children }) {
 	);
 }
 
+const spacing = { xs: 2, md: 3 };
+const columns = { xs: 4, sm: 4, md: 8, lg: 8, xl: 8 };
+
 export default function Home() {
 	return (
 		<Container maxWidth="md">
@@ -43,15 +46,11 @@ export default function Home() {
 				<br />
 				<Grid
 					container
-					spacing={{ xs: 2, md: 3 }}
-					columns={{ xs: 4, sm: 8, md: 12 }}
+					spacing={spacing}
+					columns={columns}
 					alignItems="center"
 					justifyContent="center"
-				>
-					<MenuItem href="/exposure">
-						Exposure <br />
-						<ExposureIcon />
-					</MenuItem>
+				>	 
 					<MenuItem href="/wb">
 						WB <br />
 						<WbIncandescentIcon />
@@ -75,6 +74,15 @@ export default function Home() {
 					<MenuItem href="/text">
 						Text <br />
 						<DataArrayIcon />
+					</MenuItem>
+					<Grid item xs={8} />
+					<MenuItem href="/exposure">
+						Exposure <br />
+						<ExposureIcon />
+					</MenuItem>
+					<MenuItem href="/flash">
+						Flash <br />
+						<ExposureIcon />
 					</MenuItem>
 					<MenuItem href="/flicker">
 						Flicker <br />
