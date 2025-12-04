@@ -173,7 +173,19 @@ function saveConfig() {
 
 function useMemoryRecall(): MemoryItem[] {
 	const [memory] = useGlobalState('memory');
-	return useMemo(() => memory.filter((m: MemoryItem) => m.recall), [memory]);
+	return useMemo(() => memory.filter((m: MemoryItem) => m.recall).map((v) => {
+		if (v.type == 'ref') {
+			return {
+				...v,
+				meas: {
+					...v.meas,
+					// @ts-ignore
+					SPD: new Float64Array(Object.values(v.meas.SPD)),
+				},
+			};
+		}
+		return v;
+	}), [memory]);
 }
 
 export { useGlobalState, getGlobalState, setGlobalState /* saveConfig */, useMemoryRecall };

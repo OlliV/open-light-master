@@ -280,7 +280,7 @@ export function MemorySettings() {
 	const [openAddModal, setOpenAddModal] = useState(false);
 	const handleOpen = () => setOpenAddModal(true);
 	const handleClose = () => setOpenAddModal(false);
-	const handleAdd = (label: string, spd: Float64Array) =>
+	const handleAdd = (label: string, spd: Float64Array) => {
 		setMemory([
 			...memory,
 			{
@@ -291,6 +291,7 @@ export function MemorySettings() {
 				meas: calcRefMeas(spd),
 			},
 		]);
+	}
 
 	return (
 		<SettingsCard
