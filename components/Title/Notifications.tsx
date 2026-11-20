@@ -1,5 +1,6 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SensorWindowIcon from '@mui/icons-material/SensorWindow';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import Alert, { type AlertColor } from '@mui/material/Alert';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -21,6 +22,7 @@ type Notification = {
 function useLm3Alerts(): Notification[] {
 	const [btDevice_lm3] = useGlobalState('btDevice_lm3');
 	const [battLevel] = useGlobalState('res_battery_level');
+	const [saturated] = useGlobalState('res_lm_saturated');
 
 	if (!btDevice_lm3) {
 		return [
@@ -30,18 +32,25 @@ function useLm3Alerts(): Notification[] {
 				text: 'LM3 not connected',
 			},
 		];
-	} else if (battLevel >= 0 && battLevel <= 20) {
-		const getIcon = (l: number) => <BatteryLevel batteryLevel={l} />;
-		return [
-			{
-				severity: 'warning',
-				icon: getIcon(battLevel),
-				text: 'Low battery',
-			},
-		];
-	} else {
-		return [];
 	}
+
+	const alerts: Notification[] = [];
+	if (saturated.length > 0) {
+		alerts.push({
+			severity: 'error',
+			icon: <WbSunnyIcon />,
+			permanent: true, // Disappears automatically once the sensor is no longer saturated.
+			text: `Sensor saturated (${saturated.map((l) => `${l} nm`).join(', ')}). Measurements are invalid; reduce the light level.`,
+		});
+	}
+	if (battLevel >= 0 && battLevel <= 20) {
+		alerts.push({
+			severity: 'warning',
+			icon: <BatteryLevel batteryLevel={battLevel} />,
+			text: 'Low battery',
+		});
+	}
+	return alerts;
 }
 
 function useNotifications(): [Notification[], (notification: Notification) => void] {

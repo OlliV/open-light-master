@@ -84,6 +84,10 @@ export type GlobalState = {
 		wave: readonly number[];
 	};
 	res_battery_level: number;
+	/**
+	 * Wavelengths (nm) of the sensor channels that are saturated in the latest measurement.
+	 */
+	res_lm_saturated: readonly number[];
 	// Settings
 	hz: number;
 	avg: number;
@@ -128,6 +132,7 @@ const initialState: GlobalState = {
 		wave: [],
 	},
 	res_battery_level: -1,
+	res_lm_saturated: [],
 	// Settings
 	hz: 1,
 	avg: 1,

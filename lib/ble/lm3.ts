@@ -21,6 +21,14 @@ const PROTO_MSG_FFRAG = 0x80;
 const PROTO_MSG_MFRAG = 0xa0;
 const PROTO_MSG_LFRAG = 0xc0;
 
+/**
+ * Raw sensor channels are 16-bit. A channel reading at or above this
+ * threshold is considered saturated (or so close to it that the result can't
+ * be trusted).
+ */
+const SATURATION_THRESHOLD = 65000;
+const CHANNEL_WAVELENGTHS = Object.freeze([450, 500, 550, 570, 600, 650]); // V, B, G, Y, O, R
+
 enum LightMode {
 	MONOCHROMATIC = 1,
 	INCANDESCENT = 2,
@@ -164,6 +172,9 @@ function parseMeasurementData(
 	const C1 = 1 * kSensor[6]; // But what's the relation of this to C0 that's the ambient temperature?
 
 	const result = calcResult(V1, B1, G1, Y1, O1, R1, C1);
+	const saturated = [V0, B0, G0, Y0, O0, R0]
+		.map((v, i) => (v >= SATURATION_THRESHOLD ? CHANNEL_WAVELENGTHS[i] : -1))
+		.filter((l) => l >= 0);
 	// TODO
 	//(V0 > 65e3 || B0 > 65e3 || G0 > 65e3 || Y0 > 65e3 || O0 > 65e3 || R0 > 65e3 || result.Lux > 5e4) && (result.Lux = 5e4, result.CCT = 0, result.Eu = 0, result.Ev = 0, result.Ey = 0, result.Ex = 0);
 	//result.Lux < 3 && (result.Lux = 0);
@@ -182,6 +193,7 @@ function parseMeasurementData(
 			eml: calcEml(result.CCT, V1, B1, G1, Y1, O1, R1, result.mode),
 		},
 		power,
+		saturated,
 	};
 }
 
@@ -356,6 +368,10 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 
 			setGlobalState('res_lm_measurement', res.result);
 			setGlobalState('res_battery_level', batteryLevel(res.power));
+			const prevSaturated = getGlobalState('res_lm_saturated');
+			if (prevSaturated.length !== res.saturated.length || prevSaturated.some((l, i) => l !== res.saturated[i])) {
+				setGlobalState('res_lm_saturated', res.saturated);
+			}
 		} else if (code === PROTO_RES_FREQ) {
 			if (data[12] >= 4) {
 				console.log('wat?');
