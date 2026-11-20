@@ -13,29 +13,38 @@ import { useGlobalState } from 'lib/global';
 import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from 'lib/exposure';
 
 const DEFAULT_ISO = 100;
+const DEFAULT_SHUTTER = 1 / 100;
+const DEFAULT_APERTURE = 4;
+
+function formatShutter(shutter: number): string {
+	const denom = 1 / closestShutter(shutter);
+	return `${Number.isInteger(denom) ? denom : Number(denom.toPrecision(2))}`;
+}
+
+function formatAperture(fstop: number): string {
+	const tradFstop = closestAperture(fstop);
+	return tradFstop < 10 ? tradFstop.toFixed(1) : `${tradFstop}`;
+}
 
 export default function Exposure() {
 	const [meas] = useGlobalState('res_lm_measurement');
 	const [iso, setIso] = useState(DEFAULT_ISO);
 	const [gain, setGain] = useState(0);
 	const [auto, setAuto] = useState(0);
-	const [[shutter, aperture], setParam] = useState([1 / 100, 4]);
-	const [shutterStr, setShutterStr] = useState('4');
-	const [apertureStr, setApertureStr] = useState('4');
+	const [[shutter, aperture], setParam] = useState([DEFAULT_SHUTTER, DEFAULT_APERTURE]);
+	const [shutterStr, setShutterStr] = useState(() => formatShutter(DEFAULT_SHUTTER));
+	const [apertureStr, setApertureStr] = useState(() => formatAperture(DEFAULT_APERTURE));
 	const [invalid, setInvalid] = useState(0);
 	const updateParam = useCallback(
 		(newEv: number, newShutter: number, newAperture: number) => {
 			if (auto === 0) {
 				const autoShutter = calcShutter(newEv, newAperture);
-				const str = `${1 / closestShutter(autoShutter)}`;
 				setParam([autoShutter, newAperture]);
-				setShutterStr(str);
+				setShutterStr(formatShutter(autoShutter));
 			} else {
 				const autoAperture = calcFstop(newEv, newShutter);
-				const tradFstop = closestAperture(autoAperture);
-				const str = tradFstop < 10 ? tradFstop.toFixed(1) : `${tradFstop}`;
 				setParam([newShutter, autoAperture]);
-				setApertureStr(str);
+				setApertureStr(formatAperture(autoAperture));
 			}
 		},
 		[setParam, setShutterStr, setApertureStr, auto]
