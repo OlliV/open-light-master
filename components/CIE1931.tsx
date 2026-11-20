@@ -331,7 +331,7 @@ export default function CIE1931({
 							},
 							title: {
 								display: true,
-								text: 'y',
+								text: 'x',
 								color: 'black',
 							},
 							ticks: {
@@ -347,7 +347,7 @@ export default function CIE1931({
 							},
 							title: {
 								display: true,
-								text: 'x',
+								text: 'y',
 								color: 'black',
 							},
 							ticks: {

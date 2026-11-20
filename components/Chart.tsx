@@ -53,14 +53,17 @@ function makeChartTitle(title: string): {
 	display: boolean;
 	text: string;
 	position: 'bottom';
-	padding: { top: number };
+	padding: { top: number; bottom: number };
 } {
 	return {
 		display: true,
 		text: title,
 		position: 'bottom',
+		// The title box takes lineHeight + top + bottom padding. Zero padding keeps the chart area
+		// as small as possible (no aspect ratio shift) without pulling the title up over the x-axis title.
 		padding: {
-			top: -10, // This fixes the aspect ratio shift
+			top: 0,
+			bottom: 0,
 		},
 	};
 }
