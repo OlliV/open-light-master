@@ -6,7 +6,7 @@ export function getClientLang(): string {
 			if (window.navigator.languages) {
 				return window.navigator.languages[0];
 			} else {
-				// @ts-ignore
+				// @ts-expect-error
 				return window.navigator.userLanguage || window.navigator.language;
 			}
 		}

@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import Box from '@mui/system/Box';
+import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 import Paper from '@mui/material/Paper';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
@@ -13,11 +11,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/system/Box';
+import { Line } from 'components/Chart';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
-import { Line } from 'components/Chart';
-import { useGlobalState } from 'lib/global';
 import { calcFft } from 'lib/flicker';
+import { useGlobalState } from 'lib/global';
+import { useEffect, useMemo, useState } from 'react';
 
 const marks = [
 	{
@@ -110,7 +110,7 @@ type TypedArray =
 function typedArrayMax(arr: TypedArray): number {
 	let max: number = arr.length > 0 ? arr[0] : -Infinity;
 
-	for (let v of arr) {
+	for (const v of arr) {
 		if (v > max) {
 			max = v;
 		}
@@ -226,7 +226,7 @@ export default function Flicker() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - Flicker</Title>
 				<Paper sx={{ marginTop: 2, marginBottom: 1, paddingTop: 1, paddingLeft: 4 }}>
 					<Typography variant="button">Sampling</Typography>

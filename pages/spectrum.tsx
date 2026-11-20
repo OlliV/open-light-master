@@ -1,20 +1,20 @@
-import { useMemo } from 'react';
-import Box from '@mui/system/Box';
-import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/system/Box';
+import Carousel from 'components/Carousel';
+import { Bar, makeChartTitle, Scatter } from 'components/Chart';
 import Memory from 'components/Memory';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
-import { Bar, Scatter, makeChartTitle } from 'components/Chart';
+import { type LM3Measurement, type RefMeasurement, useGlobalState, useMemoryRecall } from 'lib/global';
+import { lm3NormSPD } from 'lib/lm3calc';
+import { interpolateSPD, type SPD } from 'lib/spd';
+import { normalize2 } from 'lib/vector';
 import wavelengthToColor from 'lib/wl2rgb';
 import wlMap from 'lib/wlmap';
-import { SPD, interpolateSPD } from 'lib/spd';
-import { lm3NormSPD } from 'lib/lm3calc';
-import { normalize2 } from 'lib/vector';
-import { useMemoryRecall, useGlobalState, LM3Measurement, RefMeasurement } from 'lib/global';
+import { useMemo } from 'react';
 
 type RecallData = {
 	name: string;
@@ -71,7 +71,7 @@ function SpectrumBar({ data, recallData }: { data: Readonly<SPD>; recallData: Re
 			width={1}
 			height={1}
 			data={{
-				// @ts-ignore
+				// @ts-expect-error
 				labels: barDataLabels,
 				datasets: [
 					...recallData.map((e) => ({
@@ -175,7 +175,7 @@ export default function Spectrum() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - Spectrum</Title>
 				<Paper>
 					<Box>
@@ -184,8 +184,10 @@ export default function Spectrum() {
 							disabled
 							sx={{ m: 1, width: '15ch' }}
 							value={`${Math.round(meas.Lux)}`}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">lx</InputAdornment>,
+							slotProps={{
+								input: {
+									endAdornment: <InputAdornment position="end">lx</InputAdornment>,
+								},
 							}}
 						/>
 						<Box sx={{ float: 'right', paddingTop: 1, paddingRight: 1 }}>
@@ -193,7 +195,7 @@ export default function Spectrum() {
 						</Box>
 					</Box>
 					<Container sx={{ height: '450px', overflow: 'scroll' }}>
-						<Carousel autoPlay={false} animation="slide" swipe={false}>
+						<Carousel>
 							<Container sx={{ height: '400px', width: '100%', maxWidth: '400px' }}>
 								<SpectrumBar data={norm} recallData={recallData} />
 							</Container>

@@ -1,10 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
-import Box from '@mui/system/Box';
-import CCT from 'components/CCT';
 import Container from '@mui/material/Container';
-import Duv from 'components/Duv';
-import Memory from 'components/Memory';
-import MyHead from 'components/MyHead';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,14 +7,20 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/system/Box';
+import CCT from 'components/CCT';
+import Duv from 'components/Duv';
+import Memory from 'components/Memory';
+import MyHead from 'components/MyHead';
 import Title from 'components/Title';
-import wlMap from 'lib/wlmap';
-import { interpolateSPD } from 'lib/spd';
+import { useGlobalState, useMemoryRecall } from 'lib/global';
 import { lm3NormSPD } from 'lib/lm3calc';
 import { makeMatrix } from 'lib/matrix';
-import { normalize2 } from 'lib/vector';
+import { interpolateSPD } from 'lib/spd';
 import { ssi } from 'lib/ssi';
-import { useGlobalState, useMemoryRecall } from 'lib/global';
+import { normalize2 } from 'lib/vector';
+import wlMap from 'lib/wlmap';
+import { useEffect, useMemo, useState } from 'react';
 
 function Matrix({ head, m }: { head: string[]; m: number[][] }) {
 	const cellStyle = { borderWidth: 1, borderStyle: 'solid', borderColor: 'black' };
@@ -64,13 +64,13 @@ export default function Text() {
 			.filter((m) => ['ref', 'LM3'].includes(m.type))
 			.map(({ name, type, meas }) => {
 				if (type === 'ref') {
-					// @ts-ignore
+					// @ts-expect-error
 					const norm = normalize2(meas.SPD);
 					const lv = wlMap((l, i) => ({ l, v: norm[i] }));
 
 					return { name, spd: lv };
 				} else if (type === 'LM3') {
-					// @ts-ignore
+					// @ts-expect-error
 					return { name, spd: lm3NormSPD(meas) };
 				}
 			});
@@ -94,7 +94,7 @@ export default function Text() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - SSI</Title>
 				<Paper sx={{ padding: 2 }}>
 					<Box>

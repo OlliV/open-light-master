@@ -1,9 +1,9 @@
-import { getGlobalState, setGlobalState } from '../global';
+import { XYZ2xy, xy2uv } from 'lib/CIEConv';
 import calcCCT from 'lib/cct';
 import calcDuv from 'lib/duv';
-import calcTint from 'lib/tint';
 import { calcFlicker } from 'lib/flicker';
-import { XYZ2xy, xy2uv } from 'lib/CIEConv';
+import calcTint from 'lib/tint';
+import { getGlobalState, setGlobalState } from '../global';
 
 export const BLE_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const RX_CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
@@ -59,7 +59,7 @@ function getLightMode(V1: number, B1: number, G1: number, Y1: number, O1: number
 }
 
 function calcResult(V1: number, B1: number, G1: number, Y1: number, O1: number, R1: number, C1: number) {
-	let mode = getLightMode(V1, B1, G1, Y1, O1, R1, C1);
+	const mode = getLightMode(V1, B1, G1, Y1, O1, R1, C1);
 	const w = matMul(tristimulusM[mode - 1], 3, 7, [[V1], [B1], [G1], [Y1], [O1], [R1], [C1]], 7, 1);
 
 	// Tristimulus
@@ -113,7 +113,7 @@ function matMul(
 	m2: number,
 	n2: number
 ) {
-	let mat_r = [
+	const mat_r = [
 		[0, 0, 0],
 		[0, 0, 0],
 		[0, 0, 0],
@@ -188,9 +188,9 @@ function parseMeasurementData(
 function parseWave(data: Uint8Array, len: number): number[] {
 	const x: number[] = [];
 	for (let i = 0; i < len; i++) {
-		let a = (data[16 + 6 * i + 0] << 8) + data[16 + 6 * i + 1];
-		let b = (data[16 + 6 * i + 2] << 8) + data[16 + 6 * i + 3];
-		let c = (data[16 + 6 * i + 4] << 8) + data[16 + 6 * i + 5];
+		const a = (data[16 + 6 * i + 0] << 8) + data[16 + 6 * i + 1];
+		const b = (data[16 + 6 * i + 2] << 8) + data[16 + 6 * i + 3];
+		const c = (data[16 + 6 * i + 4] << 8) + data[16 + 6 * i + 5];
 		const xn0 = a >> 4;
 		const xn1 = ((0xf & a) << 8) | (b >> 8);
 		const xn2 = ((0xff & b) << 4) | (c >> 12);
@@ -226,14 +226,14 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		kSensor: [],
 		power: 0,
 	};
-	let prevMeas = [0, 0, 0, 0, 0, 0]; // V1, B1, G1, Y1, O1, R1
+	const prevMeas = [0, 0, 0, 0, 0, 0]; // V1, B1, G1, Y1, O1, R1
 	let coeff_a = 1; // Calc with lpfGetA()
 
 	let inflight = false;
 	let rxBuffer = null;
 	let rxBufferLen = 0;
 	txCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
-		// @ts-ignore
+		// @ts-expect-error
 		const value = event.target.value;
 		const buf = new Uint8Array(value.buffer);
 
@@ -247,7 +247,8 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 					//console.log(`Single message. len: ${value.length}`);
 					parseMsg(buf.subarray(3));
 					break;
-				case PROTO_MSG_FFRAG: // First fragment of a message
+				case PROTO_MSG_FFRAG: {
+					// First fragment of a message
 					const totalLen = (value.getUint8(1) << 8) | value.getUint8(2);
 					//const something = value.getUint8(3);
 					//console.log(`First fragment. totalLen: ${totalLen}`);
@@ -256,6 +257,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 					rxBuffer.set(payload, 0);
 					rxBufferLen = payload.length;
 					break;
+				}
 				case PROTO_MSG_MFRAG: // Partial
 					//console.log(`Fragment. len: ${value.length}`);
 					payload = buf.subarray(1);
@@ -290,7 +292,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 			let l = [];
 
 			if (0 == c) {
-				let u = data.length + nFragments + 2;
+				const u = data.length + nFragments + 2;
 
 				head = [nFragments > 1 ? PROTO_MSG_FFRAG : PROTO_MSG_SINGLE, (0xff00 & u) >> 8, 0xff & u];
 				l = nFragments > 1 ? data.slice(0, 17) : data.slice(0);
@@ -313,16 +315,16 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 		/* this.realWriteDataWithCommondAndBody */
 		seqno = (seqno + 1) & 0xff;
 
-		let h = [0, 0x13, 0, 0, seqno, 0, 0 + (n ? n.length : 0), 0, 0, (0xff00 & opCode) >> 8, 0xff & opCode];
+		const h = [0, 0x13, 0, 0, seqno, 0, 0 + (n ? n.length : 0), 0, 0, (0xff00 & opCode) >> 8, 0xff & opCode];
 
 		let v = h;
 		n && (v = h.concat(n));
-		let frames = encapsulateData(v);
+		const frames = encapsulateData(v);
 		//console.log('sending:', frames);
 		inflight = true;
 		for (const frame of frames) {
-			let buf = new ArrayBuffer(frame.length);
-			let view = new DataView(buf);
+			const buf = new ArrayBuffer(frame.length);
+			const view = new DataView(buf);
 
 			for (let i = 0; i < frame.length; i++) {
 				view.setInt8(i, 0xff & frame[i]);
@@ -373,7 +375,7 @@ export async function createLm3(server: BluetoothRemoteGATTServer) {
 			// response to readM3: M3 Matrix
 			const arr2float = (v) => new DataView(new Uint8Array(v).buffer).getFloat32(0);
 
-			let s = [];
+			const s = [];
 			for (let i = 0; i < 7; i++) {
 				const j = 4 * i;
 				const l = data.slice(12 + j, 12 + j + 4);

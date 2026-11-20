@@ -1,16 +1,15 @@
-import Alert from '@mui/material/Alert';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SensorWindowIcon from '@mui/icons-material/SensorWindow';
+import Alert, { type AlertColor } from '@mui/material/Alert';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SensorWindowIcon from '@mui/icons-material/SensorWindow';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { AlertColor } from '@mui/material/Alert';
 import { BatteryLevel } from 'components/BatteryLevel';
-import { ReactNode, MouseEvent, useState } from 'react';
 import { useGlobalState } from 'lib/global';
+import { type MouseEvent, type ReactNode, useState } from 'react';
 
 type Notification = {
 	severity: AlertColor;

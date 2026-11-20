@@ -67,7 +67,7 @@ function f(t: number): number {
 	if (t > δ ** 3) {
 		return Math.cbrt(t);
 	} else {
-		return (1 / 3) * t * Math.pow(δ, -2) + 4 / 29;
+		return (1 / 3) * t * δ ** -2 + 4 / 29;
 	}
 }
 

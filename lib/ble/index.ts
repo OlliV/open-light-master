@@ -97,7 +97,7 @@ async function _exponentialBackoff(max: number, delay: number, toTry, success, f
 			return fail(error);
 		}
 		time('Retrying in ' + delay + 's... (' + max + ' tries left)');
-		setTimeout(function () {
+		setTimeout(() => {
 			_exponentialBackoff(--max, delay * 2, toTry, success, fail);
 		}, delay * 1000);
 	}

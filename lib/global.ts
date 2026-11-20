@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
-import { Paired } from './ble';
+import type { Paired } from './ble';
 
 export type LM3Measurement = {
 	// corrected
@@ -155,7 +155,6 @@ function useGlobalState<StateKey extends keyof GlobalState>(
 			globalThis.scheduler.postTask(() => saveConfig(), {
 				priority: 'background',
 			});
-
 		}
 	};
 
@@ -173,19 +172,25 @@ function saveConfig() {
 
 function useMemoryRecall(): MemoryItem[] {
 	const [memory] = useGlobalState('memory');
-	return useMemo(() => memory.filter((m: MemoryItem) => m.recall).map((v) => {
-		if (v.type == 'ref') {
-			return {
-				...v,
-				meas: {
-					...v.meas,
-					// @ts-ignore
-					SPD: new Float64Array(Object.values(v.meas.SPD)),
-				},
-			};
-		}
-		return v;
-	}), [memory]);
+	return useMemo(
+		() =>
+			memory
+				.filter((m: MemoryItem) => m.recall)
+				.map((v) => {
+					if (v.type == 'ref') {
+						return {
+							...v,
+							meas: {
+								...v.meas,
+								// @ts-expect-error
+								SPD: new Float64Array(Object.values(v.meas.SPD)),
+							},
+						};
+					}
+					return v;
+				}),
+		[memory]
+	);
 }
 
-export { useGlobalState, getGlobalState, setGlobalState /* saveConfig */, useMemoryRecall };
+export { getGlobalState, setGlobalState /* saveConfig */, useGlobalState, useMemoryRecall };

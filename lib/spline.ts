@@ -70,7 +70,7 @@ export default class Spline {
 	}
 
 	at(x: number): number {
-		let i = this.getIndexBefore(x);
+		const i = this.getIndexBefore(x);
 		const t = (x - this.xs[i - 1]) / (this.xs[i] - this.xs[i - 1]);
 		const a = this.ks[i - 1] * (this.xs[i] - this.xs[i - 1]) - (this.ys[i] - this.ys[i - 1]);
 		const b = -this.ks[i] * (this.xs[i] - this.xs[i - 1]) + (this.ys[i] - this.ys[i - 1]);
@@ -137,7 +137,7 @@ function zerosMat(r: number, c: number): Float64Array[] {
 }
 
 function swapRows(m: Float64Array[], k: number, l: number): void {
-	let p = m[k];
+	const p = m[k];
 	m[k] = m[l];
 	m[l] = p;
 }

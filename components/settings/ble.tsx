@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import SensorWindowIcon from '@mui/icons-material/SensorWindow';
 import Alert from '@mui/material/Alert';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import SensorWindowIcon from '@mui/icons-material/SensorWindow';
-import { iconStyle, SettingsCard, ActionButton } from 'components/settings/SettingsCard';
-import { Paired, pairDevice } from 'lib/ble';
-import { GlobalState, useGlobalState } from 'lib/global';
+import { ActionButton, iconStyle, SettingsCard } from 'components/settings/SettingsCard';
+import { type Paired, pairDevice } from 'lib/ble';
+import { type GlobalState, useGlobalState } from 'lib/global';
+import { useEffect, useState } from 'react';
 
 type Severity = 'error' | 'info' | 'success' | 'warning';
 
@@ -45,7 +45,7 @@ export default function Ble({
 	const [pairingRequest, setPairingRequest] = useState(false);
 	const [isPairing, setIsPairing] = useState(false);
 	const [btDevice, setBtDevice] = useGlobalState(globalBtDeviceName);
-	let [info, setInfo] = useState<InfoMessage>(pairedWithMessage(btDevice));
+	const [info, setInfo] = useState<InfoMessage>(pairedWithMessage(btDevice));
 
 	const unpairDevice = () => {
 		if (btDevice) {

@@ -1,6 +1,6 @@
-import { SPD, interpolateSPD } from './spd';
 import { matrixMul } from './matrix';
-import { normalize3, sub as vecSub, convolve } from './vector';
+import { interpolateSPD, type SPD } from './spd';
+import { convolve, normalize3, sub as vecSub } from './vector';
 
 const trap30x301 = Object.preventExtensions(
 	(() => {

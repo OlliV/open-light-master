@@ -1,5 +1,5 @@
-import webfft from 'webfft';
 import { fftshift } from 'lib/fftshift';
+import webfft from 'webfft';
 import { setGlobalState } from './global';
 
 const fftSize = 1024; // must be a power of 2
@@ -58,7 +58,7 @@ export function calcFlicker(
 	}
 
 	let { x: wave } = waveData;
-	const corrected = wave.map(function (xn) {
+	const corrected = wave.map((xn) => {
 		var t = xn - y;
 		return t < 0 ? 0 : t;
 	});

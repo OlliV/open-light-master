@@ -36,8 +36,8 @@ const sspeeds = Object.freeze([
 
 function closest(needle: number, haystack: readonly number[]): number {
 	return haystack.reduce((a, b) => {
-		let aDiff = Math.abs(a - needle);
-		let bDiff = Math.abs(b - needle);
+		const aDiff = Math.abs(a - needle);
+		const bDiff = Math.abs(b - needle);
 
 		if (aDiff === bDiff) {
 			return a > b ? a : b;

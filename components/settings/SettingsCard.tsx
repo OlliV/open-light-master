@@ -1,14 +1,14 @@
-import { ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
+import type CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
+import { green } from '@mui/material/colors';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { green } from '@mui/material/colors';
-import SxPropsTheme from 'lib/SxPropsTheme';
+import type SxPropsTheme from 'lib/SxPropsTheme';
+import type { ReactNode } from 'react';
 
 const buttonProgressStyle: SxPropsTheme = {
 	color: green[500],
@@ -61,7 +61,7 @@ export function SettingsCard({
 	children: ReactNode;
 }) {
 	return (
-		<Grid item xs="auto">
+		<Grid size="auto">
 			<Card variant="outlined" sx={settingsCardStyle}>
 				<CardContent sx={{ height: '15em' }}>
 					<Typography gutterBottom variant="h5" component="h2">

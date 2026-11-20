@@ -1,20 +1,20 @@
-import { useMemo, useState } from 'react';
-import Box from '@mui/system/Box';
-import Carousel from 'react-material-ui-carousel';
 import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/system/Box';
+import Carousel from 'components/Carousel';
 import CCT from 'components/CCT';
+import { Bar, gridColorAuto, pointRotationAuto, Scatter } from 'components/Chart';
 import Duv from 'components/Duv';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
+import type { calcCRI } from 'lib/cri';
 import { useGlobalState } from 'lib/global';
-import { Bar, Scatter, gridColorAuto, pointRotationAuto } from 'components/Chart';
-import { calcCRI } from 'lib/cri';
 import lm3CalcCRI from 'lib/lm3calc';
+import { useMemo, useState } from 'react';
 
 const lightBlack = 'rgb(50,50,50)';
 const swatch = [
@@ -137,7 +137,7 @@ function CriChart({ cri, showAll }: { cri: ReturnType<typeof calcCRI>; showAll?:
 			}}
 			options={{
 				plugins: {
-					// @ts-ignore
+					// @ts-expect-error
 					customCanvasBackgroundColor: {
 						color: 'white',
 					},
@@ -190,7 +190,7 @@ export default function Cri() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - CRI</Title>
 				<Paper sx={{ padding: 2 }}>
 					<Box>
@@ -204,7 +204,7 @@ export default function Cri() {
 							label="Show R9-R14"
 						/>
 					</FormGroup>
-					<Carousel autoPlay={false} animation="slide" swipe={false}>
+					<Carousel>
 						<Box sx={{ height: 400 }}>
 							<CriChart cri={cri} showAll={chartShowAll} />
 						</Box>

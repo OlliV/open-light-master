@@ -1,7 +1,7 @@
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import { useGlobalState } from 'lib/global';
 
 export default function MeasControl() {

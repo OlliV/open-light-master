@@ -1,9 +1,3 @@
-import Link from 'next/link';
-import Box from '@mui/system/Box';
-import { experimentalStyled as styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import ContrastIcon from '@mui/icons-material/Contrast';
 import DataArrayIcon from '@mui/icons-material/DataArray';
 import DifferenceIcon from '@mui/icons-material/Difference';
@@ -12,8 +6,14 @@ import ExposureIcon from '@mui/icons-material/Exposure';
 import FluorescentIcon from '@mui/icons-material/Fluorescent';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/system/Box';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
+import Link from 'next/link';
 
 const Item = styled(Paper)(({ theme }) => ({
 	backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,15 +38,19 @@ export default function Home() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title disableBack>OLM</Title>
 				<br />
 				<Grid
 					container
-					spacing={{ xs: 2, md: 3 }}
-					columns={{ xs: 4, sm: 8, md: 12 }}
-					alignItems="center"
-					justifyContent="center"
+					sx={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						// Keep the MUI v5 GridLegacy geometry (container widened by the spacing).
+						width: { xs: 'calc(100% + 16px)', md: 'calc(100% + 24px)' },
+						ml: { xs: -2, md: -3 },
+						mt: { xs: -2, md: -3 },
+					}}
 				>
 					<MenuItem href="/exposure">
 						Exposure <br />

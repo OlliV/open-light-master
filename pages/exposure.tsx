@@ -1,5 +1,3 @@
-import { useCallback, useMemo, useState } from 'react';
-import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
@@ -7,10 +5,12 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/system/Box';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
-import { useGlobalState } from 'lib/global';
 import { calcEV, calcFstop, calcShutter, closestAperture, closestShutter } from 'lib/exposure';
+import { useGlobalState } from 'lib/global';
+import { useCallback, useMemo, useState } from 'react';
 
 const DEFAULT_ISO = 100;
 const DEFAULT_SHUTTER = 1 / 100;
@@ -64,8 +64,8 @@ export default function Exposure() {
 		<Container maxWidth="md">
 			<MyHead />
 			<Box
-				position="relative"
 				sx={{
+					position: 'relative',
 					'& .MuiTextField-root': { m: 1, width: '25ch' },
 				}}
 				component="form"
@@ -92,7 +92,7 @@ export default function Exposure() {
 						/>
 					</Box>
 					<Box>
-						<Stack direction="row" spacing={1} alignItems="center">
+						<Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
 							<Typography>Shutter</Typography>
 							<Switch
 								color="default"
@@ -105,8 +105,10 @@ export default function Exposure() {
 					<Box>
 						<TextField
 							label="Shutter"
-							InputProps={{
-								startAdornment: <InputAdornment position="start">1/</InputAdornment>,
+							slotProps={{
+								input: {
+									startAdornment: <InputAdornment position="start">1/</InputAdornment>,
+								},
 							}}
 							variant="outlined"
 							required
@@ -122,8 +124,10 @@ export default function Exposure() {
 						/>
 						<TextField
 							label="Aperture"
-							InputProps={{
-								startAdornment: <InputAdornment position="start">f/</InputAdornment>,
+							slotProps={{
+								input: {
+									startAdornment: <InputAdornment position="start">f/</InputAdornment>,
+								},
 							}}
 							variant="outlined"
 							required

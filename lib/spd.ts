@@ -1,11 +1,11 @@
+import { XYZ2UVW, XYZ2xy, xy2uv } from './CIEConv';
 import { CIE1931_2DEG_CMF } from './CMF';
-import Spline from './spline';
-import wlMap from './wlmap';
-import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 import calcCCT from './cct';
 import calcDuv from './duv';
+import type { RefMeasurement } from './global';
+import Spline from './spline';
 import calcTint from './tint';
-import { RefMeasurement } from './global';
+import wlMap from './wlmap';
 
 export type SPD = {
 	l: number /*!< wavelength. */;

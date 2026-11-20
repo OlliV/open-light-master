@@ -1,8 +1,8 @@
+import { XYZ2UVW, XYZ2xy, xy2uv } from './CIEConv';
 import { CIE1931_2DEG_CMF } from './CMF';
 import calcCCT from './cct';
+import { normalizeSPD, spd2XYZ } from './spd';
 import { SPDofD, SPDofPlanck } from './spdIlluminants';
-import { spd2XYZ, normalizeSPD } from './spd';
-import { XYZ2xy, xy2uv, XYZ2UVW } from './CIEConv';
 
 //const nmIncrement = 5;
 const TCSSamples = Object.freeze([

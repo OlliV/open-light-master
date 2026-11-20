@@ -64,7 +64,7 @@ const matrixMinor = (matrix: readonly (readonly number[])[], row: number, col: n
 
 // TODO FIX
 export const matrixTrans = (matrix: readonly (readonly number[])[]) =>
-	// @ts-ignore
+	// @ts-expect-error
 	makeMatrix(...shifter(matrixSize(matrix), 1), (i: number, j: number) => matrix[j][i]);
 
 export const matrixDet = (matrix: readonly (readonly number[])[]) =>
@@ -73,7 +73,7 @@ export const matrixDet = (matrix: readonly (readonly number[])[]) =>
 			? sub(matrixTrans(clone.map(shifter)).map(mul))
 			: sum(
 					clone[0].map(
-						(i: number, ix: number) => matrixDet(matrixMinor(matrix, 1, ix + 1)) * Math.pow(-1, ix + 2) * i
+						(i: number, ix: number) => matrixDet(matrixMinor(matrix, 1, ix + 1)) * (-1) ** (ix + 2) * i
 					)
 				)
 	);
@@ -81,7 +81,7 @@ export const matrixDet = (matrix: readonly (readonly number[])[]) =>
 export const matrixCofactor = (matrix: readonly (readonly number[])[]) =>
 	matrixMap(matrix, ({ ix, jx }) =>
 		matrix[0].length > 2
-			? Math.pow(-1, ix + jx + 2) * matrixDet(matrixMinor(matrix, ix + 1, jx + 1))
+			? (-1) ** (ix + jx + 2) * matrixDet(matrixMinor(matrix, ix + 1, jx + 1))
 			: ix != jx
 				? -matrix[jx][ix]
 				: matrix[+!ix][+!jx]

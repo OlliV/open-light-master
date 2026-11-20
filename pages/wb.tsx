@@ -1,6 +1,6 @@
-import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/system/Box';
 import CCT from 'components/CCT';
 import CIE1931 from 'components/CIE1931';
 import Duv from 'components/Duv';
@@ -23,7 +23,7 @@ export default function Text() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - WB</Title>
 				<Paper sx={{ padding: 2 }}>
 					<Box>

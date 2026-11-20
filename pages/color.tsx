@@ -1,13 +1,13 @@
-import Box from '@mui/system/Box';
+import Container from '@mui/material/Container';
+import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Container from '@mui/material/Container';
+import Box from '@mui/system/Box';
 import MyHead from 'components/MyHead';
-import Title from 'components/Title';
 import Polar from 'components/Polar';
+import Title from 'components/Title';
+import { LabHueSatChroma, XYZ2Lab, XYZnD65, xy2XYZ } from 'lib/CIEConv';
 import { useGlobalState } from 'lib/global';
-import { XYZnD65, xy2XYZ, XYZ2Lab, LabHueSatChroma } from 'lib/CIEConv';
 import { Oklab2Oklch, XYZD65toOklab } from 'lib/Oklab';
 import { normalize2 } from 'lib/vector';
 import wl2rgb from 'lib/wl2rgb';
@@ -19,7 +19,7 @@ function borderColorSelector(context) {
 	const ctx = context.chart.ctx;
 	const gradient = ctx.createLinearGradient(0, 0, 0, 200);
 
-	for (let v of wls) {
+	for (const v of wls) {
 		gradient.addColorStop(...v);
 	}
 
@@ -53,7 +53,7 @@ export default function Text() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - Color</Title>
 				<Paper sx={{ padding: 2 }}>
 					<Box>
@@ -68,8 +68,10 @@ export default function Text() {
 							disabled
 							sx={{ m: 1, width: '10ch' }}
 							value={posHab}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">°</InputAdornment>,
+							slotProps={{
+								input: {
+									endAdornment: <InputAdornment position="end">°</InputAdornment>,
+								},
 							}}
 						/>
 						<TextField
@@ -83,8 +85,10 @@ export default function Text() {
 							disabled
 							sx={{ m: 1, width: '10ch' }}
 							value={`${Math.round(sat * 100)}`}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">%</InputAdornment>,
+							slotProps={{
+								input: {
+									endAdornment: <InputAdornment position="end">%</InputAdornment>,
+								},
 							}}
 						/>
 					</Box>
@@ -97,7 +101,7 @@ export default function Text() {
 								r: sat,
 								angle: okH,
 							}}
-							// @ts-ignore
+							// @ts-expect-error
 							datasets={[wls]}
 						/>
 					</Container>

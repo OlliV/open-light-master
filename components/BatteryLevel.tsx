@@ -1,14 +1,14 @@
-import BatteryUnknownIcon from '@mui/icons-material/BatteryUnknown';
-import Battery0Icon from '@mui/icons-material/BatteryAlert';
 import Battery20Icon from '@mui/icons-material/Battery20';
 import Battery30Icon from '@mui/icons-material/Battery30';
 import Battery50Icon from '@mui/icons-material/Battery50';
 import Battery60Icon from '@mui/icons-material/Battery60';
 import Battery80Icon from '@mui/icons-material/Battery80';
 import Battery90Icon from '@mui/icons-material/Battery90';
+import Battery0Icon from '@mui/icons-material/BatteryAlert';
 import Battery100Icon from '@mui/icons-material/BatteryFull';
+import BatteryUnknownIcon from '@mui/icons-material/BatteryUnknown';
 import ElectricalServicesIcon from '@mui/icons-material/ElectricalServices';
-import SxPropsTheme from 'lib/SxPropsTheme';
+import type SxPropsTheme from 'lib/SxPropsTheme';
 
 const style: SxPropsTheme = {
 	verticalAlign: 'center',

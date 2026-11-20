@@ -1,14 +1,14 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import { MemorySettings } from 'components/Memory';
 import MyHead from 'components/MyHead';
+import Ble from 'components/settings/ble';
 import Parameters from 'components/settings/Parameters';
 import Title from 'components/Title';
-import { MemorySettings } from 'components/Memory';
-import Ble from 'components/settings/ble';
-import { BLE_SERVICE_UUID as LM3_SERVICE_UUID, createLm3 } from 'lib/ble/lm3';
+import type { Paired } from 'lib/ble';
+import { createLm3, BLE_SERVICE_UUID as LM3_SERVICE_UUID } from 'lib/ble/lm3';
 import { getGlobalState, useGlobalState } from 'lib/global';
-import { Paired } from 'lib/ble';
 
 function LM3() {
 	const [, setDevice] = useGlobalState('lm3');
@@ -40,7 +40,7 @@ export default function Setup() {
 			<MyHead title="Setup" />
 			<Box>
 				<Title href="/">Setup</Title>
-				<Grid container direction="row" alignItems="center" spacing={2}>
+				<Grid container direction="row" spacing={2} sx={{ alignItems: 'center' }}>
 					<LM3 />
 					<Parameters />
 					<MemorySettings />

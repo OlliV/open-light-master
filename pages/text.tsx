@@ -1,16 +1,15 @@
-import { useMemo } from 'react';
-import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { GridLogicOperator } from '@mui/x-data-grid';
+import Box from '@mui/system/Box';
+import { DataGrid, type GridColDef, GridLogicOperator } from '@mui/x-data-grid';
 import Memory from 'components/Memory';
 import MyHead from 'components/MyHead';
 import Title from 'components/Title';
-import lm3CalcCRI from 'lib/lm3calc';
-import { XYZnD65, xy2XYZ, XYZ2Lab, LabHueSatChroma } from 'lib/CIEConv';
+import { LabHueSatChroma, XYZ2Lab, XYZnD65, xy2XYZ } from 'lib/CIEConv';
 import { calcCRI } from 'lib/cri';
 import { useGlobalState, useMemoryRecall } from 'lib/global';
+import lm3CalcCRI from 'lib/lm3calc';
+import { useMemo } from 'react';
 
 const rowFormatter: { [key: string]: (value: never) => string } = {
 	CCT: (value: number) => `${Math.round(value)} K`,
@@ -96,7 +95,7 @@ function DataArray({ rows, pageSize = 5, filter }: { rows: typeof rowsSample; pa
 				disableRowSelectionOnClick
 				disableDensitySelector
 				ignoreValueFormatterDuringExport
-				slots={{ toolbar: GridToolbar }}
+				showToolbar
 				slotProps={{
 					toolbar: {
 						showQuickFilter: true,
@@ -128,7 +127,7 @@ export default function Text() {
 		const { hab: hue, sat } = calcHueSat(meas.Ex, meas.Ey, meas.Lux);
 		const cri = lm3CalcCRI(meas);
 		const recallCri = recall.map(({ type: t, meas: rMeas }) =>
-			// @ts-ignore
+			// @ts-expect-error
 			t === 'LM3' ? lm3CalcCRI(rMeas) : t === 'ref' ? calcCRI(rMeas.CCT, rMeas.SPD) : null
 		);
 		const array = [
@@ -180,7 +179,7 @@ export default function Text() {
 				id: 0,
 				name: 'Temperature',
 				value: meas.temperature,
-				// @ts-ignore
+				// @ts-expect-error
 				...makeRecallCols(recall.map((item) => item.meas?.temperature || 20)),
 			},
 		];
@@ -191,7 +190,7 @@ export default function Text() {
 	return (
 		<Container maxWidth="md">
 			<MyHead />
-			<Box position="relative" sx={{ flexGrow: 1 }}>
+			<Box sx={{ position: 'relative', flexGrow: 1 }}>
 				<Title>OLM - Text</Title>
 				<Paper>
 					<Box sx={{ width: '100%', height: 75 }}>

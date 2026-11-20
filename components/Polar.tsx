@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Scatter, makeChartTitle } from './Chart';
+import { makeChartTitle, Scatter } from './Chart';
 
 const axisAngles = [
 	0, // red
@@ -101,7 +101,7 @@ export default function Polar({
 					tooltip: {
 						callbacks: {
 							label: (ctx) =>
-								// @ts-ignore
+								// @ts-expect-error
 								(ctx.dataset.labels && ctx.dataset.labels[ctx.dataIndex]) ||
 								`(x: ${ctx.parsed.x}, y: ${ctx.parsed.y})`,
 						},
@@ -131,9 +131,9 @@ export default function Polar({
 								borderColor: 'lightGrey',
 								backgroundColor: 'white',
 							},
-							// @ts-ignore
+							// @ts-expect-error
 							...lines,
-							// @ts-ignore
+							// @ts-expect-error
 							...points,
 						],
 					},

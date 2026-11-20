@@ -1,16 +1,16 @@
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import IconSettings from '@mui/icons-material/Settings';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import IconSettings from '@mui/icons-material/Settings';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
+import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { MouseEvent } from 'react';
-import { styled } from '@mui/material/styles';
+import MeasControl from 'components/MeasControl';
 import { useRouter } from 'next/router';
+import type { MouseEvent } from 'react';
 import Notifications from './Notifications';
 import PowerStatus from './PowerStatus';
-import MeasControl from 'components/MeasControl';
 
 const sxArrowEnabled = {
 	'&:hover': {

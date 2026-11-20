@@ -1,9 +1,9 @@
-import { Scatter as cScatter } from 'react-chartjs-2';
 import Container from '@mui/material/Container';
-import { Scatter, ScatterDataset, makeChartTitle, pointRotationAuto } from './Chart';
-import planckianCalc_xy from 'lib/planckian';
 import calcCCT from 'lib/cct';
+import planckianCalc_xy from 'lib/planckian';
 import { useState } from 'react';
+import { Scatter as cScatter } from 'react-chartjs-2';
+import { makeChartTitle, pointRotationAuto, Scatter, type ScatterDataset } from './Chart';
 
 const spectral = [
 	[0.1741, 0.005],
@@ -184,7 +184,6 @@ const datasetLocus: ScatterDataset = {
 	borderWidth: 1,
 	pointRadius: 0,
 	datalabels: { display: false },
-	// @ts-ignore
 	tooltip: {
 		callbacks: {
 			beforeLabel: () => 'Planckian locus',
@@ -204,7 +203,6 @@ const makeTempLineDataset = (Tmin: number, Tmax: number, Duv: number): ScatterDa
 		borderWidth: 1,
 		pointRadius: 0,
 		datalabels: { display: false },
-		// @ts-ignore
 		tooltip: {
 			callbacks: {
 				beforeLabel: () => `Duv ${Duv}`,
@@ -256,7 +254,6 @@ export default function CIE1931({
 					},
 				},
 			},
-			// @ts-ignore
 			tooltip: {
 				callbacks: {
 					label: (tooltipItem) =>
@@ -270,7 +267,6 @@ export default function CIE1931({
 			borderColor: 'black',
 			pointRadius: 2,
 			datalabels: { display: false },
-			// @ts-ignore
 			tooltip: {
 				callbacks: {
 					beforeLabel: () => 'current',
@@ -285,7 +281,6 @@ export default function CIE1931({
 			borderColor: 'grey',
 			pointRadius: 2,
 			datalabels: { display: false },
-			// @ts-ignore
 			tooltip: {
 				callbacks: {
 					beforeLabel: () => point.label,

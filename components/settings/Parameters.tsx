@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
-import { SettingsCard, iconStyle } from './SettingsCard';
+import TextField from '@mui/material/TextField';
 import { useGlobalState } from 'lib/global';
+import { useState } from 'react';
+import { iconStyle, SettingsCard } from './SettingsCard';
 
 export default function Parameters() {
 	const [hz, setHz] = useGlobalState('hz');

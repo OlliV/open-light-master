@@ -2,7 +2,7 @@
  * Normalize by the sum of squared values.
  */
 export function normalize(v: readonly number[]) {
-	const div = Math.sqrt(v.reduce((res, vn) => res + Math.pow(vn, 2), 0));
+	const div = Math.sqrt(v.reduce((res, vn) => res + vn ** 2, 0));
 
 	return v.map((vn) => vn / div);
 }

@@ -1,23 +1,21 @@
 import {
-	Chart as ChartJS,
 	BarElement,
 	CategoryScale,
+	Chart as ChartJS,
 	Filler,
 	Legend,
-	LineElement,
 	LinearScale,
+	LineElement,
 	PointElement,
 	RadialLinearScale,
+	type ScriptableContext,
+	type ScriptableScaleContext,
 	Title,
 	Tooltip,
-	ScriptableContext,
-	ScriptableScaleContext,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { Line } from 'react-chartjs-2';
-import { Scatter } from 'react-chartjs-2';
-import Datalabels from 'chartjs-plugin-datalabels';
 import Annotation from 'chartjs-plugin-annotation';
+import Datalabels from 'chartjs-plugin-datalabels';
+import { Bar, Line, Scatter } from 'react-chartjs-2';
 
 export type ScatterDataset = Parameters<typeof Scatter>[0]['data']['datasets'][0];
 
@@ -83,4 +81,4 @@ ChartJS.register(
 	Tooltip
 );
 
-export { Bar, Line, Scatter, pointRotationAuto, gridColorAuto, makeChartTitle };
+export { Bar, gridColorAuto, Line, makeChartTitle, pointRotationAuto, Scatter };

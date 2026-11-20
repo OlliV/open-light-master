@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MemoryIcon from '@mui/icons-material/Memory';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,23 +8,23 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
-import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MemoryIcon from '@mui/icons-material/Memory';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
+import type { SxProps, Theme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { SettingsCard, iconStyle, ActionButton } from 'components/settings/SettingsCard';
-import { MemoryItem, useGlobalState } from 'lib/global';
+import { ActionButton, iconStyle, SettingsCard } from 'components/settings/SettingsCard';
+import { type MemoryItem, useGlobalState } from 'lib/global';
 import { getDateTime } from 'lib/locale';
-import * as std from 'lib/spdIlluminants';
 import { calcRefMeas } from 'lib/spd';
+import * as std from 'lib/spdIlluminants';
+import { useEffect, useState } from 'react';
 
 const recallModalStyle = {
 	position: 'absolute' as 'absolute',
@@ -82,8 +82,10 @@ function MemoryList({ sx = [] }: { sx?: SxProps<Theme> }) {
 											checked={item.recall}
 											tabIndex={-1}
 											disableRipple
-											inputProps={{
-												'aria-labelledby': labelId,
+											slotProps={{
+												input: {
+													'aria-labelledby': labelId,
+												},
 											}}
 											onClick={toggle}
 										/>
@@ -250,8 +252,10 @@ function SelectReferenceIlluminant({ onAdd }: { onAdd: (label: string, spd: Floa
 						label="CCT"
 						disabled={!selected || typeof selected.SPD !== 'function'}
 						sx={{ m: 1, width: '15ch' }}
-						InputProps={{
-							endAdornment: <InputAdornment position="end">K</InputAdornment>,
+						slotProps={{
+							input: {
+								endAdornment: <InputAdornment position="end">K</InputAdornment>,
+							},
 						}}
 						onChange={(e) => {
 							const v = e.target.value;
@@ -291,7 +295,7 @@ export function MemorySettings() {
 				meas: calcRefMeas(spd),
 			},
 		]);
-	}
+	};
 
 	return (
 		<SettingsCard

@@ -1,5 +1,5 @@
-import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 
 export default function CCT({ value }: { value: number }) {
 	return (
@@ -8,8 +8,10 @@ export default function CCT({ value }: { value: number }) {
 			disabled
 			sx={{ m: 1, width: '15ch' }}
 			value={`${Math.round(value)}`}
-			InputProps={{
-				endAdornment: <InputAdornment position="end">K</InputAdornment>,
+			slotProps={{
+				input: {
+					endAdornment: <InputAdornment position="end">K</InputAdornment>,
+				},
 			}}
 		/>
 	);
